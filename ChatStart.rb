@@ -1,12 +1,12 @@
 module ChatStart
 
-    @@contacts = [
-        "\"Prof 2\"",
-        "prof3@panesar"
-    ]
+    @@starts = {
+        "prof1@panesar" => [ "\"Prof 2\"", "prof3@panesar" ],
+        "prof2@panesar" => [ "prof1@panesar" ]
+    }
 
     def self.prof_on_connect(account_name, fulljid)
-        @@contacts.each { | contact |
+        @@starts[account_name].each { | contact |
             Prof::send_line("/msg " + contact)
         }
         Prof::send_line("/win 1")
