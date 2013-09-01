@@ -6,9 +6,11 @@ module ChatStart
     }
 
     def self.prof_on_connect(account_name, fulljid)
-        @@starts[account_name].each { | contact |
-            Prof::send_line("/msg " + contact)
-        }
-        Prof::send_line("/win 1")
+        if @@starts[account_name]
+            @@starts[account_name].each { | contact |
+                Prof::send_line("/msg " + contact)
+            }
+            Prof::send_line("/win 1")
+        end
     end
 end
