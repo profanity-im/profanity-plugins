@@ -3,6 +3,8 @@ profanity-plugins
 
 Plugin support for Profanity is currently in development at the `plugins` branch.
 
+Currently supported languages for writing plugins are Python, Ruby and C.
+
 Building Profanity with plugin support
 --------------------------------------
 
