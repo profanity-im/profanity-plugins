@@ -8,6 +8,10 @@ module RubyTest
 
     def self.prof_on_start()
         Prof::cons_show("RubyTest: on_start")
+        Prof::log_debug("RubyTest: logged debug");
+        Prof::log_info("RubyTest: logged info");
+        Prof::log_warning("RubyTest: logged warning");
+        Prof::log_error("RubyTest: logged error");
     end
 
     def self.prof_on_connect(account_name, fulljid)

@@ -7,6 +7,10 @@ def prof_init(version, status):
 
 def prof_on_start():
     prof.cons_show("python-test: on_start")
+    prof.log_debug("python-test: logged debug");
+    prof.log_info("python-test: logged info");
+    prof.log_warning("python-test: logged warning");
+    prof.log_error("python-test: logged error");
 
 def prof_on_connect(account_name, fulljid):
     prof.cons_show("python-test: on_connect, " + account_name + ", " + fulljid)

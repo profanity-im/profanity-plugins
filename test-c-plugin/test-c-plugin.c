@@ -51,6 +51,10 @@ void
 prof_on_start(void)
 {
     prof_cons_show("c-test: on_start");
+    prof_log_debug("c-test: logged debug");
+    prof_log_info("c-test: logged info");
+    prof_log_warning("c-test: logged warning");
+    prof_log_error("c-test: logged error");
 }
 
 void
