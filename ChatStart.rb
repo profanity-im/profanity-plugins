@@ -5,7 +5,7 @@ module ChatStart
         "prof3@panesar"
     ]
 
-    def self.prof_on_connect()
+    def self.prof_on_connect(account_name, fulljid)
         @@contacts.each { | contact |
             Prof::send_line("/msg " + contact)
         }
