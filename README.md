@@ -17,7 +17,7 @@ make
 sudo make install
 ```
 
-The last step will create a shared library `libprofanity` and install headers required for developing C plugins.  If you don't want to run any C plugins, you can omit the last step.
+The last step will create a shared library `libprofanity` and install headers required for developing C plugins.
 
 You will need a few more dependencies installed on your system:
 
@@ -47,6 +47,8 @@ For example:
 [plugins]
 load=browser.py;connect.py;ChatStart.rb;cricket-score.py;platform-info.py;whoami.py;ascii.py                   
 ```
+
+Run the `/plugins` command to see a list of installed plugins.
 
 Example plugin code
 -------------------
