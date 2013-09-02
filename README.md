@@ -19,7 +19,14 @@ sudo make install
 
 The last step will create a shared library `libprofanity` and install headers required for developing C plugins.  If you don't want to run any C plugins, you can omit the last step.
 
-You will need python-dev, ruby-dev and libtool packages installed on your system.
+You will need a few more dependencies installed on your system:
+
+```
+python-dev
+ruby-dev
+libtool
+autoconf-archives
+```
 
 Loading plugins
 ---------------
