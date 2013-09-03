@@ -18,6 +18,11 @@ module RubyTest
         Prof::cons_show("RubyTest: on_connect, " + account_name + ", " + fulljid)
     end
 
+    def self.prof_on_disconnect(account_name, fulljid)
+        Prof::cons_show("RubyTest: on_disconnect, " + account_name + ", " + fulljid)
+        Prof::log_info("RubyTest: on_disconnect, " + account_name + ", " + fulljid)
+    end
+
     def self.prof_on_message_received(jid, message)
         Prof::cons_show("RubyTest: on_message_received, " + jid + ", " + message)
         Prof::cons_alert

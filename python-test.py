@@ -15,6 +15,10 @@ def prof_on_start():
 def prof_on_connect(account_name, fulljid):
     prof.cons_show("python-test: on_connect, " + account_name + ", " + fulljid)
 
+def prof_on_disconnect(account_name, fulljid):
+    prof.cons_show("python-test: on_disconnect, " + account_name + ", " + fulljid)
+    prof.log_info("python-test: on_disconnect, " + account_name + ", " + fulljid)
+
 def prof_on_message_received(jid, message):
     prof.cons_show("python-test: on_message_received, " + jid + ", " + message)
     prof.cons_alert()

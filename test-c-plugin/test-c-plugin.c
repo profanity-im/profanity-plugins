@@ -66,6 +66,16 @@ prof_on_connect(const char * const account_name, const char * const fulljid)
     prof_cons_show(buf);
 }
 
+void
+prof_on_disconnect(const char * const account_name, const char * const fulljid)
+{
+    char *start = "c-test: on_disconnect, ";
+    char buf[strlen(start) + strlen(account_name) + 2 + strlen(fulljid) + 1];
+    sprintf(buf, "%s%s, %s", start, account_name, fulljid);
+    prof_cons_show(buf);
+    prof_log_info(buf);
+}
+
 char *
 prof_on_message_received(const char * const jid, const char *message)
 {
