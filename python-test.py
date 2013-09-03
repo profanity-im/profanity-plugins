@@ -25,6 +25,9 @@ def prof_on_message_send(jid, message):
     prof.cons_alert()
     return message + "[PYTHON]"
 
+def prof_on_shutdown():
+    prof.log_info("python-test: on_shutdown")
+
 def cmd_python(msg):
     if msg:
         prof.cons_show("python-test: /python command called, arg = " + msg)

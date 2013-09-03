@@ -93,3 +93,9 @@ prof_on_message_send(const char * const jid, const char *message)
 
     return result;
 }
+
+void
+prof_on_shutdown(void)
+{
+    prof_log_info("c-test: on_shutdown");
+}

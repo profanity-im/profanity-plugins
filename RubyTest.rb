@@ -30,6 +30,10 @@ module RubyTest
         return message + "[RUBY]"
     end
 
+    def self.prof_on_shutdown()
+        Prof::log_info("RubyTest: on_shutdown");
+    end
+
     def self.cmd_ruby()
         return Proc.new { | msg |
             if msg
