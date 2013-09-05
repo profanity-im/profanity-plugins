@@ -24,6 +24,16 @@ def prof_on_message_received(jid, message):
     prof.cons_alert()
     return message + "[PYTHON]"
 
+def prof_on_room_message_received(room, nick, message):
+    prof.cons_show("python-test: on_room_message_received, " + room + ", " + nick + ", " + message)
+    prof.cons_alert()
+    return message + "[PYTHON]"
+
+def prof_on_private_message_received(room, nick, message):
+    prof.cons_show("python-test: on_private_message_received, " + room + ", " + nick + ", " + message)
+    prof.cons_alert()
+    return message + "[PYTHON]"
+
 def prof_on_message_send(jid, message):
     prof.cons_show("python-test: on_message_send, " + jid + ", " + message)
     prof.cons_alert()

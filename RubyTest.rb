@@ -29,6 +29,18 @@ module RubyTest
         return message + "[RUBY]"
     end
 
+    def self.prof_on_room_message_received(room, nick, message)
+        Prof::cons_show("RubyTest: on_room_message_received, " + room + ", " + nick + ", " + message)
+        Prof::cons_alert
+        return message + "[RUBY]"
+    end
+
+    def self.prof_on_private_message_received(room, nick, message)
+        Prof::cons_show("RubyTest: on_private_message_received, " + room + ", " + nick + ", " + message)
+        Prof::cons_alert
+        return message + "[RUBY]"
+    end
+
     def self.prof_on_message_send(jid, message)
         Prof::cons_show("RubyTest: on_message_send, " + jid + ", " + message)
         Prof::cons_alert
