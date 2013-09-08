@@ -39,6 +39,16 @@ def prof_on_message_send(jid, message):
     prof.cons_alert()
     return message + "[PYTHON]"
 
+def prof_on_private_message_send(room, nick, message):
+    prof.cons_show("python-test: on_private_message_send, " + room + ", " + nick + ", " + message)
+    prof.cons_alert()
+    return message + "[PYTHON]"
+
+def prof_on_room_message_send(room, message):
+    prof.cons_show("python-test: on_room_message_send, " + room + ", " + message)
+    prof.cons_alert()
+    return message + "[PYTHON]"
+
 def prof_on_shutdown():
     prof.log_info("python-test: on_shutdown")
 

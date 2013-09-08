@@ -134,6 +134,35 @@ prof_on_message_send(const char * const jid, const char *message)
     return result;
 }
 
+char *
+prof_on_private_message_send(const char * const room, const char * const nick,
+    const char *message)
+{
+    char *start = "c-test: on_private_message_send, ";
+    char buf[strlen(start) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s, %s", start, room, nick, message);
+    prof_cons_show(buf);
+    prof_cons_alert();
+    char *result = malloc(strlen(message) + 4);
+    sprintf(result, "%s%s", message, "[C]");
+
+    return result;
+}
+
+char *
+prof_on_room_message_send(const char * const room, const char *message)
+{
+    char *start = "c-test: on_room_message_send, ";
+    char buf[strlen(start) + strlen(room) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s", start, room, message);
+    prof_cons_show(buf);
+    prof_cons_alert();
+    char *result = malloc(strlen(message) + 4);
+    sprintf(result, "%s%s", message, "[C]");
+
+    return result;
+}
+
 void
 prof_on_shutdown(void)
 {
