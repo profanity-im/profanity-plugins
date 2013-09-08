@@ -8,6 +8,15 @@ Currently supported languages for writing plugins are Python, Ruby and C.
 Building Profanity with plugin support
 --------------------------------------
 
+You will need a few more dependencies installed on your system:
+
+```
+python-dev
+ruby-dev
+libtool
+autoconf-archive
+```
+
 Check out the `plugins` branch and run the usual:
 
 ```
@@ -18,15 +27,6 @@ sudo make install
 ```
 
 The last step will create a shared library `libprofanity` and install headers required for developing C plugins.
-
-You will need a few more dependencies installed on your system:
-
-```
-python-dev
-ruby-dev
-libtool
-autoconf-archives
-```
 
 Loading plugins
 ---------------
