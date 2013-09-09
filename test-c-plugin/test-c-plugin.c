@@ -5,6 +5,8 @@
 
 #include <profapi.h>
 
+static PROF_WIN_TAG echo_win = "Reverse Echo";
+
 void
 cmd_c(char **args)
 {
@@ -37,6 +39,34 @@ timer_test(void)
 }
 
 void
+handle_reverse(PROF_WIN_TAG win, char *line)
+{
+    int len = strlen(line);
+    char buf[len];
+    int i = len;
+    int pos = 0;
+    for (i = len-1; i >= 0; i--) {
+        buf[pos] = line[i];
+        pos++;
+    }
+    buf[pos] = '\0';
+    prof_win_show(win, buf);
+}
+
+void
+cmd_reverse(char **args)
+{
+    if (!prof_win_exists(echo_win)) {
+        prof_win_create(echo_win, handle_reverse);
+    }
+
+    prof_win_focus(echo_win);
+    if (args[0] != NULL) {
+        prof_win_process_line(echo_win, args[0]);
+    }
+}
+
+void
 prof_init(const char * const version, const char * const status)
 {
     char *start = "c-test: init. ";
@@ -44,6 +74,7 @@ prof_init(const char * const version, const char * const status)
     sprintf(buf, "%s%s, %s", start, version, status);
     prof_cons_show(buf);
     prof_register_command("/c", 0, 1, "/c", "c test", "c test", cmd_c);
+    prof_register_command("/reverse", 0, 1, "/reverse", "Reverse input string", "Reverse input string", cmd_reverse);
     prof_register_timed(timer_test, 10);
 }
 

@@ -1,8 +1,11 @@
 import prof
 
+win_tag = "Upper echo";
+
 def prof_init(version, status):
     prof.cons_show("python-test: init, " + version + ", " + status)
     prof.register_command("/python", 0, 1, "/python", "python-test", "python-test", cmd_python)
+    prof.register_command("/upper", 0, 1, "/upper", "Uppercase input string", "Uppercase input string", cmd_upper);
     prof.register_timed(timer_test, 10)
 
 def prof_on_start():
@@ -69,3 +72,15 @@ def timer_test():
         prof.cons_show("  current recipient = " + recipient)
     prof.cons_alert()
 
+def cmd_upper(line):
+    global win_tag;
+    if prof.win_exists(win_tag) == False:
+        prof.win_create(win_tag, handle_upper);
+
+    prof.win_focus(win_tag);
+
+    if line:
+        prof.win_process_line(win_tag, line);
+
+def handle_upper(win, line):
+    prof.win_show(win, line.upper());

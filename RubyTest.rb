@@ -3,6 +3,7 @@ module RubyTest
     def self.prof_init(version, status)
         Prof::cons_show("RubyTest: init, " + version + ", " + status)
         Prof::register_command("/ruby", 0, 1, "/ruby", "RubyTest", "RubyTest", cmd_ruby)
+        Prof::register_command("/lower", 0, 1, "/lower", "Lowercase input string", "Lowercase input string", cmd_lower)
         Prof::register_timed(timer_test, 10)
     end
 
@@ -85,6 +86,27 @@ module RubyTest
                 Prof::cons_show("  current recipient = " + recipient)
             end
             Prof::cons_alert
+        }
+    end
+
+    def self.cmd_lower()
+        return Proc.new { | line |
+            win_tag = "Lower echo"
+            if (Prof::win_exists(win_tag) == false)
+                Prof::win_create(win_tag, handle_lower)
+            end
+
+            Prof::win_focus(win_tag)
+
+            if (line)
+                Prof::win_process_line(win_tag, line)
+            end
+        }
+    end
+
+    def self.handle_lower()
+        return Proc.new { | win, line |
+            Prof::win_show(win, line.downcase)
         }
     end
 end
