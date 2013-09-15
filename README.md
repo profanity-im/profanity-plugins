@@ -3,7 +3,7 @@ profanity-plugins
 
 Plugin support for Profanity is currently in development at the `plugins` branch.
 
-Currently supported languages for writing plugins are Python, Ruby and C.
+Currently supported languages for writing plugins are C, Python, Ruby and Lua.
 
 Building Profanity with plugin support
 --------------------------------------
@@ -12,6 +12,7 @@ You will need a few more dependencies installed on your system:
 
 ```
 python-dev
+lua-dev
 ruby-dev
 libtool
 autoconf-archive
@@ -58,6 +59,7 @@ Whilst the API is being developed, the following test plugins are a good referen
 ```
 python-test.py
 RubyTest.rb
+luatest.lua
 test-c-plugin/*
 ```
 
