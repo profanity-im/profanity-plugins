@@ -46,7 +46,7 @@ For example:
 
 ```
 [plugins]
-load=browser.py;connect.py;ChatStart.rb;cricket-score.py;platform-info.py;whoami.py;ascii.py                   
+load=browser.py;connect.lua;ChatStart.rb;cricket-score.py;platform-info.py;whoami.py;ascii.py                   
 ```
 
 Run the `/plugins` command to see a list of installed plugins.
