@@ -3,24 +3,10 @@ import os
 import webbrowser
 import re
 
-lastlink = {}
+_lastlink = {}
 
-def prof_init(version, status):
-    prof.register_command("/browser", 0, 1,
-        "/browser [url]",
-        "View a URL in the browser.",
-        "View a URL in the browser, if no argument is supplied, " +
-        "the last received URL will be used.",
-        cmd_browser)
-
-def prof_on_message_received(jid, message):
-    global lastlink
-    links = re.findall(r'(https?://\S+)', message)
-    if (len(links) > 0):
-        lastlink[jid] = links[len(links)-1]
-
-def cmd_browser(url):
-    global lastlink
+def _cmd_browser(url):
+    global _lastlink
     link = None
 
     # use arg if supplied
@@ -33,8 +19,8 @@ def cmd_browser(url):
         if (jid != None):
 
             # check for link from recipient
-            if jid in lastlink.keys():
-                link = lastlink[jid]
+            if jid in _lastlink.keys():
+                link = _lastlink[jid]
             else:
                 prof.cons_show("No links found from " + jid)
 
@@ -45,9 +31,9 @@ def cmd_browser(url):
     # open the browser if link found
     if (link != None):
         prof.cons_show("Opening " + link + " in browser")
-        open_browser(link)
+        _open_browser(link)
 
-def open_browser(url):
+def _open_browser(url):
     savout = os.dup(1)
     saverr = os.dup(2)
     os.close(1)
@@ -58,3 +44,17 @@ def open_browser(url):
     finally:
         os.dup2(savout, 1)
         os.dup2(saverr, 2)
+
+def prof_init(version, status):
+    prof.register_command("/browser", 0, 1,
+        "/browser [url]",
+        "View a URL in the browser.",
+        "View a URL in the browser, if no argument is supplied, " +
+        "the last received URL will be used.",
+        _cmd_browser)
+
+def prof_on_message_received(jid, message):
+    global _lastlink
+    links = re.findall(r'(https?://\S+)', message)
+    if (len(links) > 0):
+        _lastlink[jid] = links[len(links)-1]
