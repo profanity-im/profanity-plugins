@@ -27,7 +27,7 @@ def cmd_browser(url):
     if (url != None):
         link = url
     else:
-        jid = prof.get_current_recipient();
+        jid = prof.get_current_recipient()
 
         # check if in chat window
         if (jid != None):
@@ -36,7 +36,7 @@ def cmd_browser(url):
             if jid in lastlink.keys():
                 link = lastlink[jid]
             else:
-                prof.cons_show("No links found from " + jid);
+                prof.cons_show("No links found from " + jid)
 
         # not in chat window
         else:

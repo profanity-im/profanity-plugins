@@ -94,4 +94,4 @@ def retrieve_scores_json():
     f = urllib2.urlopen(req)
     response = f.read()
     f.close()
-    return json.loads(response);
+    return json.loads(response)
