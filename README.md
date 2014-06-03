@@ -10,14 +10,12 @@ Currently supported languages for writing plugins are C, Python, Ruby and Lua.
 Building Profanity with plugin support
 --------------------------------------
 
-You will need a few more dependencies installed on your system:
+`autoconf-archive`, `libtool` and the development packages for each supported langauge are required e.g.:
 
 ```
 python-dev
 lua-dev
 ruby-dev
-libtool
-autoconf-archive
 ```
 
 Check out the `plugins` branch and run the usual:
@@ -29,14 +27,29 @@ make
 sudo make install
 ```
 
-The last step will create a shared library `libprofanity` and install headers required for developing C plugins.
+By default, support for each language is optional and will be attempted during `./configure`.  To force support for a language, or disable support, the following flags may be used with `./configure`.
+
+```
+--enable-c-plugins, --disable-c-plugins
+--enable-python-plugins, --disable-python-plugins
+--enable-ruby-plugins, --disable-ruby-plugins
+--enable-lua-plugins, --disable-lua-plugins
+```
+
+A wrapper script is included to enable support for stable plugin languages:
+
+```
+./configure-plugins
+```
+
+This script forces support for C, Python and Ruby.  Lua support for all platforms is still in progress.
 
 Loading plugins
 ---------------
 
 1. Copy the plugin
 
-For Python and Ruby plugins, copy the plugin to `$XDG_DATA/profanity/plugins/`, (`~/.local/share/profanity/plugins/` on most systems).
+For Python, Ruby and Lua plugins, copy the plugin to `$XDG_DATA/profanity/plugins/`, (`~/.local/share/profanity/plugins/` on most systems).
 
 For C plugins, build the plugin using the supplied Makefile, and then copy the `.so` file to the same location.
 
@@ -48,7 +61,7 @@ For example:
 
 ```
 [plugins]
-load=browser.py;connect.lua;ChatStart.rb;cricket-score.py;platform-info.py;whoami.py;ascii.py                   
+load=browser.py;connect.lua;ChatStart.rb;cricket-score.py;platform-info.py;ascii.py;pid.so
 ```
 
 Run the `/plugins` command to see a list of installed plugins.
@@ -62,6 +75,5 @@ Whilst the API is being developed, the following test plugins are a good referen
 python-test.py
 RubyTest.rb
 luatest.lua
-test-c-plugin/*
+test-c-plugin/test-c-plugin.c
 ```
-
