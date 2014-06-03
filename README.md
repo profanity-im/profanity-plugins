@@ -79,7 +79,7 @@ test-c-plugin/test-c-plugin.c
 Cricket score
 -------------
 
-The cricket score python plugin polls a public API to find the score of a given match, shows the score in the console and a desktop notification when it changes.
+The cricket score python plugin polls a public API to find the score of a given match, shows the score in the console and a desktop notification when it changes.  It also adds a `/cricket` command to show the score at any time.
 
 ![alt tag](http://www.profanity.im/cricket.png)
 
