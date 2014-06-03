@@ -5,6 +5,8 @@ Plugin support for Profanity is currently in development at the `plugins` branch
 
 Currently supported languages for writing plugins are C, Python, Ruby and Lua.
 
+![alt tag](http://www.profanity.im/cricket.png)
+
 Building Profanity with plugin support
 --------------------------------------
 
