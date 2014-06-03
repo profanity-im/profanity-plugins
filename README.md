@@ -5,8 +5,6 @@ Plugin support for Profanity is currently in development at the `plugins` branch
 
 Supported languages for writing plugins are C, Python, Ruby and Lua.
 
-![alt tag](http://www.profanity.im/cricket.png)
-
 Building Profanity with plugin support
 --------------------------------------
 
@@ -36,13 +34,13 @@ By default, support for each language is optional and will be attempted during `
 --enable-lua-plugins, --disable-lua-plugins
 ```
 
-A wrapper script is included to enable support for stable plugin languages:
+A wrapper script is included to enable support for currently stable plugin languages:
 
 ```
 ./configure-plugins
 ```
 
-This script forces support for C, Python and Ruby.  Lua support for all platforms is still in progress.
+This script currently forces support for C, Python and Ruby.  Lua support for all platforms is still in progress.
 
 Loading plugins
 ---------------
@@ -77,3 +75,11 @@ RubyTest.rb
 luatest.lua
 test-c-plugin/test-c-plugin.c
 ```
+
+Cricket score
+-------------
+
+The cricket score python plugin polls a public API to find the score of a given match, shows the score in the console and a desktop notification when it changes.
+
+![alt tag](http://www.profanity.im/cricket.png)
+
