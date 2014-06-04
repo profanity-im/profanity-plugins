@@ -1,9 +1,30 @@
+"""
+Manage jenkins jobs
+
+Prerequisites:
+The jenkinsapi module is required https://pypi.python.org/pypi/jenkinsapi
+To install the module using pip:
+    sudo pip install jenkinsapi
+
+The plugin polls the jenkins server at 'jenkins_url' every 'poll_interval' seconds.
+New failures are reported in the console, and a desktop notification is sent.
+
+The following commands are available:
+
+/jenkins jobs - list all jobs
+/jenkins show [job] - show details of a specific job
+/jenkins build [job] - trigger a build for the job
+/jenkins open [job] - open the job in the systems default browser
+
+"""
+
 import prof
 import os
 import webbrowser
 import jenkinsapi
 from jenkinsapi.jenkins import Jenkins
 
+poll_interval = 30
 jenkins_url = "http://localhost:8080"
 username = None
 password = None
@@ -95,6 +116,10 @@ def _open_job(j, jobname):
             prof.cons_show("No such job " + jobname)
 
 def _cmd_jenkins(cmd, jobname=None):
+    global jenkins_url
+    global username
+    global password
+
     try:
         j = Jenkins(jenkins_url, username, password)
     except Exception:
@@ -134,6 +159,10 @@ def _process_job(name, job):
                     passing.append(name)
 
 def _poll_jobs():
+    global jenkins_url
+    global username
+    global password
+
     try:
         j = Jenkins(jenkins_url, username, password)
     except Exception:
@@ -143,6 +172,8 @@ def _poll_jobs():
             _process_job(name, job)
 
 def prof_init(version, status):
-    prof.register_timed(_poll_jobs, 30)
+    global poll_interval
+
+    prof.register_timed(_poll_jobs, poll_interval)
     prof.register_command("/jenkins", 1, 2, "/jenkins jobs|show|build|open [name]", "Do jenkins stuff.", "Do jenkins stuff.",
         _cmd_jenkins)
