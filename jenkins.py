@@ -7,7 +7,12 @@ To install the module using pip:
     sudo pip install jenkinsapi
 
 The plugin polls the jenkins server at 'jenkins_url' every 'poll_interval' seconds.
-New failures are reported in the console, and a desktop notification is sent.
+New failures are reported in the jenkins window, and a desktop notification is sent.
+
+The 'remind_interval' specified the time between reminder notifications of broken builds
+
+Both intervals can be disabled with a value of 0, which means builds must be checked manually using
+the supplied commands.
 
 The following commands are available:
 
@@ -238,8 +243,10 @@ def prof_init(version, status):
     global poll_interval
     global win_tag
 
-    prof.register_timed(_poll_jobs, poll_interval)
-    prof.register_timed(_remind, remind_interval)
+    if poll_interval > 0:
+        prof.register_timed(_poll_jobs, poll_interval)
+    if remind_interval > 0:
+        prof.register_timed(_remind, remind_interval)
     prof.register_command("/jenkins", 0, 2, "/jenkins list|show|build|open [job]", "Do jenkins stuff.", "Do jenkins stuff.",
         _cmd_jenkins)
 
