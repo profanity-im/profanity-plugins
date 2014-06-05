@@ -25,8 +25,8 @@ import jenkinsapi
 from jenkinsapi.jenkins import Jenkins
 
 win_tag = "Jenkins"
-poll_interval = 10
-remind_interval = 20
+poll_interval = 5
+remind_interval = 60 * 15
 jenkins_url = "http://localhost:8080"
 username = None
 password = None
@@ -67,13 +67,18 @@ def _list_jobs(j):
         prof.win_show(win_tag, "Jobs:")
         for name, job in j.get_jobs():
             if job.is_queued():
-                prof.win_show(win_tag, "  " + name + ", QUEUED")
+                prof.win_show_cyan(win_tag, "  " + name + ", QUEUED")
             elif job.is_running():
-                prof.win_show(win_tag, "  " + name + ", RUNNING")
+                prof.win_show_cyan(win_tag, "  " + name + ", RUNNING")
             else:
                 build = job.get_last_build_or_none()
                 if build:
-                    prof.win_show(win_tag, "  " + name + " #" + str(build.get_number()) + ", " + build.get_status())
+                    if build.get_status() == "FAILURE":
+                        prof.win_show_red(win_tag, "  " + name + " #" + str(build.get_number()) + ", " + build.get_status())
+                    elif build.get_status() == "SUCCESS":
+                        prof.win_show_green(win_tag, "  " + name + " #" + str(build.get_number()) + ", " + build.get_status())
+                    else:
+                        prof.win_show_cyan(win_tag, "  " + name + " #" + str(build.get_number()) + ", " + build.get_status())
                 else:
                     prof.win_show(win_tag, "  " + name + ", no builds")
         prof.win_show(win_tag, "")
@@ -91,21 +96,26 @@ def _show_job(j, jobname=None):
 
             desc = job.get_description()
             if desc:
-                prof.win_show  (win_tag, "  Description : " + desc)
+                prof.win_show(win_tag, "  Description : " + desc)
 
             if job.is_queued():
-                prof.win_show  (win_tag, "  Status      : Queued")
+                prof.win_show_cyan(win_tag, "  Status      : Queued")
             elif job.is_running():
-                prof.win_show  (win_tag, "  Status      : Running")
+                prof.win_show_cyan(win_tag, "  Status      : Running")
             else:
                 build = job.get_last_build_or_none()
                 if build:
-                    prof.win_show  (win_tag, "  Last build  : #" + str(build.get_number()))
-                    prof.win_show  (win_tag, "  Status      : " + build.get_status())
+                    prof.win_show(win_tag, "  Last build  : #" + str(build.get_number()))
+                    if build.get_status() == "FAILURE":
+                        prof.win_show_red(win_tag, "  Status      : " + build.get_status())
+                    elif build.get_status() == "SUCCESS":
+                        prof.win_show_green(win_tag, "  Status      : " + build.get_status())
+                    else:
+                        prof.win_show_cyan(win_tag, "  Status      : " + build.get_status())
                 else:
-                    prof.win_show  (win_tag, "  Last build  : No builds")
+                    prof.win_show(win_tag, "  Last build  : No builds")
 
-            prof.win_show      (win_tag, "  Trigger     : " + job.get_build_triggerurl())
+            prof.win_show(win_tag, "  Trigger     : " + job.get_build_triggerurl())
             prof.win_show(win_tag, "")
         else:
             prof.win_show(win_tag, "No such job " + jobname)
@@ -152,7 +162,7 @@ def _process_job(name, job):
         if build:
             if build.get_status() == "FAILURE":
                 if not name in failing:
-                    prof.win_show(win_tag, name + " #" + str(build.get_number()) + " BROKEN")
+                    prof.win_show_red(win_tag, name + " #" + str(build.get_number()) + " BROKEN")
                     prof.win_show(win_tag, "")
                     prof.notify(name + " BROKEN", 5000, "Jenkins")
                     failing.append(name)
@@ -160,7 +170,7 @@ def _process_job(name, job):
                     passing.remove(name)
             else:
                 if name in failing:
-                    prof.win_show(win_tag, name + " #" + str(build.get_number()) + " FIXED")
+                    prof.win_show_green(win_tag, name + " #" + str(build.get_number()) + " FIXED")
                     prof.win_show(win_tag, "")
                     prof.notify(name + " FIXED", 5000, "Jenkins")
                     failing.remove(name)
