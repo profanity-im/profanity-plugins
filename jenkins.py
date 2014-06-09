@@ -40,9 +40,9 @@ password = None
 
 jenkins_poll_interval = 5
 prof_cb_interval = 5
-prof_remind_interval = 60 * 15
+prof_remind_interval = 10
 enable_notify = True
-enable_remind = False
+enable_remind = True
 
 last_state = {}
 STATE_SUCCESS = "SUCCESS"
@@ -107,20 +107,11 @@ class JobList():
                 return True
         return False
 
-    def num_failing(self):
+    def num_in_state(self, given_state):
         count = 0
         for name, build_number, state in self.jobs:
-            if state == "FAILURE":
+            if state == given_state:
                 count = count + 1
-
-        return count
-
-    def num_unstable(self):
-        count = 0
-        for name, build_number, state in self.jobs:
-            if state == "UNSTABLE":
-                count = count + 1
-
         return count
 
 class JobUpdates():
@@ -186,31 +177,31 @@ def _jenkins_poll():
                 if not job.is_queued_or_running():
                     build = job.get_last_build_or_none()
                     if build:
-                        if build.get_status() == "FAILURE":
-                            new_job_list.add_job(name, build.get_number(), "FAILURE")
+                        if build.get_status() == STATE_FAILURE:
+                            new_job_list.add_job(name, build.get_number(), STATE_FAILURE)
                             changed = _set_state(name, STATE_FAILURE)
                             if changed:
                                 new_changes_list.add_failing(name, build.get_number())
-                        elif build.get_status() == "SUCCESS":
-                            new_job_list.add_job(name, build.get_number(), "SUCCESS")
+                        elif build.get_status() == STATE_SUCCESS:
+                            new_job_list.add_job(name, build.get_number(), STATE_SUCCESS)
                             changed = _set_state(name, STATE_SUCCESS)
                             if changed:
                                 new_changes_list.add_passing(name, build.get_number())
-                        elif build.get_status() == "UNSTABLE":
-                            new_job_list.add_job(name, build.get_number(), "UNSTABLE")
+                        elif build.get_status() == STATE_UNSTABLE:
+                            new_job_list.add_job(name, build.get_number(), STATE_UNSTABLE)
                             changed = _set_state(name, STATE_UNSTABLE)
                             if changed:
                                 new_changes_list.add_unstable(name, build.get_number())
                     else:
-                        new_job_list.add_job(name, None, "NOBUILDS")
+                        new_job_list.add_job(name, None, STATE_NOBUILDS)
                 else:
                     if job.is_queued():
-                        new_job_list.add_job(name, None, "QUEUED")
+                        new_job_list.add_job(name, None, STATE_QUEUED)
                         changed = _set_state(name, STATE_QUEUED)
                         if changed:
                             new_changes_list.add_queued(name)
                     elif job.is_running():
-                        new_job_list.add_job(name, None, "RUNNING")
+                        new_job_list.add_job(name, None, STATE_RUNNING)
                         changed = _set_state(name, STATE_RUNNING)
                         if changed:
                             new_changes_list.add_running(name)
@@ -227,21 +218,21 @@ def _prof_callback():
             prof.log_warning("Jenkins poll failed")
     elif changes_list:
         for name in changes_list.get_queued():
-            prof.win_show_cyan(win_tag, name + " QUEUED")
+            prof.win_show_cyan(win_tag, name + " " + STATE_QUEUED)
         for name in changes_list.get_running():
-            prof.win_show_cyan(win_tag, name + " RUNNING")
+            prof.win_show_cyan(win_tag, name + " " + STATE_RUNNING)
         for name, build_number in changes_list.get_passing():
-            prof.win_show_green(win_tag, name + " #" + str(build_number) + " SUCCESS")
+            prof.win_show_green(win_tag, name + " #" + str(build_number) + " " + STATE_SUCCESS)
             if enable_notify:
-                prof.notify(name + " SUCCESS", 5000, "Jenkins")
+                prof.notify(name + " " + STATE_SUCCESS, 5000, "Jenkins")
         for name, build_number in changes_list.get_unstable():
-            prof.win_show_yellow(win_tag, name + " #" + str(build_number) + " UNSTABLE")
+            prof.win_show_yellow(win_tag, name + " #" + str(build_number) + " " + STATE_UNSTABLE)
             if enable_notify:
-                prof.notify(name + " UNSTABLE", 5000, "Jenkins")
+                prof.notify(name + " " + STATE_UNSTABLE, 5000, "Jenkins")
         for name, build_number in changes_list.get_failing():
-            prof.win_show_red(win_tag, name + " #" + str(build_number) + " FAILURE")
+            prof.win_show_red(win_tag, name + " #" + str(build_number) + " " + STATE_FAILURE)
             if enable_notify:
-                prof.notify(name + " FAILURE", 5000, "Jenkins")
+                prof.notify(name + " " + STATE_FAILURE, 5000, "Jenkins")
 
         changes_list = None
 
@@ -261,13 +252,13 @@ def _cmd_jenkins(cmd=None, arg=None):
         if job_list and job_list.get_jobs():
             prof.win_show(win_tag, "Jobs:")
             for name, build_number, state in job_list.get_jobs():
-                if state == "SUCCESS":
-                    prof.win_show_green(win_tag, "  " + name + " #" + str(build_number) + " SUCCESS")
-                elif state == "UNSTABLE":
-                    prof.win_show_yellow(win_tag, "  " + name + " #" + str(build_number) + " UNSTABLE")
-                elif state == "FAILURE":
-                    prof.win_show_red(win_tag, "  " + name + " #" + str(build_number) + " FAILURE")
-                elif state == "NOBUILDS":
+                if state == STATE_SUCCESS:
+                    prof.win_show_green(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_SUCCESS)
+                elif state == STATE_UNSTABLE:
+                    prof.win_show_yellow(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_UNSTABLE)
+                elif state == STATE_FAILURE:
+                    prof.win_show_red(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_FAILURE)
+                elif state == STATE_NOBUILDS:
                     prof.win_show(win_tag, "  " + name + ", no builds")
                 else:
                     prof.win_show_cyan(win_tag, "  " + name + " " + state)
@@ -338,8 +329,8 @@ def _cmd_jenkins(cmd=None, arg=None):
 def _remind():
     if enable_remind and job_list:
         notify_string = ""
-        failing = job_list.num_failing()
-        unstable = job_list.num_unstable()
+        failing = job_list.num_in_state(STATE_FAILURE)
+        unstable = job_list.num_in_state(STATE_UNSTABLE)
 
         if failing == 1:
             notify_string = notify_string + "1 failing build"
