@@ -252,9 +252,17 @@ def _prof_callback():
 
         changes_list = None
 
+def _handle_input(win, line):
+    prof.win_show(win_tag, "Handled input.")
+
 def _cmd_jenkins(cmd=None, arg=None):
     global enable_remind
     global enable_notify
+
+    if not prof.win_exists(win_tag):
+        prof.win_create(win_tag, _handle_input)
+
+    prof.win_focus(win_tag)
 
     if cmd == "list":
         if job_list and job_list.get_jobs():
@@ -314,6 +322,25 @@ def _cmd_jenkins(cmd=None, arg=None):
             prof.win_show(win_tag, "Build notifications disabled.")
         else:
             prof.win_show(win_tag, "You must specify either 'on' or 'off'.")
+    elif cmd == "settings":
+        prof.win_show(win_tag, "Jenkins settings:")
+        prof.win_show(win_tag, "  Jenkins URL               : " + jenkins_url)
+        prof.win_show(win_tag, "  Jenkins poll interval     : " + str(jenkins_poll_interval) + " seconds")
+        prof.win_show(win_tag, "  Profanity update interval : " + str(prof_cb_interval) + " seconds")
+        prof.win_show(win_tag, "  Reminder interval         : " + str(prof_remind_interval) + " seconds")
+        prof.win_show(win_tag, "  Notifications enabled     : " + str(enable_notify))
+        prof.win_show(win_tag, "  Reminders enabled         : " + str(enable_remind))
+    elif cmd == "help":
+        prof.win_show(win_tag, "Commands:")
+        prof.win_show(win_tag, " /jenkins help - Show this help")
+        prof.win_show(win_tag, " /jenkins list - List all jobs")
+        prof.win_show(win_tag, " /jenkins build [job] - Trigger build for job")
+        prof.win_show(win_tag, " /jenkins open [job] - Open job in browser")
+        prof.win_show(win_tag, " /jenkins remind on|off - Enable/disable reminder notifications")
+        prof.win_show(win_tag, " /jenkins notify on|off - Enable/disable build notifications")
+        prof.win_show(win_tag, " /jenkins settings - Show current settings")
+    else:
+        prof.win_show(win_tag, "Unknown command.")
 
 def _remind():
     if enable_remind and job_list:
@@ -352,11 +379,8 @@ def prof_init(version, status):
 
     prof.register_timed(_prof_callback, prof_cb_interval)
     prof.register_timed(_remind, prof_remind_interval)
-    prof.register_command("/jenkins", 0, 2, "/jenkins list|build|open|remind|notify", "Do jenkins stuff.", "Do jenkins stuff.",
+    prof.register_command("/jenkins", 0, 2, "/jenkins list|build|open|remind|notify|settings|help", "Do jenkins stuff.", "Do jenkins stuff.",
         _cmd_jenkins)
-
-def _handle_input(win, line):
-    prof.win_show(win_tag, "Handled input.")
 
 def prof_on_start():
     prof.win_create(win_tag, _handle_input)
