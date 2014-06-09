@@ -79,15 +79,6 @@ def _set_state(jobname, state):
     else:
         return False
 
-def _show_help():
-    prof.win_show(win_tag, "Commands:")
-    prof.win_show(win_tag, "  /jenkins help        - Show this help")
-    prof.win_show(win_tag, "  /jenkins list        - List all jobs")
-    prof.win_show(win_tag, "  /jenkins show [job]  - Details of specific job")
-    prof.win_show(win_tag, "  /jenkins build [job] - Trigger build for job")
-    prof.win_show(win_tag, "  /jenkins open [job]  - Open job in browser")
-    prof.win_show(win_tag, "")
-
 def _open_job_url(url):
     savout = os.dup(1)
     saverr = os.dup(2)
