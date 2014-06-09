@@ -116,41 +116,21 @@ class JobList():
 
 class JobUpdates():
     def __init__(self):
-        self.failing = []
-        self.passing = []
-        self.unstable = []
-        self.queued = []
-        self.running = []
+        self.states = {}
+        self.states[STATE_FAILURE] = []
+        self.states[STATE_SUCCESS] = []
+        self.states[STATE_UNSTABLE] = []
+        self.states[STATE_QUEUED] = []
+        self.states[STATE_RUNNING] = []
 
-    def add_failing(self, name, build_number):
-        self.failing.append((name, build_number))
+    def add_update(self, state, name, build_number=None):
+        if build_number:
+            self.states[state].append((name, build_number))
+        else:
+            self.states[state].append(name)
 
-    def get_failing(self):
-        return self.failing
-
-    def add_passing(self, name, build_number):
-        self.passing.append((name, build_number))
-
-    def get_passing(self):
-        return self.passing
-    
-    def add_unstable(self, name, build_number):
-        self.unstable.append((name, build_number))
-
-    def get_unstable(self):
-        return self.unstable
-    
-    def add_queued(self, name):
-        self.queued.append(name)
-
-    def get_queued(self):
-        return self.queued
-    
-    def add_running(self, name):
-        self.running.append(name)
-
-    def get_running(self):
-        return self.running
+    def get_in_state(self, state):
+        return self.states[state]
 
 def _jenkins_poll():
     global poll_fail
@@ -181,17 +161,17 @@ def _jenkins_poll():
                             new_job_list.add_job(name, build.get_number(), STATE_FAILURE)
                             changed = _set_state(name, STATE_FAILURE)
                             if changed:
-                                new_changes_list.add_failing(name, build.get_number())
+                                new_changes_list.add_update(STATE_FAILURE, name, build.get_number())
                         elif build.get_status() == STATE_SUCCESS:
                             new_job_list.add_job(name, build.get_number(), STATE_SUCCESS)
                             changed = _set_state(name, STATE_SUCCESS)
                             if changed:
-                                new_changes_list.add_passing(name, build.get_number())
+                                new_changes_list.add_update(STATE_SUCCESS, name, build.get_number())
                         elif build.get_status() == STATE_UNSTABLE:
                             new_job_list.add_job(name, build.get_number(), STATE_UNSTABLE)
                             changed = _set_state(name, STATE_UNSTABLE)
                             if changed:
-                                new_changes_list.add_unstable(name, build.get_number())
+                                new_changes_list.add_update(STATE_UNSTABLE, name, build.get_number())
                     else:
                         new_job_list.add_job(name, None, STATE_NOBUILDS)
                 else:
@@ -199,12 +179,12 @@ def _jenkins_poll():
                         new_job_list.add_job(name, None, STATE_QUEUED)
                         changed = _set_state(name, STATE_QUEUED)
                         if changed:
-                            new_changes_list.add_queued(name)
+                            new_changes_list.add_update(STATE_QUEUED, name)
                     elif job.is_running():
                         new_job_list.add_job(name, None, STATE_RUNNING)
                         changed = _set_state(name, STATE_RUNNING)
                         if changed:
-                            new_changes_list.add_running(name)
+                            new_changes_list.add_update(STATE_RUNNING, name)
             job_list = new_job_list
             changes_list = new_changes_list
 
@@ -217,19 +197,19 @@ def _prof_callback():
         else:
             prof.log_warning("Jenkins poll failed")
     elif changes_list:
-        for name in changes_list.get_queued():
+        for name in changes_list.get_in_state(STATE_QUEUED):
             prof.win_show_cyan(win_tag, name + " " + STATE_QUEUED)
-        for name in changes_list.get_running():
+        for name in changes_list.get_in_state(STATE_RUNNING):
             prof.win_show_cyan(win_tag, name + " " + STATE_RUNNING)
-        for name, build_number in changes_list.get_passing():
+        for name, build_number in changes_list.get_in_state(STATE_SUCCESS):
             prof.win_show_green(win_tag, name + " #" + str(build_number) + " " + STATE_SUCCESS)
             if enable_notify:
                 prof.notify(name + " " + STATE_SUCCESS, 5000, "Jenkins")
-        for name, build_number in changes_list.get_unstable():
+        for name, build_number in changes_list.get_in_state(STATE_UNSTABLE):
             prof.win_show_yellow(win_tag, name + " #" + str(build_number) + " " + STATE_UNSTABLE)
             if enable_notify:
                 prof.notify(name + " " + STATE_UNSTABLE, 5000, "Jenkins")
-        for name, build_number in changes_list.get_failing():
+        for name, build_number in changes_list.get_in_state(STATE_FAILURE):
             prof.win_show_red(win_tag, name + " #" + str(build_number) + " " + STATE_FAILURE)
             if enable_notify:
                 prof.notify(name + " " + STATE_FAILURE, 5000, "Jenkins")
