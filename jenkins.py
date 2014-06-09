@@ -132,6 +132,35 @@ class JobUpdates():
     def get_in_state(self, state):
         return self.states[state]
 
+def _process_build(name, build, new_job_list, new_changes_list):
+    if build.get_status() == STATE_FAILURE:
+        new_job_list.add_job(name, build.get_number(), STATE_FAILURE)
+        changed = _set_state(name, STATE_FAILURE)
+        if changed:
+            new_changes_list.add_update(STATE_FAILURE, name, build.get_number())
+    elif build.get_status() == STATE_SUCCESS:
+        new_job_list.add_job(name, build.get_number(), STATE_SUCCESS)
+        changed = _set_state(name, STATE_SUCCESS)
+        if changed:
+            new_changes_list.add_update(STATE_SUCCESS, name, build.get_number())
+    elif build.get_status() == STATE_UNSTABLE:
+        new_job_list.add_job(name, build.get_number(), STATE_UNSTABLE)
+        changed = _set_state(name, STATE_UNSTABLE)
+        if changed:
+            new_changes_list.add_update(STATE_UNSTABLE, name, build.get_number())
+
+def _process_queued_or_running(name, job, new_job_list, new_changes_list):
+    if job.is_queued():
+        new_job_list.add_job(name, None, STATE_QUEUED)
+        changed = _set_state(name, STATE_QUEUED)
+        if changed:
+            new_changes_list.add_update(STATE_QUEUED, name)
+    elif job.is_running():
+        new_job_list.add_job(name, None, STATE_RUNNING)
+        changed = _set_state(name, STATE_RUNNING)
+        if changed:
+            new_changes_list.add_update(STATE_RUNNING, name)
+
 def _jenkins_poll():
     global poll_fail
     global poll_fail_message
@@ -140,7 +169,6 @@ def _jenkins_poll():
 
     while True:
         time.sleep(jenkins_poll_interval)
-
         try:
             j = Jenkins(jenkins_url, username, password)
         except Exception, e:
@@ -149,42 +177,17 @@ def _jenkins_poll():
         else:
             poll_fail = False
             poll_fail_message = None
-
             new_job_list = JobList()
             new_changes_list = JobUpdates()        
-
             for name, job in j.get_jobs():
                 if not job.is_queued_or_running():
                     build = job.get_last_build_or_none()
                     if build:
-                        if build.get_status() == STATE_FAILURE:
-                            new_job_list.add_job(name, build.get_number(), STATE_FAILURE)
-                            changed = _set_state(name, STATE_FAILURE)
-                            if changed:
-                                new_changes_list.add_update(STATE_FAILURE, name, build.get_number())
-                        elif build.get_status() == STATE_SUCCESS:
-                            new_job_list.add_job(name, build.get_number(), STATE_SUCCESS)
-                            changed = _set_state(name, STATE_SUCCESS)
-                            if changed:
-                                new_changes_list.add_update(STATE_SUCCESS, name, build.get_number())
-                        elif build.get_status() == STATE_UNSTABLE:
-                            new_job_list.add_job(name, build.get_number(), STATE_UNSTABLE)
-                            changed = _set_state(name, STATE_UNSTABLE)
-                            if changed:
-                                new_changes_list.add_update(STATE_UNSTABLE, name, build.get_number())
+                        _process_build(name, build, new_job_list, new_changes_list)
                     else:
                         new_job_list.add_job(name, None, STATE_NOBUILDS)
                 else:
-                    if job.is_queued():
-                        new_job_list.add_job(name, None, STATE_QUEUED)
-                        changed = _set_state(name, STATE_QUEUED)
-                        if changed:
-                            new_changes_list.add_update(STATE_QUEUED, name)
-                    elif job.is_running():
-                        new_job_list.add_job(name, None, STATE_RUNNING)
-                        changed = _set_state(name, STATE_RUNNING)
-                        if changed:
-                            new_changes_list.add_update(STATE_RUNNING, name)
+                    _process_queued_or_running(name, job, new_job_list, new_changes_list)
             job_list = new_job_list
             changes_list = new_changes_list
 
