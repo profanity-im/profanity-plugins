@@ -20,6 +20,8 @@ The following commands are available:
 /jenkins open [job] - open the job in the systems default browser
 /jenkins remind on|off - Enable or disable reminder notifications
 /jenkins notify on|off - Enable or disable build status change notifications
+/jenkins settings - Show current settings
+/jenkins help - Show help
 
 """
 
