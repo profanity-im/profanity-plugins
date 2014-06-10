@@ -23,6 +23,8 @@ The following commands are available:
 /jenkins settings - Show current settings
 /jenkins help - Show help
 
+When in the jenkins window, the "/jenkins" part of the command can be omitted.
+
 """
 
 import prof
@@ -220,7 +222,12 @@ def _prof_callback():
         changes_list = None
 
 def _handle_input(win, line):
-    prof.win_show(win_tag, "Handled input.")
+    if line:
+        words = line.split()
+        if len(words) == 1:
+            _cmd_jenkins(words[0], None)
+        elif len(words) == 2:
+            _cmd_jenkins(words[0], words[1])
 
 def _list_jobs():
     if job_list and job_list.get_jobs():
