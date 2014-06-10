@@ -103,6 +103,12 @@ class JobList():
     def get_jobs(self):
         return self.jobs
 
+    def get_job(self, jobname):
+        for name, build_number, state in self.jobs:
+            if name == jobname:
+                return name, build_number
+        return None
+
     def contains_job(self, jobname):
         for name, build_number, state in self.jobs:
             if name == jobname:
@@ -258,7 +264,7 @@ def _build_job(job):
 def _help():
     prof.win_show(win_tag, "Commands:")
     prof.win_show(win_tag, " /jenkins help - Show this help")
-    prof.win_show(win_tag, " /jenkins list - List all jobs")
+    prof.win_show(win_tag, " /jenkins jobs - List all jobs")
     prof.win_show(win_tag, " /jenkins build [job] - Trigger build for job")
     prof.win_show(win_tag, " /jenkins open [job] - Open job in browser")
     prof.win_show(win_tag, " /jenkins remind on|off - Enable/disable reminder notifications")
@@ -283,7 +289,7 @@ def _cmd_jenkins(cmd=None, arg=None):
 
     prof.win_focus(win_tag)
 
-    if cmd == "list":
+    if cmd == "jobs":
         _list_jobs()
     elif cmd == "build":
         if not arg:
@@ -325,6 +331,27 @@ def _cmd_jenkins(cmd=None, arg=None):
         _settings()
     elif cmd == "help":
         _help()
+    elif cmd == "log":
+        if not arg:
+            prof.win_show(win_tag, "You must specify a job.")
+        else:
+            job = job_list.get_job(arg)
+            if job:
+                name = job[0]
+                build_no = job[1]
+                if build_no:
+                    try:
+                        response = urllib2.urlopen(jenkins_url + "/job/" + name + "/" + str(build_no) + "/consoleText")
+                    except Exception, e:
+                        prof.win_show(win_tag, "Unable to fetch log for " + name + "#" + str(build_no) + ", see the logs.")
+                        prof.log_warning("Unable to fetch log for " + name + "#" + str(build_no) + ": " + str(e))
+                    else:
+                        log_str = "Log for " + name + " #" + str(build_no) + ":\n" + response.read()
+                        prof.win_show(win_tag, log_str)
+                else:
+                    prof.win_show(win_tag, "No build found for " + job)
+            else:
+                prof.win_show(win_tag, "No job found: " + job)
     else:
         prof.win_show(win_tag, "Unknown command.")
 
