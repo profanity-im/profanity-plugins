@@ -222,6 +222,51 @@ def _prof_callback():
 def _handle_input(win, line):
     prof.win_show(win_tag, "Handled input.")
 
+def _list_jobs():
+    if job_list and job_list.get_jobs():
+        prof.win_show(win_tag, "Jobs:")
+        for name, build_number, state in job_list.get_jobs():
+            if state == STATE_SUCCESS:
+                prof.win_show_green(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_SUCCESS)
+            elif state == STATE_UNSTABLE:
+                prof.win_show_yellow(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_UNSTABLE)
+            elif state == STATE_FAILURE:
+                prof.win_show_red(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_FAILURE)
+            elif state == STATE_NOBUILDS:
+                prof.win_show(win_tag, "  " + name + ", no builds")
+            else:
+                prof.win_show_cyan(win_tag, "  " + name + " " + state)
+    else:
+        prof.win_show(win_tag, "No job data yet.")
+
+def _build_job(job):
+    try:
+        urllib2.urlopen(jenkins_url + "/job/" + job + "/build")
+    except Exception, e:
+        prof.win_show(win_tag, "Failed to build " + job + ", see the logs.")
+        prof.log_warning("Failed to build " + job + ": " + str(e))
+    else:
+        prof.win_show(win_tag, "Build request sent for " + job)
+
+def _help():
+    prof.win_show(win_tag, "Commands:")
+    prof.win_show(win_tag, " /jenkins help - Show this help")
+    prof.win_show(win_tag, " /jenkins list - List all jobs")
+    prof.win_show(win_tag, " /jenkins build [job] - Trigger build for job")
+    prof.win_show(win_tag, " /jenkins open [job] - Open job in browser")
+    prof.win_show(win_tag, " /jenkins remind on|off - Enable/disable reminder notifications")
+    prof.win_show(win_tag, " /jenkins notify on|off - Enable/disable build notifications")
+    prof.win_show(win_tag, " /jenkins settings - Show current settings")
+
+def _settings():
+    prof.win_show(win_tag, "Jenkins settings:")
+    prof.win_show(win_tag, "  Jenkins URL               : " + jenkins_url)
+    prof.win_show(win_tag, "  Jenkins poll interval     : " + str(jenkins_poll_interval) + " seconds")
+    prof.win_show(win_tag, "  Profanity update interval : " + str(prof_cb_interval) + " seconds")
+    prof.win_show(win_tag, "  Reminder interval         : " + str(prof_remind_interval) + " seconds")
+    prof.win_show(win_tag, "  Notifications enabled     : " + str(enable_notify))
+    prof.win_show(win_tag, "  Reminders enabled         : " + str(enable_remind))
+
 def _cmd_jenkins(cmd=None, arg=None):
     global enable_remind
     global enable_notify
@@ -232,32 +277,12 @@ def _cmd_jenkins(cmd=None, arg=None):
     prof.win_focus(win_tag)
 
     if cmd == "list":
-        if job_list and job_list.get_jobs():
-            prof.win_show(win_tag, "Jobs:")
-            for name, build_number, state in job_list.get_jobs():
-                if state == STATE_SUCCESS:
-                    prof.win_show_green(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_SUCCESS)
-                elif state == STATE_UNSTABLE:
-                    prof.win_show_yellow(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_UNSTABLE)
-                elif state == STATE_FAILURE:
-                    prof.win_show_red(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_FAILURE)
-                elif state == STATE_NOBUILDS:
-                    prof.win_show(win_tag, "  " + name + ", no builds")
-                else:
-                    prof.win_show_cyan(win_tag, "  " + name + " " + state)
-        else:
-            prof.win_show(win_tag, "No job data yet.")
+        _list_jobs()
     elif cmd == "build":
         if not arg:
             prof.win_show(win_tag, "You must supply a job argument.")
         elif job_list and job_list.contains_job(arg):
-            try:
-                urllib2.urlopen(jenkins_url + "/job/" + arg + "/build")
-            except Exception, e:
-                prof.win_show(win_tag, "Failed to build " + arg + ", see the logs.")
-                prof.log_warning("Failed to build " + arg + ": " + str(e))
-            else:
-                prof.win_show(win_tag, "Build request sent for " + arg)
+            _build_job(arg)
         else:
             prof.win_show(win_tag, "No such job: " + arg)
     elif cmd == "open":
@@ -290,22 +315,9 @@ def _cmd_jenkins(cmd=None, arg=None):
         else:
             prof.win_show(win_tag, "You must specify either 'on' or 'off'.")
     elif cmd == "settings":
-        prof.win_show(win_tag, "Jenkins settings:")
-        prof.win_show(win_tag, "  Jenkins URL               : " + jenkins_url)
-        prof.win_show(win_tag, "  Jenkins poll interval     : " + str(jenkins_poll_interval) + " seconds")
-        prof.win_show(win_tag, "  Profanity update interval : " + str(prof_cb_interval) + " seconds")
-        prof.win_show(win_tag, "  Reminder interval         : " + str(prof_remind_interval) + " seconds")
-        prof.win_show(win_tag, "  Notifications enabled     : " + str(enable_notify))
-        prof.win_show(win_tag, "  Reminders enabled         : " + str(enable_remind))
+        _settings()
     elif cmd == "help":
-        prof.win_show(win_tag, "Commands:")
-        prof.win_show(win_tag, " /jenkins help - Show this help")
-        prof.win_show(win_tag, " /jenkins list - List all jobs")
-        prof.win_show(win_tag, " /jenkins build [job] - Trigger build for job")
-        prof.win_show(win_tag, " /jenkins open [job] - Open job in browser")
-        prof.win_show(win_tag, " /jenkins remind on|off - Enable/disable reminder notifications")
-        prof.win_show(win_tag, " /jenkins notify on|off - Enable/disable build notifications")
-        prof.win_show(win_tag, " /jenkins settings - Show current settings")
+        _help()
     else:
         prof.win_show(win_tag, "Unknown command.")
 
