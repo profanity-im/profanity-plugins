@@ -13,16 +13,6 @@ New failures are reported in the jenkins window, and a desktop notification is s
 
 The 'prof_remind_interval' specifies the time between reminder notifications of broken builds
 
-The following commands are available:
-
-/jenkins list - list all jobs
-/jenkins build [job] - trigger a build for the job
-/jenkins open [job] - open the job in the systems default browser
-/jenkins remind on|off - Enable or disable reminder notifications
-/jenkins notify on|off - Enable or disable build status change notifications
-/jenkins settings - Show current settings
-/jenkins help - Show help
-
 When in the jenkins window, the "/jenkins" part of the command can be omitted.
 
 """
@@ -100,8 +90,15 @@ class JobList():
     def add_job(self, name, build_number, state):
         self.jobs.append((name, build_number, state))
 
-    def get_jobs(self):
-        return self.jobs
+    def get_jobs(self, in_state=None):
+        if not in_state:
+            return self.jobs
+        else:
+            result = []
+            for name, build_number, state in self.jobs:
+                if state == in_state:
+                    result.append((name, build_number, state))
+            return result
 
     def get_job(self, jobname):
         for name, build_number, state in self.jobs:
@@ -236,7 +233,6 @@ def _handle_input(win, line):
             _cmd_jenkins(words[0], words[1])
 
 def _list_jobs(jobs):
-    prof.win_show(win_tag, "Jobs:")
     for name, build_number, state in jobs:
         if state == STATE_SUCCESS:
             prof.win_show_green(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_SUCCESS)
@@ -262,8 +258,12 @@ def _help():
     prof.win_show(win_tag, "Commands:")
     prof.win_show(win_tag, " /jenkins help - Show this help")
     prof.win_show(win_tag, " /jenkins jobs - List all jobs")
+    prof.win_show(win_tag, " /jenkins failing - List all failing jobs")
+    prof.win_show(win_tag, " /jenkins passing - List all passing jobs")
+    prof.win_show(win_tag, " /jenkins unstable - List all unstable jobs")
     prof.win_show(win_tag, " /jenkins build [job] - Trigger build for job")
     prof.win_show(win_tag, " /jenkins open [job] - Open job in browser")
+    prof.win_show(win_tag, " /jenkins log [job] - Show the latest build log")
     prof.win_show(win_tag, " /jenkins remind on|off - Enable/disable reminder notifications")
     prof.win_show(win_tag, " /jenkins notify on|off - Enable/disable build notifications")
     prof.win_show(win_tag, " /jenkins settings - Show current settings")
@@ -288,7 +288,38 @@ def _cmd_jenkins(cmd=None, arg=None):
 
     if cmd == "jobs":
         if job_list and job_list.get_jobs():
+            prof.win_show(win_tag, "Jobs:")
             _list_jobs(job_list.get_jobs())
+        else:
+            prof.win_show(win_tag, "No job data yet.")
+    elif cmd == "failing":
+        if job_list:
+            jobs_in_state = job_list.get_jobs(STATE_FAILURE)
+            if jobs_in_state:
+                prof.win_show(win_tag, "Failing jobs:")
+                _list_jobs(jobs_in_state)
+            else:
+                prof.win_show(win_tag, "No failing jobs.")
+        else:
+            prof.win_show(win_tag, "No job data yet.")
+    elif cmd == "passing":
+        if job_list:
+            jobs_in_state = job_list.get_jobs(STATE_SUCCESS)
+            if jobs_in_state:
+                prof.win_show(win_tag, "Passing jobs:")
+                _list_jobs(jobs_in_state)
+            else:
+                prof.win_show(win_tag, "No passing jobs.")
+        else:
+            prof.win_show(win_tag, "No job data yet.")
+    elif cmd == "unstable":
+        if job_list:
+            jobs_in_state = job_list.get_jobs(STATE_UNSTABLE)
+            if jobs_in_state:
+                prof.win_show(win_tag, "Unstable jobs:")
+                _list_jobs(jobs_in_state)
+            else:
+                prof.win_show(win_tag, "No unstable jobs.")
         else:
             prof.win_show(win_tag, "No job data yet.")
     elif cmd == "build":
