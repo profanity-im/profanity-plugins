@@ -235,22 +235,19 @@ def _handle_input(win, line):
         elif len(words) == 2:
             _cmd_jenkins(words[0], words[1])
 
-def _list_jobs():
-    if job_list and job_list.get_jobs():
-        prof.win_show(win_tag, "Jobs:")
-        for name, build_number, state in job_list.get_jobs():
-            if state == STATE_SUCCESS:
-                prof.win_show_green(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_SUCCESS)
-            elif state == STATE_UNSTABLE:
-                prof.win_show_yellow(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_UNSTABLE)
-            elif state == STATE_FAILURE:
-                prof.win_show_red(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_FAILURE)
-            elif state == STATE_NOBUILDS:
-                prof.win_show(win_tag, "  " + name + ", no builds")
-            else:
-                prof.win_show_cyan(win_tag, "  " + name + " " + state)
-    else:
-        prof.win_show(win_tag, "No job data yet.")
+def _list_jobs(jobs):
+    prof.win_show(win_tag, "Jobs:")
+    for name, build_number, state in jobs:
+        if state == STATE_SUCCESS:
+            prof.win_show_green(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_SUCCESS)
+        elif state == STATE_UNSTABLE:
+            prof.win_show_yellow(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_UNSTABLE)
+        elif state == STATE_FAILURE:
+            prof.win_show_red(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_FAILURE)
+        elif state == STATE_NOBUILDS:
+            prof.win_show(win_tag, "  " + name + ", no builds")
+        else:
+            prof.win_show_cyan(win_tag, "  " + name + " " + state)
 
 def _build_job(job):
     try:
@@ -290,7 +287,10 @@ def _cmd_jenkins(cmd=None, arg=None):
     prof.win_focus(win_tag)
 
     if cmd == "jobs":
-        _list_jobs()
+        if job_list and job_list.get_jobs():
+            _list_jobs(job_list.get_jobs())
+        else:
+            prof.win_show(win_tag, "No job data yet.")
     elif cmd == "build":
         if not arg:
             prof.win_show(win_tag, "You must supply a job argument.")
