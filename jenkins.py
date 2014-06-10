@@ -254,6 +254,21 @@ def _build_job(job):
     else:
         prof.win_show(win_tag, "Build request sent for " + job)
 
+def _job_log(job):
+    name = job[0]
+    build_no = job[1]
+    if build_no:
+        try:
+            response = urllib2.urlopen(jenkins_url + "/job/" + name + "/" + str(build_no) + "/consoleText")
+        except Exception, e:
+            prof.win_show(win_tag, "Unable to fetch log for " + name + "#" + str(build_no) + ", see the logs.")
+            prof.log_warning("Unable to fetch log for " + name + "#" + str(build_no) + ": " + str(e))
+        else:
+            log_str = "Log for " + name + " #" + str(build_no) + ":\n" + response.read()
+            prof.win_show(win_tag, log_str)
+    else:
+        prof.win_show(win_tag, "No build found for " + name)
+
 def _help():
     prof.win_show(win_tag, "Commands:")
     prof.win_show(win_tag, " /jenkins help - Show this help")
@@ -368,21 +383,9 @@ def _cmd_jenkins(cmd=None, arg=None):
         else:
             job = job_list.get_job(arg)
             if job:
-                name = job[0]
-                build_no = job[1]
-                if build_no:
-                    try:
-                        response = urllib2.urlopen(jenkins_url + "/job/" + name + "/" + str(build_no) + "/consoleText")
-                    except Exception, e:
-                        prof.win_show(win_tag, "Unable to fetch log for " + name + "#" + str(build_no) + ", see the logs.")
-                        prof.log_warning("Unable to fetch log for " + name + "#" + str(build_no) + ": " + str(e))
-                    else:
-                        log_str = "Log for " + name + " #" + str(build_no) + ":\n" + response.read()
-                        prof.win_show(win_tag, log_str)
-                else:
-                    prof.win_show(win_tag, "No build found for " + job)
+                _job_log(job)
             else:
-                prof.win_show(win_tag, "No job found: " + job)
+                prof.win_show(win_tag, "No job found: " + arg)
     else:
         prof.win_show(win_tag, "Unknown command.")
 
