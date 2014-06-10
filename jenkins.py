@@ -53,6 +53,29 @@ poll_fail_message = None
 job_list = None
 changes_list = None
 
+def _help():
+    prof.win_show(win_tag, "Commands:")
+    prof.win_show(win_tag, " /jenkins help - Show this help")
+    prof.win_show(win_tag, " /jenkins jobs - List all jobs")
+    prof.win_show(win_tag, " /jenkins failing - List all failing jobs")
+    prof.win_show(win_tag, " /jenkins passing - List all passing jobs")
+    prof.win_show(win_tag, " /jenkins unstable - List all unstable jobs")
+    prof.win_show(win_tag, " /jenkins build [job] - Trigger build for job")
+    prof.win_show(win_tag, " /jenkins open [job] - Open job in browser")
+    prof.win_show(win_tag, " /jenkins log [job] - Show the latest build log")
+    prof.win_show(win_tag, " /jenkins remind on|off - Enable/disable reminder notifications")
+    prof.win_show(win_tag, " /jenkins notify on|off - Enable/disable build notifications")
+    prof.win_show(win_tag, " /jenkins settings - Show current settings")
+
+def _settings():
+    prof.win_show(win_tag, "Jenkins settings:")
+    prof.win_show(win_tag, "  Jenkins URL               : " + jenkins_url)
+    prof.win_show(win_tag, "  Jenkins poll interval     : " + str(jenkins_poll_interval) + " seconds")
+    prof.win_show(win_tag, "  Profanity update interval : " + str(prof_cb_interval) + " seconds")
+    prof.win_show(win_tag, "  Reminder interval         : " + str(prof_remind_interval) + " seconds")
+    prof.win_show(win_tag, "  Notifications enabled     : " + str(enable_notify))
+    prof.win_show(win_tag, "  Reminders enabled         : " + str(enable_remind))
+
 def _safe_remove(jobname, state):
     if jobname in last_state[state]:
         last_state[state].remove(jobname)
@@ -268,29 +291,6 @@ def _job_log(job):
             prof.win_show(win_tag, log_str)
     else:
         prof.win_show(win_tag, "No build found for " + name)
-
-def _help():
-    prof.win_show(win_tag, "Commands:")
-    prof.win_show(win_tag, " /jenkins help - Show this help")
-    prof.win_show(win_tag, " /jenkins jobs - List all jobs")
-    prof.win_show(win_tag, " /jenkins failing - List all failing jobs")
-    prof.win_show(win_tag, " /jenkins passing - List all passing jobs")
-    prof.win_show(win_tag, " /jenkins unstable - List all unstable jobs")
-    prof.win_show(win_tag, " /jenkins build [job] - Trigger build for job")
-    prof.win_show(win_tag, " /jenkins open [job] - Open job in browser")
-    prof.win_show(win_tag, " /jenkins log [job] - Show the latest build log")
-    prof.win_show(win_tag, " /jenkins remind on|off - Enable/disable reminder notifications")
-    prof.win_show(win_tag, " /jenkins notify on|off - Enable/disable build notifications")
-    prof.win_show(win_tag, " /jenkins settings - Show current settings")
-
-def _settings():
-    prof.win_show(win_tag, "Jenkins settings:")
-    prof.win_show(win_tag, "  Jenkins URL               : " + jenkins_url)
-    prof.win_show(win_tag, "  Jenkins poll interval     : " + str(jenkins_poll_interval) + " seconds")
-    prof.win_show(win_tag, "  Profanity update interval : " + str(prof_cb_interval) + " seconds")
-    prof.win_show(win_tag, "  Reminder interval         : " + str(prof_remind_interval) + " seconds")
-    prof.win_show(win_tag, "  Notifications enabled     : " + str(enable_notify))
-    prof.win_show(win_tag, "  Reminders enabled         : " + str(enable_remind))
 
 def _cmd_jenkins(cmd=None, arg=None):
     global enable_remind
