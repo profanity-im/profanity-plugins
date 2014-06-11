@@ -70,10 +70,10 @@ Example plugin code
 Whilst the API is being developed, the following test plugins are a good reference of possible hooks and API calls available:
 
 ```
-python-test.py
-RubyTest.rb
-luatest.lua
-test-c-plugin/test-c-plugin.c
+tests/python-test.py
+tests/RubyTest.rb
+tests/luatest.lua
+tests/test-c-plugin/test-c-plugin.c
 ```
 
 Cricket score
