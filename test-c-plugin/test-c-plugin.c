@@ -51,6 +51,10 @@ handle_reverse(PROF_WIN_TAG win, char *line)
     }
     buf[pos] = '\0';
     prof_win_show(win, buf);
+    prof_win_show_red(win, "Red");
+    prof_win_show_yellow(win, "Yellow");
+    prof_win_show_green(win, "Green");
+    prof_win_show_cyan(win, "Cyan");
 }
 
 void
