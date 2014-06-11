@@ -13,8 +13,6 @@ New failures are reported in the jenkins window, and a desktop notification is s
 
 The 'prof_remind_interval' specifies the time between reminder notifications of broken builds
 
-When in the jenkins window, the "/jenkins" part of the command can be omitted.
-
 """
 
 import prof
@@ -195,6 +193,8 @@ def _jenkins_poll():
     global job_list
     global changes_list
 
+    job_ac = []
+
     while True:
         time.sleep(jenkins_poll_interval)
         try:
@@ -216,6 +216,14 @@ def _jenkins_poll():
                         new_job_list.add_job(name, None, STATE_NOBUILDS)
                 else:
                     _process_queued_or_running(name, job, new_job_list, new_changes_list)
+                if not job_list:
+                    job_ac.append(name)
+
+            if not job_list:
+                prof.register_ac("/jenkins build", job_ac)
+                prof.register_ac("/jenkins open", job_ac)
+                prof.register_ac("/jenkins log", job_ac)
+
             job_list = new_job_list
             changes_list = new_changes_list
 
@@ -248,12 +256,7 @@ def _prof_callback():
         changes_list = None
 
 def _handle_input(win, line):
-    if line:
-        words = line.split()
-        if len(words) == 1:
-            _cmd_jenkins(words[0], None)
-        elif len(words) == 2:
-            _cmd_jenkins(words[0], words[1])
+    pass
 
 def _list_jobs(jobs):
     for name, build_number, state in jobs:
@@ -426,6 +429,13 @@ def prof_init(version, status):
 
     prof.register_timed(_prof_callback, prof_cb_interval)
     prof.register_timed(_remind, prof_remind_interval)
+
+    cmd_ac = [ "help", "jobs", "failing", "passing", "unstable", "build", "open", "log", "remind", "notify", "settings" ]
+    prof.register_ac("/jenkins", cmd_ac);
+    remind_ac = [ "on", "off" ]
+    prof.register_ac("/jenkins remind", remind_ac);
+    notify_ac = [ "on", "off" ]
+    prof.register_ac("/jenkins notify", notify_ac);
     prof.register_command("/jenkins", 0, 2, "/jenkins list|build|open|remind|notify|settings|help", "Do jenkins stuff.", "Do jenkins stuff.",
         _cmd_jenkins)
 
