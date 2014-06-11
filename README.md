@@ -79,7 +79,7 @@ tests/test-c-plugin/test-c-plugin.c
 Jenkins plugin
 --------------
 
-The jenkins plugin monitors builds at a jenkins server and notifies of build status changes, builds may be triggered, logs viewed, and jobs opened using the systems browser.
+The jenkins plugin monitors builds at a jenkins server and notifies of build status changes, builds may be triggered, logs viewed, and jobs opened using the system's default browser.
 
 ![alt tag](http://www.boothj5.com/jenkins-plugin.png)
 
