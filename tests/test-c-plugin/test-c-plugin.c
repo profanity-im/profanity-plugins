@@ -77,8 +77,17 @@ prof_init(const char * const version, const char * const status)
     char buf[strlen(start) + strlen(version) + 2 + strlen(status) + 1];
     sprintf(buf, "%s%s, %s", start, version, status);
     prof_cons_show(buf);
+
     prof_register_command("/c", 0, 1, "/c", "c test", "c test", cmd_c);
+
     prof_register_command("/reverse", 0, 1, "/reverse", "Reverse input string", "Reverse input string", cmd_reverse);
+
+    char *arg_ac[] = { "one", "two", "three", NULL };
+    prof_register_ac("/ccomplete", arg_ac);
+    char *arg_one_ac[] = { "james", "bob", "jenny", "steven", NULL };
+    prof_register_ac("/ccomplete one", arg_one_ac);
+    prof_register_command("/ccomplete", 0, 2, "/ccomplete", "C completion", "C completion", cmd_reverse);
+
     prof_register_timed(timer_test, 10);
 }
 
