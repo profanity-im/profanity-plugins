@@ -34,7 +34,7 @@ local function cmd_bracket(line)
     prof_win_focus(win_tag);
 
     if line then
-        prof_win_process_line(win_tag, line);
+        handle_bracket(win_tag, line)
     end
 end
 

@@ -62,7 +62,7 @@ cmd_reverse(char **args)
 
     prof_win_focus(echo_win);
     if (args[0] != NULL) {
-        prof_win_process_line(echo_win, args[0]);
+        handle_reverse(echo_win, args[0]);
     }
 }
 

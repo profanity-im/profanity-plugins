@@ -27,7 +27,7 @@ def _cmd_upper(line):
     prof.win_focus(_win_tag)
 
     if line:
-        prof.win_process_line(_win_tag, line)
+        _handle_upper(_win_tag, line)
 
 def _handle_upper(win, line):
     prof.win_show(win, line.upper())

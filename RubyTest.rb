@@ -99,7 +99,7 @@ module RubyTest
             Prof::win_focus(win_tag)
 
             if (line)
-                Prof::win_process_line(win_tag, line)
+                handle_lower.call(win_tag, line)
             end
         }
     end
