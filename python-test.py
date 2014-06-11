@@ -31,6 +31,10 @@ def _cmd_upper(line):
 
 def _handle_upper(win, line):
     prof.win_show(win, line.upper())
+    prof.win_show_red(win, "Red")
+    prof.win_show_yellow(win, "Yellow")
+    prof.win_show_green(win, "Green")
+    prof.win_show_cyan(win, "Cyan")
 
 def prof_init(version, status):
     prof.cons_show("python-test: init, " + version + ", " + status)

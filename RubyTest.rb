@@ -107,6 +107,10 @@ module RubyTest
     def self.handle_lower()
         return Proc.new { | win, line |
             Prof::win_show(win, line.downcase)
+            Prof::win_show_red(win, "Red")
+            Prof::win_show_yellow(win, "Yellow")
+            Prof::win_show_green(win, "Green")
+            Prof::win_show_cyan(win, "Cyan")
         }
     end
 end

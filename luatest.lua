@@ -23,6 +23,10 @@ end
 
 local function handle_bracket(win, line)
     prof_win_show(win, "(" .. line .. ")")
+    prof_win_show_red(win, "Red")
+    prof_win_show_yellow(win, "Yellow")
+    prof_win_show_green(win, "Green")
+    prof_win_show_cyan(win, "Cyan")
 end
 
 local function cmd_bracket(line)
