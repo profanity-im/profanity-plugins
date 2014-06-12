@@ -76,8 +76,15 @@ tests/luatest.lua
 tests/test-c-plugin/test-c-plugin.c
 ```
 
-Cricket score
--------------
+Jenkins plugin
+--------------
+
+The jenkins plugin monitors builds at a jenkins server and notifies of build status changes, builds may be triggered, logs viewed, and jobs opened using the system's default browser.
+
+![alt tag](http://www.boothj5.com/jenkins-plugin.png)
+
+Cricket score plugin
+--------------------
 
 The cricket score python plugin polls a public API to find the score of a given match, shows the score in the console and a desktop notification when it changes.  It also adds a `/cricket` command to show the score at any time.
 
