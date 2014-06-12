@@ -43,12 +43,9 @@ def prof_init(version, status):
 
     prof.register_command("/upper", 0, 1, "/upper", "Uppercase input string", "Uppercase input string", _cmd_upper)
 
-    arg_ac = [ "aah", "baa", "bee" ]
-    prof.register_ac("/pcomplete", arg_ac);
-    arg_one_ac = [ "one", "two", "three", "nan" ]
-    prof.register_ac("/pcomplete aah", arg_one_ac);
-    arg_two_ac = [ "james", "jim", "jane", "bob" ]
-    prof.register_ac("/pcomplete baa", arg_two_ac);
+    prof.register_ac("/pcomplete", [ "aah", "baa", "bee" ]);
+    prof.register_ac("/pcomplete aah", [ "one", "two", "three", "nan" ]);
+    prof.register_ac("/pcomplete baa", [ "james", "jim", "jane", "bob" ]);
     prof.register_command("/pcomplete", 0, 2, "/pcomplete", "Python completion", "Python completion", _cmd_upper)
 
     prof.register_timed(_timer_test, 10)

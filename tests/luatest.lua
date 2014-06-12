@@ -48,12 +48,9 @@ function luatest.prof_init(version, status)
     prof_register_command("/lua", 0, 1, "/lua", "luatest", "luatest", cmd_lua)
     prof_register_command("/bracket", 0, 1, "/bracket", "Parenthesise input string", "Parenthesise input string", cmd_bracket);
 
-    arg_ac = { "football", "footy", "tennis" }
-    prof_register_ac("/lcomplete", arg_ac)
-    arg_one_ac = { "goal", "out", "try", "given" }
-    prof_register_ac("/lcomplete football", arg_one_ac)
-    arg_two_ac = { "test", "prod", "dev", "stage" }
-    prof_register_ac("/lcomplete tennis", arg_two_ac)
+    prof_register_ac("/lcomplete", { "football", "footy", "tennis" })
+    prof_register_ac("/lcomplete football", { "goal", "out", "try", "given" })
+    prof_register_ac("/lcomplete tennis", { "test", "prod", "dev", "stage" })
     prof_register_command("/lcomplete", 0, 2, "/lcomplete", "Lua completion", "Lua completion", cmd_bracket)
 
     prof_register_timed(timer_test, 10)
