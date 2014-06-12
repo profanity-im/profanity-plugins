@@ -2,8 +2,15 @@ module RubyTest
 
     def self.prof_init(version, status)
         Prof::cons_show("RubyTest: init, " + version + ", " + status)
+
         Prof::register_command("/ruby", 0, 1, "/ruby", "RubyTest", "RubyTest", cmd_ruby)
         Prof::register_command("/lower", 0, 1, "/lower", "Lowercase input string", "Lowercase input string", cmd_lower)
+
+        Prof::register_ac("/rcomplete", [ "england", "chile", "croatia" ])
+        Prof::register_ac("/rcomplete england", [ "win", "lose", "whatever", "runnerup" ])
+        Prof::register_ac("/rcomplete chile", [ "1", "10", "100", "200" ])
+        Prof::register_command("/rcomplete", 0, 2, "/rcomplete", "Ruby completion", "Ruby completion", cmd_lower)
+
         Prof::register_timed(timer_test, 10)
     end
 
