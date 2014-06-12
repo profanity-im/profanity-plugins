@@ -24,16 +24,17 @@ import urllib2
 import jenkinsapi
 from jenkinsapi.jenkins import Jenkins
 
+# Settings
 jenkins_url = "http://localhost:8080"
 username = None
 password = None
-
 jenkins_poll_interval = 5
 prof_cb_interval = 5
 prof_remind_interval = 10
 enable_notify = True
 enable_remind = True
 
+# Global state
 last_state = {}
 STATE_SUCCESS = "SUCCESS"
 STATE_UNSTABLE = "UNSTABLE"
@@ -442,14 +443,42 @@ def prof_init(version, status):
     prof.register_timed(_prof_callback, prof_cb_interval)
     prof.register_timed(_remind, prof_remind_interval)
 
-    cmd_ac = [ "help", "jobs", "failing", "passing", "unstable", "build", "open", "log", "remind", "notify", "settings" ]
-    prof.register_ac("/jenkins", cmd_ac);
-    remind_ac = [ "on", "off" ]
-    prof.register_ac("/jenkins remind", remind_ac);
-    notify_ac = [ "on", "off" ]
-    prof.register_ac("/jenkins notify", notify_ac);
-    prof.register_command("/jenkins", 0, 2, "/jenkins list|build|open|remind|notify|settings|help", "Do jenkins stuff.", "Do jenkins stuff.",
-        _cmd_jenkins)
+    prof.register_ac(
+        "/jenkins", [
+            "help",
+            "jobs",
+            "failing",
+            "passing",
+            "unstable",
+            "build",
+            "open",
+            "log",
+            "remind",
+            "notify",
+            "settings"
+        ]
+    );
+    prof.register_ac(
+        "/jenkins remind", [
+            "on",
+            "off"
+        ]
+    );
+    prof.register_ac(
+        "/jenkins notify", [
+            "on",
+            "off"
+        ]
+    );
+    prof.register_command(
+        "/jenkins",
+        0,
+        2,
+        "/jenkins",
+        "Do jenkins stuff.",
+        "Do jenkins stuff.",
+        _cmd_jenkins
+    )
 
 def prof_on_start():
     prof.win_create(win_tag, _handle_input)
