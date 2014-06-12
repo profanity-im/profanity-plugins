@@ -230,6 +230,8 @@ def _jenkins_poll():
 def _prof_callback():
     global changes_list
     if poll_fail:
+        if not prof.win_exists(win_tag):
+            prof.win_create(win_tag, _handle_input)
         prof.win_show(win_tag, "Could not connect to jenkins, see the logs.")
         if poll_fail_message:
             prof.log_warning("Jenkins poll failed: " + str(poll_fail_message))
@@ -237,18 +239,28 @@ def _prof_callback():
             prof.log_warning("Jenkins poll failed")
     elif changes_list:
         for name in changes_list.get_in_state(STATE_QUEUED):
+            if not prof.win_exists(win_tag):
+                prof.win_create(win_tag, _handle_input)
             prof.win_show_cyan(win_tag, name + " " + STATE_QUEUED)
         for name in changes_list.get_in_state(STATE_RUNNING):
+            if not prof.win_exists(win_tag):
+                prof.win_create(win_tag, _handle_input)
             prof.win_show_cyan(win_tag, name + " " + STATE_RUNNING)
         for name, build_number in changes_list.get_in_state(STATE_SUCCESS):
+            if not prof.win_exists(win_tag):
+                prof.win_create(win_tag, _handle_input)
             prof.win_show_green(win_tag, name + " #" + str(build_number) + " " + STATE_SUCCESS)
             if enable_notify:
                 prof.notify(name + " " + STATE_SUCCESS, 5000, "Jenkins")
         for name, build_number in changes_list.get_in_state(STATE_UNSTABLE):
+            if not prof.win_exists(win_tag):
+                prof.win_create(win_tag, _handle_input)
             prof.win_show_yellow(win_tag, name + " #" + str(build_number) + " " + STATE_UNSTABLE)
             if enable_notify:
                 prof.notify(name + " " + STATE_UNSTABLE, 5000, "Jenkins")
         for name, build_number in changes_list.get_in_state(STATE_FAILURE):
+            if not prof.win_exists(win_tag):
+                prof.win_create(win_tag, _handle_input)
             prof.win_show_red(win_tag, name + " #" + str(build_number) + " " + STATE_FAILURE)
             if enable_notify:
                 prof.notify(name + " " + STATE_FAILURE, 5000, "Jenkins")
