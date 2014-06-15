@@ -21,6 +21,7 @@ import threading
 import time
 import webbrowser
 import urllib2
+import base64
 import jenkinsapi
 from jenkinsapi.jenkins import Jenkins
 
@@ -286,7 +287,12 @@ def _list_jobs(jobs):
 
 def _build_job(job):
     try:
-        urllib2.urlopen(jenkins_url + "/job/" + job + "/build")
+        request = urllib2.Request(jenkins_url + "/job/" + job + "/build");
+        if username:
+            basicauth = base64.encodestring("%s:%s" %(username, password)).replace("\n", "")
+            request.add_header("Authorization", "Basic %s" %basicauth);
+            request.add_data("")
+        urllib2.urlopen(request)
     except Exception, e:
         prof.win_show(win_tag, "Failed to build " + job + ", see the logs.")
         prof.log_warning("Failed to build " + job + ": " + str(e))
