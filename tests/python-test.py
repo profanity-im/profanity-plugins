@@ -1,7 +1,5 @@
 import prof
 
-_win_tag = "Python Plugin";
-
 def _timer_test():
     prof.cons_show("python-test: timer fired.")
     prof.cons_alert()
@@ -24,14 +22,12 @@ def _cmd_ac(arg1=None, arg2=None):
     prof.cons_show("python-test: /py_complete called");
 
 def _cmd_upper(line):
-    global _win_tag;
-    if prof.win_exists(_win_tag) == False:
-        prof.win_create(_win_tag, _handle_upper)
-
-    prof.win_focus(_win_tag)
-
+    win_tag = "Python Plugin"
+    if prof.win_exists(win_tag) == False:
+        prof.win_create(win_tag, _handle_upper)
+    prof.win_focus(win_tag)
     if line:
-        _handle_upper(_win_tag, line)
+        _handle_upper(win_tag, line)
 
 def _cmd_notify():
     prof.notify("python-test: notify", 2000, "Plugins")
@@ -42,20 +38,14 @@ def _cmd_vercheck():
 
 def prof_init(version, status):
     prof.cons_show("python-test: init, " + version + ", " + status)
-
     prof.register_command("/python", 0, 1, "/python [arg]", "python-test", "python-test", _cmd_python)
-
     prof.register_command("/py_upper", 1, 1, "/py_upper string", "python-test", "python-test", _cmd_upper)
-
     prof.register_command("/py_notify", 0, 0, "/py_notify", "python-test", "python-test", _cmd_notify)
-
     prof.register_command("/py_vercheck", 0, 0, "/py_vercheck", "python-test", "python-test", _cmd_vercheck)
-
     prof.register_ac("/py_complete", [ "aaaa", "bbbb", "bcbcbc" ])
     prof.register_ac("/py_complete aaaa", [ "one", "two", "three", "four" ])
     prof.register_ac("/py_complete bcbcbc", [ "james", "jim", "jane", "bob" ])
     prof.register_command("/py_complete", 0, 2, "/py_complete [arg1] [arg2]", "python-test", "python-test", _cmd_ac)
-
     prof.register_timed(_timer_test, 30)
 
 def prof_on_start():
