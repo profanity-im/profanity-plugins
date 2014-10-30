@@ -19,7 +19,7 @@ def _cmd_python(msg):
         prof.cons_show("python-test: /python command called with no arg")
 
 def _cmd_ac(arg1=None, arg2=None):
-    prof.cons_show("python-test: /py_complete called");
+    prof.cons_show("python-test: /py_complete called")
 
 def _cmd_upper(line):
     win_tag = "Python Plugin"

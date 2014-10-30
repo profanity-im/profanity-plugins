@@ -12,7 +12,7 @@ all: pid.so
 
 %.o:%.c
 	$(CC) $(INCLUDE) -D_GNU_SOURCE -D_BSD_SOURCE -fpic -O3 -std=c99 \
-        -Wall -Wextra -pedantic -c -o $@ $<
+        -Wextra -pedantic -c -o $@ $<
 
 clean:
 	$(RM) pid.so

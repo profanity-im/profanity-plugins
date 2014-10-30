@@ -53,7 +53,7 @@ def prof_init(version, status):
         "the last received URL will be used.",
         _cmd_browser)
 
-def prof_on_message_received(jid, message):
+def prof_post_chat_message_display(jid, message):
     global _lastlink
     links = re.findall(r'(https?://\S+)', message)
     if (len(links) > 0):
