@@ -10,7 +10,8 @@ bot_state = False
 
 def prof_post_chat_message_display(jid, message):
     if bot_state:
-        bot_session[jid] = bot.create_session()
+        if jid not in bot_session:
+            bot_session[jid] = bot.create_session()
         response = bot_session[jid].think(message)
         prof.send_line("/msg " + jid + " " + response)
 
