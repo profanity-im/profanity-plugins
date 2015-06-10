@@ -1,24 +1,31 @@
 import prof
 import os
+from sys import platform
 
 enabled = False
+
+def say(message):
+    if platform == "darwin":
+        os.system("say '" + message + "' 2>/dev/null")
+    elif platform == "linux" or platform == "linux2":
+        os.system("echo '" + message + "' | espeak 2>/dev/null")
 
 def prof_post_chat_message_display(jid, message):
     global enabled
     if enabled:
-        os.system("say \"" + jid + " says " + message + "\" 2>/dev/null")    
+        say(jid + " says " + message)
     return message
 
 def prof_post_room_message_display(room, nick, message):
     global enabled
     if enabled:
-        os.system("say \"" + nick + " says " + message + " in " + room + "\" 2>/dev/null")    
+        say(nick + " says " + message + " in " + room)
     return message
 
 def prof_post_priv_message_display(room, nick, message):
     global enabled
     if enabled:
-        os.system("say \"" + nick + " says " + message + "\" 2>/dev/null")    
+        say(nick + " says " + message)
     return message
 
 def _cmd_say(arg=None):
