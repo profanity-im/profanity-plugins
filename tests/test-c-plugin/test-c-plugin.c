@@ -65,6 +65,36 @@ cmd_ctest(char **args)
         } else {
             prof_cons_show("Invalid usage, see '/help c-test' for details.");
         }
+    } else if (strcmp(args[0], "get") == 0) {
+        if (!args[1]) {
+            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+        } else if (strcmp(args[1], "recipient") == 0) {
+            char *recipient = prof_get_current_recipient();
+            if (recipient) {
+                prof_win_focus(plugin_win);
+                char *str = "called -> prof_get_current_recipient: ";
+                char buf[strlen(str) + strlen(recipient)];
+                sprintf(buf, "%s%s", str, recipient);
+                prof_win_show(plugin_win, buf);
+            } else {
+                prof_win_focus(plugin_win);
+                prof_win_show(plugin_win, "called -> prof_get_current_recipient: <none>");
+            }
+        } else if (strcmp(args[1], "room") == 0) {
+            char *room = prof_get_current_muc();
+            if (room) {
+                prof_win_focus(plugin_win);
+                char *str = "called -> prof_get_current_muc: ";
+                char buf[strlen(str) + strlen(room)];
+                sprintf(buf, "%s%s", str, room);
+                prof_win_show(plugin_win, buf);
+            } else {
+                prof_win_focus(plugin_win);
+                prof_win_show(plugin_win, "called -> prof_get_current_muc: <none>");
+            }
+        } else {
+            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+        }
     } else {
         prof_cons_show("Invalid usage, see '/help c-test' for details.");
     }
@@ -75,8 +105,10 @@ prof_init(const char * const version, const char * const status)
 {
     prof_win_create(plugin_win, handle_win_input);
     prof_register_command("/c-test", 1, 2, "/c-test", "C Test plugin", "C Test plugin", cmd_ctest);
-    char *arg_ac[] = { "consalert", "consshow", "notify", "sendline", NULL };
-    prof_register_ac("/c-test", arg_ac);
+    char *cmd_ac[] = { "consalert", "consshow", "notify", "sendline", "get", NULL };
+    prof_register_ac("/c-test", cmd_ac);
+    char *get_ac[] = { "recipient", "room", NULL };
+    prof_register_ac("/c-test get", get_ac);
 }
 
 void
