@@ -32,6 +32,14 @@ cmd_ctest(char **args)
         prof_win_focus(plugin_win);
         prof_cons_alert();
         prof_win_show(plugin_win, "called -> prof_cons_alert");
+    } else if (strcmp(args[0], "consshow") == 0) {
+        if (args[1]) {
+            prof_win_focus(plugin_win);
+            prof_cons_show(args[1]);
+            prof_win_show(plugin_win, "called -> prof_cons_show");
+        } else {
+            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+        }
     } else {
         prof_cons_show("Invalid usage, see '/help c-test' for details.");
     }
@@ -41,8 +49,8 @@ void
 prof_init(const char * const version, const char * const status)
 {
     prof_win_create(plugin_win, handle_win_input);
-    prof_register_command("/c-test", 1, 1, "/c-test", "C Test plugin", "C Test plugin", cmd_ctest);
-    char *arg_ac[] = { "consalert", NULL };
+    prof_register_command("/c-test", 1, 2, "/c-test", "C Test plugin", "C Test plugin", cmd_ctest);
+    char *arg_ac[] = { "consalert", "consshow", NULL };
     prof_register_ac("/c-test", arg_ac);
 }
 
