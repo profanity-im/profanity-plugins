@@ -34,6 +34,7 @@ cmd_ctest(char **args)
         prof_win_show(plugin_win, "called -> prof_cons_alert");
     } else if (strcmp(args[0], "consshow") == 0) {
         if (args[1]) {
+            create_win();
             prof_win_focus(plugin_win);
             prof_cons_show(args[1]);
             char *str = "called -> prof_cons_show: ";
@@ -45,6 +46,7 @@ cmd_ctest(char **args)
         }
     } else if (strcmp(args[0], "sendline") == 0) {
         if (args[1]) {
+            create_win();
             prof_win_focus(plugin_win);
             prof_send_line(args[1]);
             char *str = "called -> prof_send_line: ";
@@ -56,6 +58,7 @@ cmd_ctest(char **args)
         }
     } else if (strcmp(args[0], "notify") == 0) {
         if (args[1]) {
+            create_win();
             prof_win_focus(plugin_win);
             prof_notify(args[1], 5000, "c-test plugin");
             char *str = "called -> prof_notify: ";
@@ -69,6 +72,7 @@ cmd_ctest(char **args)
         if (!args[1]) {
             prof_cons_show("Invalid usage, see '/help c-test' for details.");
         } else if (strcmp(args[1], "recipient") == 0) {
+            create_win();
             char *recipient = prof_get_current_recipient();
             if (recipient) {
                 prof_win_focus(plugin_win);
@@ -81,6 +85,7 @@ cmd_ctest(char **args)
                 prof_win_show(plugin_win, "called -> prof_get_current_recipient: <none>");
             }
         } else if (strcmp(args[1], "room") == 0) {
+            create_win();
             char *room = prof_get_current_muc();
             if (room) {
                 prof_win_focus(plugin_win);
@@ -95,6 +100,60 @@ cmd_ctest(char **args)
         } else {
             prof_cons_show("Invalid usage, see '/help c-test' for details.");
         }
+    } else if (strcmp(args[0], "log") == 0) {
+        if (!args[1]) {
+            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+        } else if (strcmp(args[1], "debug") == 0) {
+            if (!args[2]) {
+                prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            } else {
+                create_win();
+                prof_win_focus(plugin_win);
+                prof_log_debug(args[2]);
+                char *str = "called -> prof_log_debug: ";
+                char buf[strlen(str) + strlen(args[2])];
+                sprintf(buf, "%s%s", str, args[2]);
+                prof_win_show(plugin_win, buf);
+            }
+        } else if (strcmp(args[1], "info") == 0) {
+            if (!args[2]) {
+                prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            } else {
+                create_win();
+                prof_win_focus(plugin_win);
+                prof_log_info(args[2]);
+                char *str = "called -> prof_log_info: ";
+                char buf[strlen(str) + strlen(args[2])];
+                sprintf(buf, "%s%s", str, args[2]);
+                prof_win_show(plugin_win, buf);
+            }
+        } else if (strcmp(args[1], "warning") == 0) {
+            if (!args[2]) {
+                prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            } else {
+                create_win();
+                prof_win_focus(plugin_win);
+                prof_log_warning(args[2]);
+                char *str = "called -> prof_log_warning: ";
+                char buf[strlen(str) + strlen(args[2])];
+                sprintf(buf, "%s%s", str, args[2]);
+                prof_win_show(plugin_win, buf);
+            }
+        } else if (strcmp(args[1], "error") == 0) {
+            if (!args[2]) {
+                prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            } else {
+                create_win();
+                prof_win_focus(plugin_win);
+                prof_log_error(args[2]);
+                char *str = "called -> prof_log_error: ";
+                char buf[strlen(str) + strlen(args[2])];
+                sprintf(buf, "%s%s", str, args[2]);
+                prof_win_show(plugin_win, buf);
+            }
+        } else {
+            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+        }
     } else {
         prof_cons_show("Invalid usage, see '/help c-test' for details.");
     }
@@ -104,11 +163,13 @@ void
 prof_init(const char * const version, const char * const status)
 {
     prof_win_create(plugin_win, handle_win_input);
-    prof_register_command("/c-test", 1, 2, "/c-test", "C Test plugin", "C Test plugin", cmd_ctest);
-    char *cmd_ac[] = { "consalert", "consshow", "notify", "sendline", "get", NULL };
+    prof_register_command("/c-test", 1, 3, "/c-test", "C Test plugin", "C Test plugin", cmd_ctest);
+    char *cmd_ac[] = { "consalert", "consshow", "notify", "sendline", "get", "log", NULL };
     prof_register_ac("/c-test", cmd_ac);
     char *get_ac[] = { "recipient", "room", NULL };
     prof_register_ac("/c-test get", get_ac);
+    char *log_ac[] = { "debug", "info", "warning", "error", NULL };
+    prof_register_ac("/c-test log", log_ac);
 }
 
 void
