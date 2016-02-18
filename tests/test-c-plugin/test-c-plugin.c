@@ -163,11 +163,42 @@ void
 prof_init(const char * const version, const char * const status)
 {
     prof_win_create(plugin_win, handle_win_input);
-    prof_register_command("/c-test", 1, 3, "/c-test", "C Test plugin", "C Test plugin", cmd_ctest);
+
+    const char *synopsis[] = {
+        "/c-test consalert",
+        "/c-test consshow <message>",
+        "/c-test notify <message>",
+        "/c-test sendline <line>",
+        "/c-test get recipient|room",
+        "/c-test log debug|info|warning|error <message>",
+        NULL
+    };
+    const char *description = "C test plugins.";
+    const char *args[][2] = {
+        { "consalert",                      "Highlight the console window in the status bar" },
+        { "consshow <message>",             "Show the message in the console window" },
+        { "notify <message>",               "Send a desltop notification with message" },
+        { "sendline <line>",                "Pass line to profanity to process" },
+        { "get recipient",                  "Show the current chat recipient, if in a chat window" },
+        { "get room",                       "Show the current room JID, if in a chat room" },
+        { "log debug|info|warning|error",   "Log a message at the specified level" },
+        { NULL, NULL }
+    };
+
+    const char *examples[] = {
+        "/c-test sendline /about",
+        "/c-test log debug \"Test debug message\"",
+        NULL
+    };
+
+    prof_register_command("/c-test", 1, 3, synopsis, description, args, examples, cmd_ctest);
+
     char *cmd_ac[] = { "consalert", "consshow", "notify", "sendline", "get", "log", NULL };
     prof_register_ac("/c-test", cmd_ac);
+
     char *get_ac[] = { "recipient", "room", NULL };
     prof_register_ac("/c-test get", get_ac);
+
     char *log_ac[] = { "debug", "info", "warning", "error", NULL };
     prof_register_ac("/c-test log", log_ac);
 }
