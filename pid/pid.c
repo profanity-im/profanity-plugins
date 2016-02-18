@@ -18,5 +18,10 @@ cmd_pid(char **args)
 void
 prof_init(const char * const version, const char * const status)
 {
-    prof_register_command("/pid", 0, 0, "/pid", "Get process ID", "Get process ID", cmd_pid);
+    const char *synopsis[] = { "/pid", NULL };
+    const char *description = "Show process ID and parent Process ID in the console window.";
+    const char *args[][2] = { { NULL, NULL } };
+    const char *examples[] = { NULL };
+
+    prof_register_command("/pid", 0, 0, synopsis, description, args, examples, cmd_pid);
 }
