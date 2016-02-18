@@ -173,7 +173,7 @@ prof_init(const char * const version, const char * const status)
         "/c-test log debug|info|warning|error <message>",
         NULL
     };
-    const char *description = "C test plugins.";
+    const char *description = "C test plugin. All commands focus the plugin window.";
     const char *args[][2] = {
         { "consalert",                      "Highlight the console window in the status bar" },
         { "consshow <message>",             "Show the message in the console window" },
