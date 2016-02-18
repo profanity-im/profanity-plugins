@@ -42,7 +42,7 @@ cmd_ctest(char **args)
             sprintf(buf, "%s%s", str, args[1]);
             prof_win_show(plugin_win, buf);
         } else {
-            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            prof_cons_bad_cmd_usage("/c-test");
         }
     } else if (strcmp(args[0], "sendline") == 0) {
         if (args[1]) {
@@ -54,7 +54,7 @@ cmd_ctest(char **args)
             sprintf(buf, "%s%s", str, args[1]);
             prof_win_show(plugin_win, buf);
         } else {
-            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            prof_cons_bad_cmd_usage("/c-test");
         }
     } else if (strcmp(args[0], "notify") == 0) {
         if (args[1]) {
@@ -66,11 +66,11 @@ cmd_ctest(char **args)
             sprintf(buf, "%s%s", str, args[1]);
             prof_win_show(plugin_win, buf);
         } else {
-            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            prof_cons_bad_cmd_usage("/c-test");
         }
     } else if (strcmp(args[0], "get") == 0) {
         if (!args[1]) {
-            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            prof_cons_bad_cmd_usage("/c-test");
         } else if (strcmp(args[1], "recipient") == 0) {
             create_win();
             char *recipient = prof_get_current_recipient();
@@ -98,14 +98,14 @@ cmd_ctest(char **args)
                 prof_win_show(plugin_win, "called -> prof_get_current_muc: <none>");
             }
         } else {
-            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            prof_cons_bad_cmd_usage("/c-test");
         }
     } else if (strcmp(args[0], "log") == 0) {
         if (!args[1]) {
-            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            prof_cons_bad_cmd_usage("/c-test");
         } else if (strcmp(args[1], "debug") == 0) {
             if (!args[2]) {
-                prof_cons_show("Invalid usage, see '/help c-test' for details.");
+                prof_cons_bad_cmd_usage("/c-test");
             } else {
                 create_win();
                 prof_win_focus(plugin_win);
@@ -117,7 +117,7 @@ cmd_ctest(char **args)
             }
         } else if (strcmp(args[1], "info") == 0) {
             if (!args[2]) {
-                prof_cons_show("Invalid usage, see '/help c-test' for details.");
+                prof_cons_bad_cmd_usage("/c-test");
             } else {
                 create_win();
                 prof_win_focus(plugin_win);
@@ -129,7 +129,7 @@ cmd_ctest(char **args)
             }
         } else if (strcmp(args[1], "warning") == 0) {
             if (!args[2]) {
-                prof_cons_show("Invalid usage, see '/help c-test' for details.");
+                prof_cons_bad_cmd_usage("/c-test");
             } else {
                 create_win();
                 prof_win_focus(plugin_win);
@@ -141,7 +141,7 @@ cmd_ctest(char **args)
             }
         } else if (strcmp(args[1], "error") == 0) {
             if (!args[2]) {
-                prof_cons_show("Invalid usage, see '/help c-test' for details.");
+                prof_cons_bad_cmd_usage("/c-test");
             } else {
                 create_win();
                 prof_win_focus(plugin_win);
@@ -152,10 +152,10 @@ cmd_ctest(char **args)
                 prof_win_show(plugin_win, buf);
             }
         } else {
-            prof_cons_show("Invalid usage, see '/help c-test' for details.");
+            prof_cons_bad_cmd_usage("/c-test");
         }
     } else {
-        prof_cons_show("Invalid usage, see '/help c-test' for details.");
+        prof_cons_bad_cmd_usage("/c-test");
     }
 }
 
