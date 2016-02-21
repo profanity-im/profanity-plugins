@@ -164,6 +164,50 @@ prof_init(const char * const version, const char * const status)
 {
     prof_win_create(plugin_win, handle_win_input);
 
+/* TODO ADD COMMAND
+
+    prof_cons_show_themed("c-test", "test.out", NULL, "This from test.out");
+    prof_cons_show_themed("c-test", "another.theme", "yellow", "This from another.theme, default yellow");
+    prof_cons_show_themed("c-test", "more.theme", "bold_cyan", "This from more.theme, default bold cyan");
+    prof_cons_show_themed(NULL, NULL, "white", "This is white");
+    prof_cons_show_themed(NULL, NULL, "bold_white", "This is bold white");
+    prof_cons_show_themed(NULL, NULL, "red", "This is red");
+    prof_cons_show_themed(NULL, NULL, "bold_red", "This is bold red");
+    prof_cons_show_themed(NULL, NULL, "green", "This is green");
+    prof_cons_show_themed(NULL, NULL, "bold_green", "This is bold green");
+    prof_cons_show_themed(NULL, NULL, "blue", "This is blue");
+    prof_cons_show_themed(NULL, NULL, "bold_blue", "This is bold blue");
+    prof_cons_show_themed(NULL, NULL, "yellow", "This is yellow");
+    prof_cons_show_themed(NULL, NULL, "bold_yellow", "This is bold yellow");
+    prof_cons_show_themed(NULL, NULL, "cyan", "This is cyan");
+    prof_cons_show_themed(NULL, NULL, "bold_cyan", "This is bold cyan");
+    prof_cons_show_themed(NULL, NULL, "magenta", "This is magenta");
+    prof_cons_show_themed(NULL, NULL, "bold_magenta", "This is bold magenta");
+    prof_cons_show_themed(NULL, NULL, "black", "This is black");
+    prof_cons_show_themed(NULL, NULL, "bold_black", "This is bold_black");
+
+    prof_win_show_themed(plugin_win, "c-test", "test.out", NULL, "This from test.out");
+    prof_win_show_themed(plugin_win, "c-test", "another.theme", "yellow", "This from another.theme, default yellow");
+    prof_win_show_themed(plugin_win, "c-test", "more.theme", "bold_cyan", "This from more.theme, default bold cyan");
+    prof_win_show_themed(plugin_win, NULL, NULL, "white", "This is white");
+    prof_win_show_themed(plugin_win, NULL, NULL, "bold_white", "This is bold white");
+    prof_win_show_themed(plugin_win, NULL, NULL, "red", "This is red");
+    prof_win_show_themed(plugin_win, NULL, NULL, "bold_red", "This is bold red");
+    prof_win_show_themed(plugin_win, NULL, NULL, "green", "This is green");
+    prof_win_show_themed(plugin_win, NULL, NULL, "bold_green", "This is bold green");
+    prof_win_show_themed(plugin_win, NULL, NULL, "blue", "This is blue");
+    prof_win_show_themed(plugin_win, NULL, NULL, "bold_blue", "This is bold blue");
+    prof_win_show_themed(plugin_win, NULL, NULL, "yellow", "This is yellow");
+    prof_win_show_themed(plugin_win, NULL, NULL, "bold_yellow", "This is bold yellow");
+    prof_win_show_themed(plugin_win, NULL, NULL, "cyan", "This is cyan");
+    prof_win_show_themed(plugin_win, NULL, NULL, "bold_cyan", "This is bold cyan");
+    prof_win_show_themed(plugin_win, NULL, NULL, "magenta", "This is magenta");
+    prof_win_show_themed(plugin_win, NULL, NULL, "bold_magenta", "This is bold magenta");
+    prof_win_show_themed(plugin_win, NULL, NULL, "black", "This is black");
+    prof_win_show_themed(plugin_win, NULL, NULL, "bold_black", "This is bold_black");
+
+*/
+
     const char *synopsis[] = {
         "/c-test consalert",
         "/c-test consshow <message>",
