@@ -36,7 +36,7 @@ def prof_init(version, status):
         "/chatterbot",
         "/chatterbot enable|disable"
     ]
-    description = "ChatterBot"
+    description = "ChatterBot, running with no args will show the current chatterbot status"
     args = [
         [ "enable", "Enable chatterbot" ],
         [ "disable", "Disable chatterbot" ]
@@ -44,3 +44,4 @@ def prof_init(version, status):
     examples = []
 
     prof.register_command("/chatterbot", 0, 1, synopsis, description, args, examples, _cmd_chatterbot)
+    prof.register_ac("/chatterbot", [ "enable", "disable" ])
