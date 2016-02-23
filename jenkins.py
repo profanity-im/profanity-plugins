@@ -243,27 +243,27 @@ def _prof_callback():
         for name in changes_list.get_in_state(STATE_QUEUED):
             if not prof.win_exists(win_tag):
                 prof.win_create(win_tag, _handle_input)
-            prof.win_show_cyan(win_tag, name + " " + STATE_QUEUED)
+            prof.win_show_themed(win_tag, None, None, "cyan", name + " " + STATE_QUEUED)
         for name in changes_list.get_in_state(STATE_RUNNING):
             if not prof.win_exists(win_tag):
                 prof.win_create(win_tag, _handle_input)
-            prof.win_show_cyan(win_tag, name + " " + STATE_RUNNING)
+            prof.win_show_themed(win_tag, None, None, "cyan", name + " " + STATE_RUNNING)
         for name, build_number in changes_list.get_in_state(STATE_SUCCESS):
             if not prof.win_exists(win_tag):
                 prof.win_create(win_tag, _handle_input)
-            prof.win_show_green(win_tag, name + " #" + str(build_number) + " " + STATE_SUCCESS)
+            prof.win_show_themed(win_tag, None, None, "green", name + " #" + str(build_number) + " " + STATE_SUCCESS)
             if enable_notify:
                 prof.notify(name + " " + STATE_SUCCESS, 5000, "Jenkins")
         for name, build_number in changes_list.get_in_state(STATE_UNSTABLE):
             if not prof.win_exists(win_tag):
                 prof.win_create(win_tag, _handle_input)
-            prof.win_show_yellow(win_tag, name + " #" + str(build_number) + " " + STATE_UNSTABLE)
+            prof.win_show_themed(win_tag, None, None, "yellow", name + " #" + str(build_number) + " " + STATE_UNSTABLE)
             if enable_notify:
                 prof.notify(name + " " + STATE_UNSTABLE, 5000, "Jenkins")
         for name, build_number in changes_list.get_in_state(STATE_FAILURE):
             if not prof.win_exists(win_tag):
                 prof.win_create(win_tag, _handle_input)
-            prof.win_show_red(win_tag, name + " #" + str(build_number) + " " + STATE_FAILURE)
+            prof.win_show_themed(win_tag, None, None, "red", name + " #" + str(build_number) + " " + STATE_FAILURE)
             if enable_notify:
                 prof.notify(name + " " + STATE_FAILURE, 5000, "Jenkins")
 
@@ -275,15 +275,15 @@ def _handle_input(win, line):
 def _list_jobs(jobs):
     for name, build_number, state in jobs:
         if state == STATE_SUCCESS:
-            prof.win_show_green(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_SUCCESS)
+            prof.win_show_themed(win_tag, None, None, "green", "  " + name + " #" + str(build_number) + " " + STATE_SUCCESS)
         elif state == STATE_UNSTABLE:
-            prof.win_show_yellow(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_UNSTABLE)
+            prof.win_show_themed(win_tag, None, None, "yellow", "  " + name + " #" + str(build_number) + " " + STATE_UNSTABLE)
         elif state == STATE_FAILURE:
-            prof.win_show_red(win_tag, "  " + name + " #" + str(build_number) + " " + STATE_FAILURE)
+            prof.win_show_themed(win_tag, None, None, "red", "  " + name + " #" + str(build_number) + " " + STATE_FAILURE)
         elif state == STATE_NOBUILDS:
             prof.win_show(win_tag, "  " + name + ", no builds")
         else:
-            prof.win_show_cyan(win_tag, "  " + name + " " + state)
+            prof.win_show_themed(win_tag, None, None, "cyan", "  " + name + " " + state)
 
 def _build_job(job):
     try:
@@ -476,15 +476,36 @@ def prof_init(version, status):
             "off"
         ]
     );
-    prof.register_command(
-        "/jenkins",
-        0,
-        2,
-        "/jenkins",
-        "Do jenkins stuff.",
-        "Do jenkins stuff.",
-        _cmd_jenkins
-    )
+
+    synopsis = [ 
+        "/jenkins jobs|failing|passing|unstable",
+        "/jenkins build <job>",
+        "/jenkins open <job>",
+        "/jenkins log <job>",
+        "/jenkins remind on|off",
+        "/jenkins notify on|off",
+        "/jenkins settings"
+    ]
+    description = "Monitor, run and view Jenkins jobs."
+    args = [
+        [ "jobs",           "List all jobs" ],
+        [ "failing",        "List all failing jobs" ],
+        [ "passing",        "List all passing jobs" ],
+        [ "unstable",       "List all unstable jobs" ],
+        [ "build <job>",    "Trigger build for job" ],
+        [ "open <job>",     "Open job in browser" ],
+        [ "log <job>",      "Show the latest build log for job" ],
+        [ "remind on|off",  "Enable/disable reminder notifications" ],
+        [ "notify on|off",  "Enable/disable build notifications" ],
+        [ "settings",       "Show current settings" ]
+    ]
+    examples = [
+        "/kenkins failing",
+        "/kenkins build stabber-build",
+        "/kenkins remind off"
+    ]
+
+    prof.register_command("/jenkins", 0, 2, synopsis, description, args, examples, _cmd_jenkins)
 
 def prof_on_start():
     prof.win_create(win_tag, _handle_input)

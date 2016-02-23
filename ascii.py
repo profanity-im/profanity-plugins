@@ -9,4 +9,13 @@ def _cmd_ascii(text):
         prof.send_line(u'\u000A' + ascii_out)
 
 def prof_init(version, status):
-    prof.register_command("/ascii", 1, 1, "/ascii", "ASCIIfy a message", "ASCIIfy a message.", _cmd_ascii)
+    synopsis = [ "/ascii <message>" ]
+    description = "ASCIIfy a message."
+    args = [
+        [ "<message>", "The message to be ASCIIfied" ]
+    ]
+    examples = [
+        "/ascii \"Hello there\""
+    ]
+    
+    prof.register_command("/ascii", 1, 1, synopsis, description, args, examples, _cmd_ascii)

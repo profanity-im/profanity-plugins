@@ -57,12 +57,19 @@ def _open_browser(url):
 
 
 def prof_init(version, status):
-    prof.register_command("/browser", 0, 1,
-                          "/browser [url]",
-                          "View a URL in the browser.",
-                          "View a URL in the browser, if no argument is supplied, " +
-                          "the last received URL will be used.",
-                          _cmd_browser)
+    synopsis = [ 
+        "/browser",
+        "/browser <url>"
+    ]
+    description = "View a URL in the systems default browser. If no argument is supplied, the last URL in the current chat or room will be used."
+    args = [
+        [ "<url>", "URL to open in the browser" ]
+    ]
+    examples = [
+        "/browser http://www.profanity.im"
+    ]
+
+    prof.register_command("/browser", 0, 1, synopsis, description, args, examples, _cmd_browser)
 
 
 def prof_post_chat_message_display(jid, message):

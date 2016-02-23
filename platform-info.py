@@ -6,4 +6,11 @@ def _cmd_platform():
     prof.cons_show(result_summary)
 
 def prof_init(version, status):
-    prof.register_command("/platform", 0, 0, "/platform", "Output system information.", "Output system information", _cmd_platform)
+    synopsis = [ 
+        "/platform"
+    ]
+    description = "Output system information to the console window."
+    args = []
+    examples = []
+
+    prof.register_command("/platform", 0, 0, synopsis, description, args, examples, _cmd_platform)

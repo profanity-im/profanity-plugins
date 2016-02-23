@@ -32,4 +32,15 @@ def _cmd_chatterbot(state):
             prof.cons_show("ChatterBot is stopped - /chatterbot enable to activate.")
         
 def prof_init(version, status):
-    prof.register_command("/chatterbot", 0, 1, "/chatterbot [enable|disable]", "ChatterBot", "ChatterBot", _cmd_chatterbot)
+    synopsis = [ 
+        "/chatterbot",
+        "/chatterbot enable|disable"
+    ]
+    description = "ChatterBot"
+    args = [
+        [ "enable", "Enable chatterbot" ],
+        [ "disable", "Disable chatterbot" ]
+    ]
+    examples = []
+
+    prof.register_command("/chatterbot", 0, 1, synopsis, description, args, examples, _cmd_chatterbot)

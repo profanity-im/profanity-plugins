@@ -38,6 +38,14 @@ def _cmd_say(arg=None):
         prof.cons_show("Usage: /say on|off")
 
 def prof_init(version, status):
-    prof.register_command("/say", 1, 1, "/say on|pff", "Enable or disable say.", "Enable or disable say.",
-        _cmd_say)
+    synopsis = [ 
+        "/say on|off"
+    ]
+    description = "Read all messages out loud"
+    args = [
+        [ "on|off", "Enable/disable say" ]
+    ]
+    examples = []
+
+    prof.register_command("/say", 1, 1, synopsis, description, args, examples, _cmd_say)
     prof.register_ac("/say", [ "on", "off" ])

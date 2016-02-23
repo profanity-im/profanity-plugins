@@ -3,7 +3,12 @@ import getpass
 
 def _cmd_whoami():
     me = getpass.getuser()
-    prof.cons_show(me)
+    prof.cons_show_themed("whoami", "result", "bold_yellow", me)
 
 def prof_init(version, status):
-    prof.register_command("/whoami", 0, 0, "/whoami", "Call shell whoami command.", "Call shell whoami command.", _cmd_whoami)
+    synopsis = [ "/whoami" ]
+    description = "Calls the system whoami command"
+    args = []
+    examples = []
+
+    prof.register_command("/whoami", 0, 0, synopsis, description, args, examples, _cmd_whoami)
