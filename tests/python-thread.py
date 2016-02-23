@@ -18,4 +18,10 @@ def prof_init(version, status):
     t = threading.Thread(target=_inc_counter)
     t.daemon = True
     t.start()
-    prof.register_command("/count", 0, 0, "/count", "Threaded example", "Threaded example", _cmd_count)
+
+    synopsis = [ "/count" ]
+    description = "Python threading example."
+    args = []
+    examples = []
+
+    prof.register_command("/count", 0, 0, synopsis, description, args, examples, _cmd_count)

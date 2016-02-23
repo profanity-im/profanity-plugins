@@ -219,13 +219,13 @@ prof_init(const char * const version, const char * const status)
     };
     const char *description = "C test plugin. All commands focus the plugin window.";
     const char *args[][2] = {
-        { "consalert",                      "Highlight the console window in the status bar" },
-        { "consshow <message>",             "Show the message in the console window" },
-        { "notify <message>",               "Send a desltop notification with message" },
-        { "sendline <line>",                "Pass line to profanity to process" },
-        { "get recipient",                  "Show the current chat recipient, if in a chat window" },
-        { "get room",                       "Show the current room JID, if in a chat room" },
-        { "log debug|info|warning|error",   "Log a message at the specified level" },
+        { "consalert",                              "Highlight the console window in the status bar" },
+        { "consshow <message>",                     "Show the message in the console window" },
+        { "notify <message>",                       "Send a desktop notification with message" },
+        { "sendline <line>",                        "Pass line to profanity to process" },
+        { "get recipient",                          "Show the current chat recipient, if in a chat window" },
+        { "get room",                               "Show the current room JID, if in a chat room" },
+        { "log debug|info|warning|error <message>", "Log a message at the specified level" },
         { NULL, NULL }
     };
 
