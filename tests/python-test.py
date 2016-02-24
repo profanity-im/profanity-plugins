@@ -53,10 +53,10 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None):
                 prof.win_show(plugin_win, "called -> prof_get_current_recipient: <none>")
         elif arg2 == "room":
             create_win()
-            room = prof.get_current_muc();
+            room = prof.get_current_muc()
             if room != None:
                 prof.win_focus(plugin_win)
-                prof_win_show(plugin_win, "called -> prof_get_current_muc: " + room)
+                prof.win_show(plugin_win, "called -> prof_get_current_muc: " + room)
             else:
                 prof.win_focus(plugin_win)
                 prof.win_show(plugin_win, "called -> prof_get_current_muc: <none>")
@@ -174,7 +174,7 @@ def prof_post_chat_message_send(jid, message):
 
 def prof_pre_room_message_display(room, nick, message):
     create_win()
-    prof.win_show(plugin_win, "fired -> prof_pre_room_message_display: " + room ", " + nick + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_pre_room_message_display: " + room + ", " + nick + ", " + message)
 
 def prof_post_room_message_display(room, nick, message):
     create_win()
@@ -203,4 +203,4 @@ def prof_pre_priv_message_send(room, nick, message):
 def prof_post_priv_message_send(room, nick, message):
     create_win()
     prof.win_show(plugin_win, "fired -> prof_post_priv_message_send: " + room + ", " + nick + ", " + message)
-    
+
