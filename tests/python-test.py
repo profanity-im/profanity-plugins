@@ -98,9 +98,9 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None):
                 prof.log_error(arg3)
                 prof.win_show(plugin_win, "called -> prof.log_error: " + arg3)
         else:
-            prof.cons_bad_cmd_usage("/c-test")
+            prof.cons_bad_cmd_usage("/python-test")
     else:
-        prof.cons_bad_cmd_usage("/c-test")
+        prof.cons_bad_cmd_usage("/python-test")
 
 def prof_init(version, status):
     prof.win_create(plugin_win, _handle_win_input)
