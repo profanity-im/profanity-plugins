@@ -9,7 +9,7 @@ def create_win():
     if prof.win_exists(plugin_win) == False:
         prof.win_create(plugin_win, _handle_win_input)
 
-def cmd_pythontest(arg1=None, arg2=None, arg3=None):
+def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
     if arg1 == "consalert":
         create_win()
         prof.win_focus(plugin_win)
@@ -23,6 +23,38 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None):
             prof.win_show(plugin_win, "called -> prof.cons_show: " + arg2)
         else:
             prof.cons_bad_cmd_usage("/python-test")
+    elif arg1 == "consshow_t":
+        if arg2 == None or arg3 == None or arg4 == None or arg5 == None:
+            prof.cons_bad_cmd_usage("/python-test");
+        else:
+            group = None if arg2 == "none" else arg2
+            key = None if arg3 == "none" else arg3
+            dflt = None if arg4 == "none" else arg4
+            message = arg5
+            create_win()
+            prof.win_focus(plugin_win)
+            prof.cons_show_themed(group, key, dflt, message)
+            prof.win_show(plugin_win, "called -> prof_cons_show_themed: " + arg2 + ", " + arg3 + ", " + arg4 + ", " + arg5)
+    elif arg1 == "winshow":
+        if arg2 != None:
+            create_win()
+            prof.win_focus(plugin_win)
+            prof.win_show(plugin_win, arg2)
+            prof.win_show(plugin_win, "called -> prof.win_show: " + arg2)
+        else:
+            prof.cons_bad_cmd_usage("/python-test")
+    elif arg1 == "winshow_t":
+        if arg2 == None or arg3 == None or arg4 == None or arg5 == None:
+            prof.cons_bad_cmd_usage("/python-test");
+        else:
+            group = None if arg2 == "none" else arg2
+            key = None if arg3 == "none" else arg3
+            dflt = None if arg4 == "none" else arg4
+            message = arg5
+            create_win()
+            prof.win_focus(plugin_win)
+            prof.win_show_themed(plugin_win, group, key, dflt, message)
+            prof.win_show(plugin_win, "called -> prof_win_show_themed: " + arg2 + ", " + arg3 + ", " + arg4 + ", " + arg5)
     elif arg1 == "sendline":
         if arg2 != None:
             create_win()
@@ -108,6 +140,9 @@ def prof_init(version, status):
     synopsis = [
         "/python-test consalert",
         "/python-test consshow <message>",
+        "/python-test consshow_t <group> <key> <default> <message>",
+        "/python-test winshow <message>",
+        "/python-test winshow_t <group> <key> <default> <message>",
         "/python-test notify <message>",
         "/python-test sendline <line>",
         "/python-test get recipient|room",
@@ -115,23 +150,28 @@ def prof_init(version, status):
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
-        [ "consalert",                              "Highlight the console window in the status bar" ],
-        [ "consshow <message>",                     "Show the message in the console window" ],
-        [ "notify <message>",                       "Send a desktop notification with message" ],
-        [ "sendline <line>",                        "Pass line to profanity to process" ],
-        [ "get recipient",                          "Show the current chat recipient, if in a chat window" ],
-        [ "get room",                               "Show the current room JID, if ina a chat room"],
-        [ "log debug|info|warning|error <message>", "Log a message at the specified level" ]
+        [ "consalert",                                      "Highlight the console window in the status bar" ],
+        [ "consshow <message>",                             "Show the message in the console window" ],
+        [ "consshow_t <group> <key> <default> <message>",   "Show the themed message in the console window. " ],
+        [ "winshow <message>",                              "Show the message in the plugin window" ],
+        [ "winshow_t <group> <key> <default> <message>",    "Show the themed message in the plugin window. " ],
+        [ "notify <message>",                               "Send a desktop notification with message" ],
+        [ "sendline <line>",                                "Pass line to profanity to process" ],
+        [ "get recipient",                                  "Show the current chat recipient, if in a chat window" ],
+        [ "get room",                                       "Show the current room JID, if ina a chat room"],
+        [ "log debug|info|warning|error <message>",         "Log a message at the specified level" ]
     ]
     examples = [
         "/python-test sendline /about",
-        "/python-test log debug \"Test debug message\""
+        "/python-test log debug \"Test debug message\"",
+        "/python-test consshow_t c-test cons.show none \"This is themed\"",
+        "/python-test consshow_t none none bold_cyan \"This is bold_cyan\""
     ]
 
-    prof.register_command("/python-test", 1, 3, synopsis, description, args, examples, cmd_pythontest)
+    prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, cmd_pythontest)
 
     prof.register_ac("/python-test", 
-        [ "consalert", "consshow", "notify", "sendline", "get", "log" ]
+        [ "consalert", "consshow", "consshow_t", "winshow", "winshow_t", "notify", "sendline", "get", "log" ]
     )
     prof.register_ac("/python-test get",
         [ "recipient", "room" ]

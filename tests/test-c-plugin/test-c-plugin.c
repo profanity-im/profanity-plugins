@@ -44,6 +44,50 @@ cmd_ctest(char **args)
         } else {
             prof_cons_bad_cmd_usage("/c-test");
         }
+    } else if (strcmp(args[0], "consshow_t") == 0) {
+        if (args[1] == NULL || args[2] == NULL || args[3] == NULL || args[4] == NULL) {
+            prof_cons_bad_cmd_usage("/c-test");
+        } else {
+            char *group = strcmp(args[1], "none") == 0 ? NULL : args[1];
+            char *key = strcmp(args[2], "none") == 0 ? NULL : args[2];
+            char *def = strcmp(args[3], "none") == 0 ? NULL : args[3];
+            char *message = args[4];
+            create_win();
+            prof_win_focus(plugin_win);
+            prof_cons_show_themed(group, key, def, message);
+            char *str = "called -> prof_cons_show_themed: ";
+            char buf[strlen(str) + strlen(args[1]) + 2 + strlen(args[2]) + 2 + strlen(args[3]) + 2 + strlen(args[4])];
+            sprintf(buf, "%s%s, %s, %s, %s", str, args[1], args[2], args[3], args[4]);
+            prof_win_show(plugin_win, buf);
+        }
+    } else if (strcmp(args[0], "winshow") == 0) {
+        if (args[1]) {
+            create_win();
+            prof_win_focus(plugin_win);
+            prof_win_show(plugin_win, args[1]);
+            char *str = "called -> prof_win_show: ";
+            char buf[strlen(str) + strlen(args[1])];
+            sprintf(buf, "%s%s", str, args[1]);
+            prof_win_show(plugin_win, buf);
+        } else {
+            prof_cons_bad_cmd_usage("/c-test");
+        }
+    } else if (strcmp(args[0], "winshow_t") == 0) {
+        if (args[1] == NULL || args[2] == NULL || args[3] == NULL || args[4] == NULL) {
+            prof_cons_bad_cmd_usage("/c-test");
+        } else {
+            char *group = strcmp(args[1], "none") == 0 ? NULL : args[1];
+            char *key = strcmp(args[2], "none") == 0 ? NULL : args[2];
+            char *def = strcmp(args[3], "none") == 0 ? NULL : args[3];
+            char *message = args[4];
+            create_win();
+            prof_win_focus(plugin_win);
+            prof_win_show_themed(plugin_win, group, key, def, message);
+            char *str = "called -> prof_win_show_themed: ";
+            char buf[strlen(str) + strlen(args[1]) + 2 + strlen(args[2]) + 2 + strlen(args[3]) + 2 + strlen(args[4])];
+            sprintf(buf, "%s%s, %s, %s, %s", str, args[1], args[2], args[3], args[4]);
+            prof_win_show(plugin_win, buf);
+        }
     } else if (strcmp(args[0], "sendline") == 0) {
         if (args[1]) {
             create_win();
@@ -164,53 +208,12 @@ prof_init(const char * const version, const char * const status)
 {
     prof_win_create(plugin_win, handle_win_input);
 
-/* TODO ADD COMMAND
-
-    prof_cons_show_themed("c-test", "test.out", NULL, "This from test.out");
-    prof_cons_show_themed("c-test", "another.theme", "yellow", "This from another.theme, default yellow");
-    prof_cons_show_themed("c-test", "more.theme", "bold_cyan", "This from more.theme, default bold cyan");
-    prof_cons_show_themed(NULL, NULL, "white", "This is white");
-    prof_cons_show_themed(NULL, NULL, "bold_white", "This is bold white");
-    prof_cons_show_themed(NULL, NULL, "red", "This is red");
-    prof_cons_show_themed(NULL, NULL, "bold_red", "This is bold red");
-    prof_cons_show_themed(NULL, NULL, "green", "This is green");
-    prof_cons_show_themed(NULL, NULL, "bold_green", "This is bold green");
-    prof_cons_show_themed(NULL, NULL, "blue", "This is blue");
-    prof_cons_show_themed(NULL, NULL, "bold_blue", "This is bold blue");
-    prof_cons_show_themed(NULL, NULL, "yellow", "This is yellow");
-    prof_cons_show_themed(NULL, NULL, "bold_yellow", "This is bold yellow");
-    prof_cons_show_themed(NULL, NULL, "cyan", "This is cyan");
-    prof_cons_show_themed(NULL, NULL, "bold_cyan", "This is bold cyan");
-    prof_cons_show_themed(NULL, NULL, "magenta", "This is magenta");
-    prof_cons_show_themed(NULL, NULL, "bold_magenta", "This is bold magenta");
-    prof_cons_show_themed(NULL, NULL, "black", "This is black");
-    prof_cons_show_themed(NULL, NULL, "bold_black", "This is bold_black");
-
-    prof_win_show_themed(plugin_win, "c-test", "test.out", NULL, "This from test.out");
-    prof_win_show_themed(plugin_win, "c-test", "another.theme", "yellow", "This from another.theme, default yellow");
-    prof_win_show_themed(plugin_win, "c-test", "more.theme", "bold_cyan", "This from more.theme, default bold cyan");
-    prof_win_show_themed(plugin_win, NULL, NULL, "white", "This is white");
-    prof_win_show_themed(plugin_win, NULL, NULL, "bold_white", "This is bold white");
-    prof_win_show_themed(plugin_win, NULL, NULL, "red", "This is red");
-    prof_win_show_themed(plugin_win, NULL, NULL, "bold_red", "This is bold red");
-    prof_win_show_themed(plugin_win, NULL, NULL, "green", "This is green");
-    prof_win_show_themed(plugin_win, NULL, NULL, "bold_green", "This is bold green");
-    prof_win_show_themed(plugin_win, NULL, NULL, "blue", "This is blue");
-    prof_win_show_themed(plugin_win, NULL, NULL, "bold_blue", "This is bold blue");
-    prof_win_show_themed(plugin_win, NULL, NULL, "yellow", "This is yellow");
-    prof_win_show_themed(plugin_win, NULL, NULL, "bold_yellow", "This is bold yellow");
-    prof_win_show_themed(plugin_win, NULL, NULL, "cyan", "This is cyan");
-    prof_win_show_themed(plugin_win, NULL, NULL, "bold_cyan", "This is bold cyan");
-    prof_win_show_themed(plugin_win, NULL, NULL, "magenta", "This is magenta");
-    prof_win_show_themed(plugin_win, NULL, NULL, "bold_magenta", "This is bold magenta");
-    prof_win_show_themed(plugin_win, NULL, NULL, "black", "This is black");
-    prof_win_show_themed(plugin_win, NULL, NULL, "bold_black", "This is bold_black");
-
-*/
-
     const char *synopsis[] = {
         "/c-test consalert",
         "/c-test consshow <message>",
+        "/c-test consshow_t <group> <key> <default> <message>",
+        "/c-test winshow <message>",
+        "/c-test winshow_t <group> <key> <default> <message>",
         "/c-test notify <message>",
         "/c-test sendline <line>",
         "/c-test get recipient|room",
@@ -219,25 +222,30 @@ prof_init(const char * const version, const char * const status)
     };
     const char *description = "C test plugin. All commands focus the plugin window.";
     const char *args[][2] = {
-        { "consalert",                              "Highlight the console window in the status bar" },
-        { "consshow <message>",                     "Show the message in the console window" },
-        { "notify <message>",                       "Send a desktop notification with message" },
-        { "sendline <line>",                        "Pass line to profanity to process" },
-        { "get recipient",                          "Show the current chat recipient, if in a chat window" },
-        { "get room",                               "Show the current room JID, if in a chat room" },
-        { "log debug|info|warning|error <message>", "Log a message at the specified level" },
+        { "consalert",                                      "Highlight the console window in the status bar" },
+        { "consshow <message>",                             "Show the message in the console window" },
+        { "consshow_t <group> <key> <default> <message>",   "Show the themed message in the console window. " },
+        { "winshow <message>",                              "Show the message in the plugin window" },
+        { "winshow_t <group> <key> <default> <message>",    "Show the themed message in the plugin window. " },
+        { "notify <message>",                               "Send a desktop notification with message" },
+        { "sendline <line>",                                "Pass line to profanity to process" },
+        { "get recipient",                                  "Show the current chat recipient, if in a chat window" },
+        { "get room",                                       "Show the current room JID, if in a chat room" },
+        { "log debug|info|warning|error <message>",         "Log a message at the specified level" },
         { NULL, NULL }
     };
 
     const char *examples[] = {
         "/c-test sendline /about",
         "/c-test log debug \"Test debug message\"",
+        "/c-test consshow_t c-test cons.show none \"This is themed\"",
+        "/c-test consshow_t none none bold_cyan \"This is bold_cyan\"",
         NULL
     };
 
-    prof_register_command("/c-test", 1, 3, synopsis, description, args, examples, cmd_ctest);
+    prof_register_command("/c-test", 1, 5, synopsis, description, args, examples, cmd_ctest);
 
-    char *cmd_ac[] = { "consalert", "consshow", "notify", "sendline", "get", "log", NULL };
+    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "winshow", "winshow_t", "notify", "sendline", "get", "log", NULL };
     prof_register_ac("/c-test", cmd_ac);
 
     char *get_ac[] = { "recipient", "room", NULL };
