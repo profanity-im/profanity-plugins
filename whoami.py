@@ -3,7 +3,7 @@ import getpass
 
 def _cmd_whoami():
     me = getpass.getuser()
-    prof.cons_show_themed("whoami", "result", "bold_yellow", me)
+    prof.cons_show_themed("whoami", "result", None, me)
 
 def prof_init(version, status):
     synopsis = [ "/whoami" ]
