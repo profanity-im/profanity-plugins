@@ -71,8 +71,8 @@ Whilst the API is being developed, the following test plugins are a good referen
 
 ```
 tests/python-test.py
-~~tests/RubyTest.rb~~
-~~tests/luatest.lua~~
+tests/RubyTest.rb
+tests/luatest.lua
 tests/test-c-plugin/test-c-plugin.c
 ```
 
