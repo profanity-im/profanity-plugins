@@ -11,9 +11,9 @@ cmd_pid(char **args)
     pid_t ppid = getppid();
     char buf[50];
     sprintf(buf, "PID: %d", pid);
-    prof_cons_show_themed("pid", "self", "bold_cyan", buf);
+    prof_cons_show_themed("pid", "self", NULL, buf);
     sprintf(buf, "Parent PID: %d", ppid);
-    prof_cons_show_themed("pid", "parent", "cyan", buf);
+    prof_cons_show_themed("pid", "parent", NULL, buf);
     prof_cons_alert();
 }
 
