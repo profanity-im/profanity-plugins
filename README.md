@@ -40,7 +40,7 @@ A wrapper script is included to enable support for currently stable plugin langu
 ./configure-plugins
 ```
 
-This script currently forces support for C, Python and Ruby.  Lua support for all platforms is still in progress.
+This script currently forces support for C and Python.  Ruby and Lua support for all platforms is still in progress.
 
 Loading plugins
 ---------------
@@ -59,7 +59,7 @@ For example:
 
 ```
 [plugins]
-load=browser.py;connect.lua;ChatStart.rb;cricket-score.py;platform-info.py;ascii.py;pid.so
+load=browser.py;connect.lua;ChatStart.rb;platform-info.py;ascii.py;pid.so
 ```
 
 Run the `/plugins` command to see a list of installed plugins.
@@ -71,8 +71,8 @@ Whilst the API is being developed, the following test plugins are a good referen
 
 ```
 tests/python-test.py
-tests/RubyTest.rb
-tests/luatest.lua
+~~tests/RubyTest.rb~~
+~~tests/luatest.lua~~
 tests/test-c-plugin/test-c-plugin.c
 ```
 
@@ -82,11 +82,3 @@ Jenkins plugin
 The jenkins plugin monitors builds at a jenkins server and notifies of build status changes, builds may be triggered, logs viewed, and jobs opened using the system's default browser.
 
 ![alt tag](http://www.boothj5.com/jenkins-plugin.png)
-
-Cricket score plugin
---------------------
-
-The cricket score python plugin polls a public API to find the score of a given match, shows the score in the console and a desktop notification when it changes.  It also adds a `/cricket` command to show the score at any time.
-
-![alt tag](http://www.profanity.im/cricket.png)
-
