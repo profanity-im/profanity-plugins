@@ -28,24 +28,31 @@ def prof_post_priv_message_display(room, nick, message):
         say(nick + " says " + message)
     return message
 
-def _cmd_say(arg=None):
+def _cmd_say(arg1=None, arg2=None):
     global enabled
-    if arg == "on":
+    if arg1 == "on":
         enabled = True
-    elif arg == "off":
+    elif arg1 == "off":
         enabled = False
+    elif arg1 == "test":
+        if arg2 == None:
+            prof.cons_bad_cmd_usage("/say")
+        else:
+            say(arg2)
     else:
-        prof.cons_show("Usage: /say on|off")
+        prof.cons_bad_cmd_usage("/say")
 
 def prof_init(version, status):
     synopsis = [ 
-        "/say on|off"
+        "/say on|off",
+        "/say test <message>"
     ]
     description = "Read all messages out loud"
     args = [
-        [ "on|off", "Enable/disable say" ]
+        [ "on|off",         "Enable/disable say" ],
+        [ "test <message>", "Say message" ]
     ]
     examples = []
 
-    prof.register_command("/say", 1, 1, synopsis, description, args, examples, _cmd_say)
-    prof.register_ac("/say", [ "on", "off" ])
+    prof.register_command("/say", 1, 2, synopsis, description, args, examples, _cmd_say)
+    prof.register_ac("/say", [ "on", "off", "test" ])
