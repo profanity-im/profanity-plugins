@@ -1,14 +1,25 @@
 profanity-plugins
 =================
 
-Plugin support for Profanity is currently in development at the `plugins` branch.
+Plugin support for Profanity is currently in development.
 
-Supported languages for writing plugins are C, Python, Ruby and Lua.
+The `master` branch of Profanity now includes support for C plugins.
+The `plugins-python` branch includes support for both C and Python plugins.
+The `plugins` branch is unstable and includes support for C, Python, Ruby and Lua.
+
+The plan is to merge `plugins-python` into `master` once a few issues have been resolved and then release `0.5.0` of Profanity.
 
 Building Profanity with plugin support
 --------------------------------------
 
-`autoconf-archive`, `libtool` and the development packages for each supported langauge are required e.g.:
+Additional dependencies required:
+
+```
+autoconf-archive
+libtool
+```
+
+Plus the development packages for supported languages:
 
 ```
 python-dev
@@ -16,7 +27,9 @@ lua-dev
 ruby-dev
 ```
 
-Check out the `plugins` branch and run the usual:
+Until the `plugins` branch is stable enough, it is recommended to either build `master` (C plugins) or the `plugins-python` (C and Python) branch.
+
+Build with the usual:
 
 ```
 ./bootstrap.sh
@@ -25,25 +38,27 @@ make
 sudo make install
 ```
 
-By default, support for each language is optional and will be attempted during `./configure`.  To force support for a language, or disable support, the following flags may be used with `./configure`.
+By default the build will look for required libraries and add plugin support if they are found.  After building, run `profanity -v` to see which language support is available, example output:
 
 ```
---enable-c-plugins, --disable-c-plugins
---enable-python-plugins, --disable-python-plugins
---enable-ruby-plugins, --disable-ruby-plugins
---enable-lua-plugins, --disable-lua-plugins
+Profanity, version 0.5.0dev.plugins-python.63a7316
+Copyright (C) 2012 - 2016 James Booth <boothj5web@gmail.com>.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Build information:
+XMPP library: libmesode
+Desktop notification support: Enabled
+OTR support: Enabled
+PGP support: Enabled
+C plugins: Enabled
+Python plugins: Enabled
 ```
 
-A wrapper script is included to enable support for currently stable plugin languages:
-
-```
-./configure-plugins
-```
-
-This script currently forces support for C and Python.  Ruby and Lua support for all platforms is still in progress.
-
-Loading plugins
----------------
+Installing plugins
+------------------
 
 1. Copy the plugin
 
@@ -59,26 +74,24 @@ For example:
 
 ```
 [plugins]
-load=browser.py;connect.lua;ChatStart.rb;platform-info.py;ascii.py;pid.so
+load=browser.py;platform-info.py;ascii.py;pid.so
 ```
 
-Run the `/plugins` command to see a list of installed plugins.
+Getting help on plugins:
+
+`/plugins` - Shows a list of loaded plugins.
+`/help commands` - Includes commands defined in plugins
+`/help commands plugins` - Shows only commands defined by plugins
+`/help <plugin_cmd>` - Show help for a plugin command, e.g. `/help browser`
 
 Example plugin code
 -------------------
 
-Whilst the API is being developed, the following test plugins are a good reference of possible hooks and API calls available:
+Whilst the API is being developed, the following test plugins are a good reference of possible hooks and API calls available, (Ruby and Lua examples might not be up to date):
 
 ```
+tests/test-c-plugin/test-c-plugin.c
 tests/python-test.py
 tests/RubyTest.rb
 tests/luatest.lua
-tests/test-c-plugin/test-c-plugin.c
 ```
-
-Jenkins plugin
---------------
-
-The jenkins plugin monitors builds at a jenkins server and notifies of build status changes, builds may be triggered, logs viewed, and jobs opened using the system's default browser.
-
-![alt tag](http://www.boothj5.com/jenkins-plugin.png)
