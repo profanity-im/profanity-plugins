@@ -2,12 +2,16 @@ import prof
 import subprocess
 
 def _cmd_ascii(text):
+    proc = subprocess.Popen(['figlet', '--', text], stdout=subprocess.PIPE)
+    ascii_out = proc.communicate()[0].decode('utf-8')
     recipient = prof.get_current_recipient()
     room = prof.get_current_muc()
-    if recipient or room:
-        proc = subprocess.Popen(['figlet', '--', text], stdout=subprocess.PIPE)
-        ascii_out = proc.communicate()[0].decode('utf-8')
+    if recipient:
         prof.send_line(u'\u000A' + ascii_out)
+    elif room:
+        prof.send_line(u'\u000A' + ascii_out)
+    elif prof.current_win_is_console():
+        prof.cons_show(u'\u000A' + ascii_out)
 
 def prof_init(version, status):
     synopsis = [ "/ascii <message>" ]

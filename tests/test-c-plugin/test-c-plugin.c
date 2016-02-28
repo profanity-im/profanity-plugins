@@ -60,6 +60,15 @@ cmd_ctest(char **args)
             sprintf(buf, "%s%s, %s, %s, %s", str, args[1], args[2], args[3], args[4]);
             prof_win_show(plugin_win, buf);
         }
+    } else if (strcmp(args[0], "constest") == 0) {
+        int res = prof_current_win_is_console();
+        create_win();
+        prof_win_focus(plugin_win);
+        if (res) {
+            prof_win_show(plugin_win, "called -> prof_current_win_is_console: true");
+        } else {
+            prof_win_show(plugin_win, "called -> prof_current_win_is_console: false");
+        }
     } else if (strcmp(args[0], "winshow") == 0) {
         if (args[1]) {
             create_win();
@@ -212,6 +221,7 @@ prof_init(const char * const version, const char * const status)
         "/c-test consalert",
         "/c-test consshow <message>",
         "/c-test consshow_t <group> <key> <default> <message>",
+        "/c-test constest",
         "/c-test winshow <message>",
         "/c-test winshow_t <group> <key> <default> <message>",
         "/c-test notify <message>",
@@ -225,6 +235,7 @@ prof_init(const char * const version, const char * const status)
         { "consalert",                                      "Highlight the console window in the status bar" },
         { "consshow <message>",                             "Show the message in the console window" },
         { "consshow_t <group> <key> <default> <message>",   "Show the themed message in the console window. " },
+        { "constest",                                       "Show whether the command was run in the console." },
         { "winshow <message>",                              "Show the message in the plugin window" },
         { "winshow_t <group> <key> <default> <message>",    "Show the themed message in the plugin window. " },
         { "notify <message>",                               "Send a desktop notification with message" },
@@ -245,7 +256,7 @@ prof_init(const char * const version, const char * const status)
 
     prof_register_command("/c-test", 1, 5, synopsis, description, args, examples, cmd_ctest);
 
-    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "winshow", "winshow_t", "notify", "sendline", "get", "log", NULL };
+    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", NULL };
     prof_register_ac("/c-test", cmd_ac);
 
     char *get_ac[] = { "recipient", "room", NULL };

@@ -34,7 +34,15 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
             create_win()
             prof.win_focus(plugin_win)
             prof.cons_show_themed(group, key, dflt, message)
-            prof.win_show(plugin_win, "called -> prof_cons_show_themed: " + arg2 + ", " + arg3 + ", " + arg4 + ", " + arg5)
+            prof.win_show(plugin_win, "called -> prof.cons_show_themed: " + arg2 + ", " + arg3 + ", " + arg4 + ", " + arg5)
+    elif arg1 == "constest":
+        res = prof.current_win_is_console()
+        create_win()
+        prof.win_focus(plugin_win)
+        if res:
+            prof.win_show(plugin_win, "called -> prof.current_win_is_console: true")
+        else:
+            prof.win_show(plugin_win, "called -> prof.current_win_is_console: false")
     elif arg1 == "winshow":
         if arg2 != None:
             create_win()
@@ -141,6 +149,7 @@ def prof_init(version, status):
         "/python-test consalert",
         "/python-test consshow <message>",
         "/python-test consshow_t <group> <key> <default> <message>",
+        "/python-test constest",
         "/python-test winshow <message>",
         "/python-test winshow_t <group> <key> <default> <message>",
         "/python-test notify <message>",
@@ -153,6 +162,7 @@ def prof_init(version, status):
         [ "consalert",                                      "Highlight the console window in the status bar" ],
         [ "consshow <message>",                             "Show the message in the console window" ],
         [ "consshow_t <group> <key> <default> <message>",   "Show the themed message in the console window. " ],
+        [ "constest",                                       "Show whether the command was run in the console." ],
         [ "winshow <message>",                              "Show the message in the plugin window" ],
         [ "winshow_t <group> <key> <default> <message>",    "Show the themed message in the plugin window. " ],
         [ "notify <message>",                               "Send a desktop notification with message" ],
@@ -171,7 +181,7 @@ def prof_init(version, status):
     prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, cmd_pythontest)
 
     prof.register_ac("/python-test", 
-        [ "consalert", "consshow", "consshow_t", "winshow", "winshow_t", "notify", "sendline", "get", "log" ]
+        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log" ]
     )
     prof.register_ac("/python-test get",
         [ "recipient", "room" ]
