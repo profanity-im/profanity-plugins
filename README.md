@@ -79,10 +79,10 @@ load=browser.py;platform-info.py;ascii.py;pid.so
 
 Getting help on plugins:
 
-`/plugins` - Shows a list of loaded plugins.
-`/help commands` - Includes commands defined in plugins
-`/help commands plugins` - Shows only commands defined by plugins
-`/help <plugin_cmd>` - Show help for a plugin command, e.g. `/help browser`
+* `/plugins` - Shows a list of loaded plugins.
+* `/help commands` - Includes commands defined in plugins
+* `/help commands plugins` - Shows only commands defined by plugins
+* `/help <plugin_cmd>` - Show help for a plugin command, e.g. `/help browser`
 
 Example plugin code
 -------------------
