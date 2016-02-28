@@ -9,6 +9,8 @@ Plugin support for Profanity is currently in development.
 
 The plan is to merge `plugins-python` into `master` once a few issues have been resolved and then release `0.5.0` of Profanity.
 
+For a list of outstanding issues, see: https://github.com/boothj5/profanity/milestones/0.5.0
+
 Building Profanity with plugin support
 --------------------------------------
 
