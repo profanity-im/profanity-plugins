@@ -1,4 +1,4 @@
-rm -f ~/.local/share/profanity/plugins/*
+rm -rf ~/.local/share/profanity/plugins/*
 
 cp ascii.py ~/.local/share/profanity/plugins/.
 cp browser.py ~/.local/share/profanity/plugins/.
