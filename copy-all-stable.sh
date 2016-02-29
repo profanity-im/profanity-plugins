@@ -1,6 +1,7 @@
 rm -rf ~/.local/share/profanity/plugins/*
 
 cp ascii.py ~/.local/share/profanity/plugins/.
+cp syscmd.py ~/.local/share/profanity/plugins/.
 cp browser.py ~/.local/share/profanity/plugins/.
 cp platform-info.py ~/.local/share/profanity/plugins/.
 cp say.py ~/.local/share/profanity/plugins/.
