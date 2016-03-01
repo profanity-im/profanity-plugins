@@ -3,10 +3,13 @@ import subprocess
 
 system_win = "System"
 
+def _get_result(command):
+    return subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read()
+
 def _handle_win_input(win, command):
     prof.win_show_themed(win, "system", "command", None, command)
     prof.win_show(win, "")
-    result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read()
+    result = _get_result(command)
     split = result.splitlines()
     for s in split:
         prof.win_show_themed(win, "system", "result", None, s)
@@ -16,22 +19,39 @@ def create_win():
     if prof.win_exists(system_win) == False:
         prof.win_create(system_win, _handle_win_input)
 
-def _cmd_system(command=None):
-    create_win()
-    prof.win_focus(system_win)
-    if command:
-        _handle_win_input(system_win, command)
+def _cmd_system(arg1=None, arg2=None):
+    if arg1 == "send":
+        if arg2 == None:
+            prof.cons_bad_cmd_usage("/system")
+        else:
+            room = prof.get_current_muc()
+            recipient = prof.get_current_recipient()
+            if room == None and recipient == None:
+                prof.cons_show("You must be in a chat or muc window to send a system command")
+                prof.cons_alert()
+            else:
+                result = _get_result(arg2)
+                prof.send_line(u'\u000A' + result)
+    else:
+        create_win()
+        prof.win_focus(system_win)
+        if arg1:
+            _handle_win_input(system_win, arg1)
 
 def prof_init(version, status):
     synopsis = [
         "/system",
-        "/system <command>"
+        "/system <command>",
+        "/system send <command>"
     ]
     description = "Run a system command, calling with no arguments will open or focus the system window."
     args = [
-        [ "<command>", "The system command to run" ]
+        [ "send <command>", "Send the result of the command to the current recipient or room" ],
+        [ "<command>",      "The system command to run" ]
     ]
     examples = [
-        "/system \"ls -l\""
+        "/system \"ls -l\"",
+        "/system send \"uname -a\""
     ]
-    prof.register_command("/system", 0, 1, synopsis, description, args, examples, _cmd_system)
+    prof.register_command("/system", 0, 2, synopsis, description, args, examples, _cmd_system)
+    prof.register_ac("/system", [ "send" ])
