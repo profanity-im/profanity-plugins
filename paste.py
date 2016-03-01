@@ -6,7 +6,10 @@ def _cmd_paste():
     root = tk.Tk(baseName="")
     root.withdraw()
     result = root.clipboard_get()
-    prof.cons_show(u'\u000A' + result)
+    recipient = prof.get_current_recipient()
+    room = prof.get_current_muc()
+    if recipient or room:
+        prof.send_line(u'\u000A' + result)
 
 def prof_init(version, status):
     synopsis = [
