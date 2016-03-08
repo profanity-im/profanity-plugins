@@ -142,6 +142,10 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
     else:
         prof.cons_bad_cmd_usage("/python-test")
 
+def timed_callback():
+    create_win()
+    prof.win_show(plugin_win, "timed -> timed_callback called")
+
 def prof_init(version, status):
     prof.win_create(plugin_win, _handle_win_input)
 
@@ -189,6 +193,8 @@ def prof_init(version, status):
     prof.register_ac("/python-test log",
         [ "debug", "info", "warning", "error" ]
     )
+
+    prof.register_timed(timed_callback, 30)
 
 def prof_on_start():
     create_win()

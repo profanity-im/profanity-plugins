@@ -213,6 +213,13 @@ cmd_ctest(char **args)
 }
 
 void
+timed_callback(void)
+{
+    create_win();
+    prof_win_show(plugin_win, "timed -> timed_callback called");
+}
+
+void
 prof_init(const char * const version, const char * const status)
 {
     prof_win_create(plugin_win, handle_win_input);
@@ -264,6 +271,8 @@ prof_init(const char * const version, const char * const status)
 
     char *log_ac[] = { "debug", "info", "warning", "error", NULL };
     prof_register_ac("/c-test log", log_ac);
+
+    prof_register_timed(timed_callback, 30);
 }
 
 void
