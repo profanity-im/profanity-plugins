@@ -1,6 +1,17 @@
 import prof
 
+import threading
+import time
+
 plugin_win = "Python Test"
+
+count = 0
+
+def _inc_counter():
+    global count
+    while True:
+        time.sleep(5)
+        count = count + 1
 
 def _handle_win_input(win, line):
     prof.win_show(win, "Input received: " + line)
@@ -139,6 +150,10 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
                 prof.win_show(plugin_win, "called -> prof.log_error: " + arg3)
         else:
             prof.cons_bad_cmd_usage("/python-test")
+    elif arg1 == "count":
+        create_win()
+        prof.win_focus(plugin_win)
+        prof.win_show(plugin_win, "Count: " + str(count))
     else:
         prof.cons_bad_cmd_usage("/python-test")
 
@@ -147,6 +162,10 @@ def timed_callback():
     prof.win_show(plugin_win, "timed -> timed_callback called")
 
 def prof_init(version, status):
+    t = threading.Thread(target=_inc_counter)
+    t.daemon = True
+    t.start()
+
     prof.win_create(plugin_win, _handle_win_input)
 
     synopsis = [
@@ -159,7 +178,8 @@ def prof_init(version, status):
         "/python-test notify <message>",
         "/python-test sendline <line>",
         "/python-test get recipient|room",
-        "/python-test log debug|info|warning|error <message>"
+        "/python-test log debug|info|warning|error <message>",
+        "/python-test count"
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
@@ -173,7 +193,8 @@ def prof_init(version, status):
         [ "sendline <line>",                                "Pass line to profanity to process" ],
         [ "get recipient",                                  "Show the current chat recipient, if in a chat window" ],
         [ "get room",                                       "Show the current room JID, if ina a chat room"],
-        [ "log debug|info|warning|error <message>",         "Log a message at the specified level" ]
+        [ "log debug|info|warning|error <message>",         "Log a message at the specified level" ],
+        [ "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" ]
     ]
     examples = [
         "/python-test sendline /about",
@@ -185,7 +206,7 @@ def prof_init(version, status):
     prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, cmd_pythontest)
 
     prof.register_ac("/python-test", 
-        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log" ]
+        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count" ]
     )
     prof.register_ac("/python-test get",
         [ "recipient", "room" ]

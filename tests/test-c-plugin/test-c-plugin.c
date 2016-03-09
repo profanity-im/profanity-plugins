@@ -3,10 +3,23 @@
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
+#include <pthread.h>
+#include <unistd.h>
 
 #include <profapi.h>
 
 static PROF_WIN_TAG plugin_win = "C Test";
+static pthread_t worker_thread;
+static int count = 0;
+
+void*
+inc_counter(void *arg)
+{
+    while (1) {
+        sleep(5);
+        count++;
+    }
+}
 
 void
 handle_win_input(PROF_WIN_TAG win, char *line)
@@ -17,7 +30,8 @@ handle_win_input(PROF_WIN_TAG win, char *line)
     prof_win_show(win, buf);
 }
 
-void create_win(void)
+void
+create_win(void)
 {
     if (!prof_win_exists(plugin_win)) {
         prof_win_create(plugin_win, handle_win_input);
@@ -207,6 +221,12 @@ cmd_ctest(char **args)
         } else {
             prof_cons_bad_cmd_usage("/c-test");
         }
+    } else if (strcmp(args[0], "count") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        char buf[100];
+        sprintf(buf, "Count: %d", count);
+        prof_win_show(plugin_win, buf);
     } else {
         prof_cons_bad_cmd_usage("/c-test");
     }
@@ -222,6 +242,8 @@ timed_callback(void)
 void
 prof_init(const char * const version, const char * const status)
 {
+    pthread_create(&worker_thread, NULL, inc_counter, NULL);
+
     prof_win_create(plugin_win, handle_win_input);
 
     const char *synopsis[] = {
@@ -235,6 +257,7 @@ prof_init(const char * const version, const char * const status)
         "/c-test sendline <line>",
         "/c-test get recipient|room",
         "/c-test log debug|info|warning|error <message>",
+        "/c-test count",
         NULL
     };
     const char *description = "C test plugin. All commands focus the plugin window.";
@@ -250,6 +273,7 @@ prof_init(const char * const version, const char * const status)
         { "get recipient",                                  "Show the current chat recipient, if in a chat window" },
         { "get room",                                       "Show the current room JID, if in a chat room" },
         { "log debug|info|warning|error <message>",         "Log a message at the specified level" },
+        { "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" },
         { NULL, NULL }
     };
 
@@ -263,7 +287,7 @@ prof_init(const char * const version, const char * const status)
 
     prof_register_command("/c-test", 1, 5, synopsis, description, args, examples, cmd_ctest);
 
-    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", NULL };
+    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", NULL };
     prof_register_ac("/c-test", cmd_ac);
 
     char *get_ac[] = { "recipient", "room", NULL };
