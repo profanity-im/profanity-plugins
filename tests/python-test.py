@@ -87,7 +87,7 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
             create_win()
             prof.win_focus(plugin_win)
             prof.notify(arg2, 5000, "python-test plugin")
-            prof_win_show(plugin_win, "called -> prof.notify: " + arg2)
+            prof.win_show(plugin_win, "called -> prof.notify: " + arg2)
         else:
             prof.cons_bad_cmd_usage("/python-test")
     elif arg1 == "get":
