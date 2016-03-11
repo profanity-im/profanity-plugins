@@ -86,9 +86,9 @@ Example plugin code
 
 Whilst the API is being developed, the following test plugins are a good reference of possible hooks and API calls available, (Ruby and Lua examples might not be up to date):
 
-```
-tests/test-c-plugin/test-c-plugin.c
-tests/python-test.py
-tests/RubyTest.rb
-tests/luatest.lua
-```
+* [tests/test-c-plugin.c](https://github.com/boothj5/profanity-plugins/blob/master/tests/test-c-plugin/test-c-plugin.c)
+* [tests/python-test.py](https://github.com/boothj5/profanity-plugins/blob/master/tests/python-test.py)
+* [tests/RubyTest.rb](https://github.com/boothj5/profanity-plugins/blob/master/tests/RubyTest.rb)
+* [tests/luatest.lua](https://github.com/boothj5/profanity-plugins/blob/master/tests/luatest.lua)
+
+
