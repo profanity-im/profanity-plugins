@@ -59,13 +59,13 @@ Python plugins: Enabled
 Installing plugins
 ------------------
 
-1. Copy the plugin
+1 - Copy the plugin
 
 For Python, Ruby and Lua plugins, copy the plugin to `$XDG_DATA/profanity/plugins/`, (`~/.local/share/profanity/plugins/` on most systems).
 
 For C plugins, build the plugin using the supplied Makefile, and then copy the `.so` file to the same location.
 
-2. Add to profrc
+2 - Add to profrc
 
 For all types of plugins, the list of plugins to acutally load when starting Profanity is defined in `$XDG_CONFIG/profanity/profrc` (`~/.config/profanity/profrc` on most systems).
 
