@@ -4,7 +4,7 @@ profanity-plugins
 Plugin support for Profanity is currently in development.
 
 * The `master` branch of Profanity now includes support for C and Python plugins.
-* The `plugins` contains additional support for Ruby and Lua, but is unstable.
+* The `plugins` branch contains additional support for Ruby and Lua, but is unstable.
 
 For a list of outstanding issues before releasing 0.5.0, see: https://github.com/boothj5/profanity/milestones/0.5.0
 
