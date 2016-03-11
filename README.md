@@ -26,8 +26,6 @@ lua-dev
 ruby-dev
 ```
 
-Until the `plugins` branch is stable enough, it is recommended to either build `master` (C and Python plugins).
-
 Build with the usual:
 
 ```
