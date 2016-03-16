@@ -3,7 +3,7 @@ import prof
 import wikipedia
 import os
 import webbrowser
-import sys
+import requests
 
 win = "Wikipedia"
 page_ac = []
@@ -146,13 +146,24 @@ def _refs(page_str):
     prof.win_focus(win)
 
 def cmd_wp(subcmd, arg):
-    if   subcmd == "search":    _search(arg)
-    elif subcmd == "summary":   _summary(arg)
-    elif subcmd == "page":      _page(arg)
-    elif subcmd == "images":    _images(arg)
-    elif subcmd == "links":     _links(arg)
-    elif subcmd == "refs":      _refs(arg)
-    elif subcmd == "open":      _open_browser(arg)
+    try:
+        if   subcmd == "search":    _search(arg)
+        elif subcmd == "summary":   _summary(arg)
+        elif subcmd == "page":      _page(arg)
+        elif subcmd == "images":    _images(arg)
+        elif subcmd == "links":     _links(arg)
+        elif subcmd == "refs":      _refs(arg)
+        elif subcmd == "open":      _open_browser(arg)
+    except wikipedia.exceptions.WikipediaException as e:
+        create_win()
+        prof.win_show_themed(win, "wikipedia", "error", None, str(e))
+        prof.win_show(win, "")
+        prof.win_focus(win)
+    except requests.exceptions.ConnectionError:
+        create_win()
+        prof.win_show_themed(win, "wikipedia", "error", None, "Connection Error")
+        prof.win_show(win, "")
+        prof.win_focus(win)
 
 def prof_init(version, status):
     synopsis = [
