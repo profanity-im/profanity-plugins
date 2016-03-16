@@ -80,6 +80,23 @@ Getting help on plugins:
 * `/help commands plugins` - Shows commands defined by plugins
 * `/help <plugin_cmd>` - Show help for a plugin command, e.g. `/help browser`
 
+Plugin themes
+-------------
+
+The plugins API includes functions to print themed output to the console or a plugins window.  The themes need to be added to 
+
+```
+~/.local/share/profanity/plugin_themes
+```
+
+For example ([syscmd.py](https://github.com/boothj5/profanity-plugins/blob/master/syscmd.py) plugin):
+
+```
+[system]
+command=cyan
+result=green
+```
+
 Example plugin code
 -------------------
 
