@@ -1,3 +1,12 @@
+"""
+Calls the 'whoami' command
+
+Theme in ~/.local/share/profanity/plugin_themes
+
+[whoami]
+result=bold_magenta
+"""
+
 import prof
 import getpass
 

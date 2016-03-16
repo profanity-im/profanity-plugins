@@ -1,3 +1,13 @@
+/*
+Simple plugin to display the PID of the Profanity process and its parent
+ 
+Theme example in ~/.local/share/profanity/plugin_themes
+
+[pid]
+self=bold_white
+parent=white
+*/
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>

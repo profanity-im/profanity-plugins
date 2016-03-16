@@ -1,3 +1,12 @@
+"""
+Shows platform details in the console
+
+Theme items in ~/.local/share/profanity/plugin_themes
+
+[platform]
+line=cyan
+"""
+
 import prof
 import platform
 

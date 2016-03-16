@@ -1,3 +1,13 @@
+"""
+Allow running system commands in a plugin window, or send result to recipient
+
+Theme options in ~/.local/share/profanity/plugin_themes
+
+[system]
+command=magenta
+result=green
+"""
+
 import prof
 import subprocess
 
