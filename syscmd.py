@@ -20,7 +20,10 @@ def create_win():
         prof.win_create(system_win, _handle_win_input)
 
 def _cmd_system(arg1=None, arg2=None):
-    if arg1 == "send":
+    if not arg1:
+        create_win()
+        prof.win_focus(system_win)
+    elif arg1 == "send":
         if arg2 == None:
             prof.cons_bad_cmd_usage("/system")
         else:
@@ -32,26 +35,30 @@ def _cmd_system(arg1=None, arg2=None):
             else:
                 result = _get_result(arg2)
                 prof.send_line(u'\u000A' + result)
+    elif arg1 == "exec":
+        if arg2 == None:
+            prof.cons_bad_cmd_usage("/system")
+        else:
+            create_win()
+            prof.win_focus(system_win)
+            _handle_win_input(system_win, arg2)
     else:
-        create_win()
-        prof.win_focus(system_win)
-        if arg1:
-            _handle_win_input(system_win, arg1)
+        prof.cons_bad_cmd_usage("/system")
 
 def prof_init(version, status):
     synopsis = [
         "/system",
-        "/system <command>",
+        "/system exec <comman>",
         "/system send <command>"
     ]
     description = "Run a system command, calling with no arguments will open or focus the system window."
     args = [
-        [ "send <command>", "Send the result of the command to the current recipient or room" ],
-        [ "<command>",      "The system command to run" ]
+        [ "exec <command>", "Execute a command" ],
+        [ "send <command>", "Send the result of the command to the current recipient or room" ]
     ]
     examples = [
-        "/system \"ls -l\"",
-        "/system send \"uname -a\""
+        "/system exec ls -l",
+        "/system send uname -a"
     ]
     prof.register_command("/system", 0, 2, synopsis, description, args, examples, _cmd_system)
-    prof.register_ac("/system", [ "send" ])
+    prof.register_ac("/system", [ "exec", "send" ])
