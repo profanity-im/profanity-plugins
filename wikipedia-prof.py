@@ -2,7 +2,7 @@
 Requires wikipedia API
     pip install wikipedia
 
-Example theme options:
+Example theme options (~/.local/share/profanity/plugin_themes):
 
 [wikipedia]
 error=red
