@@ -1,3 +1,33 @@
+"""
+Requires wikipedia API
+    pip install wikipedia
+
+Example theme options:
+
+[wikipedia]
+error=red
+search=bold_green
+search.noresult=red
+search.results=green
+summary.nopage=red
+summary.title=bold_green
+summary.url=magenta
+summary.text=cyan
+page.nopage=red
+page.title=bold_green
+page.text=cyan
+images.nopage=red
+images=bold_green
+images.url=magenta
+links.nopage=red
+links=bold_green
+links.link=green
+refs.nopage=red
+refs=bold_green
+refs.url=magenta
+
+"""
+
 import prof
 
 import wikipedia
