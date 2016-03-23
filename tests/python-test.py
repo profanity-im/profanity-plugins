@@ -6,6 +6,7 @@ import time
 plugin_win = "Python Test"
 
 count = 0
+ping_id = 1
 
 def _inc_counter():
     global count
@@ -21,6 +22,7 @@ def create_win():
         prof.win_create(plugin_win, _handle_win_input)
 
 def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
+    global ping_id
     if arg1 == "consalert":
         create_win()
         prof.win_focus(plugin_win)
@@ -154,6 +156,18 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
         create_win()
         prof.win_focus(plugin_win)
         prof.win_show(plugin_win, "Count: " + str(count))
+    elif arg1 == "ping":
+        if arg2 == None:
+            prof.cons_bad_cmd_usage("/python-test")
+        else:
+            create_win()
+            prof.win_focus(plugin_win)
+            res = prof.send_stanza("<iq to='" + arg2 + "' id='pythonplugin-" + str(ping_id) + "' type='get'><ping xmlns='urn:xmpp:ping'/></iq>")
+            ping_id = ping_id + 1
+            if res:
+                prof.win_show(plugin_win, "Ping sent successfully")
+            else:
+                prof.win_show(plugin_win, "Error sending ping")
     else:
         prof.cons_bad_cmd_usage("/python-test")
 
@@ -179,7 +193,8 @@ def prof_init(version, status):
         "/python-test sendline <line>",
         "/python-test get recipient|room",
         "/python-test log debug|info|warning|error <message>",
-        "/python-test count"
+        "/python-test count",
+        "/python-test ping <jid>"
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
@@ -194,19 +209,21 @@ def prof_init(version, status):
         [ "get recipient",                                  "Show the current chat recipient, if in a chat window" ],
         [ "get room",                                       "Show the current room JID, if ina a chat room"],
         [ "log debug|info|warning|error <message>",         "Log a message at the specified level" ],
-        [ "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" ]
+        [ "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" ],
+        [ "ping <jid>",                                     "Send an XMPP ping to the specified Jabber ID" ]
     ]
     examples = [
         "/python-test sendline /about",
         "/python-test log debug \"Test debug message\"",
         "/python-test consshow_t c-test cons.show none \"This is themed\"",
-        "/python-test consshow_t none none bold_cyan \"This is bold_cyan\""
+        "/python-test consshow_t none none bold_cyan \"This is bold_cyan\"",
+        "/python-test ping buddy@server.org"
     ]
 
     prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, cmd_pythontest)
 
     prof.register_ac("/python-test", 
-        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count" ]
+        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping" ]
     )
     prof.register_ac("/python-test get",
         [ "recipient", "room" ]

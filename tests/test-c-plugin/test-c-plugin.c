@@ -11,6 +11,7 @@
 static PROF_WIN_TAG plugin_win = "C Test";
 static pthread_t worker_thread;
 static int count = 0;
+static int ping_id = 1;
 
 void*
 inc_counter(void *arg)
@@ -227,6 +228,27 @@ cmd_ctest(char **args)
         char buf[100];
         sprintf(buf, "Count: %d", count);
         prof_win_show(plugin_win, buf);
+    } else if (strcmp(args[0], "ping") == 0) {
+        if (args[1] == NULL) {
+            prof_cons_bad_cmd_usage("/c-test");
+        } else {
+            create_win();
+            prof_win_focus(plugin_win);
+            char *strstart = "<iq to='";
+            char *strend = "' type='get'><ping xmlns='urn:xmpp:ping'/></iq>";
+            char *idstart = "' id='cplugin-";
+            char idbuf[strlen(idstart) + 10];
+            sprintf(idbuf, "%s%d", idstart, ping_id);
+            char buf[strlen(strstart) + strlen(args[1]) + strlen(idbuf) + strlen(strend)];
+            sprintf(buf, "%s%s%s%s", strstart, args[1], idbuf, strend);
+            int res = prof_send_stanza(buf);
+            ping_id++;
+            if (res) {
+                prof_win_show(plugin_win, "Ping sent successfully");
+            } else {
+                prof_win_show(plugin_win, "Error sending ping");
+            }
+        }
     } else {
         prof_cons_bad_cmd_usage("/c-test");
     }
@@ -258,6 +280,7 @@ prof_init(const char * const version, const char * const status)
         "/c-test get recipient|room",
         "/c-test log debug|info|warning|error <message>",
         "/c-test count",
+        "/c-test ping <jid>",
         NULL
     };
     const char *description = "C test plugin. All commands focus the plugin window.";
@@ -274,6 +297,7 @@ prof_init(const char * const version, const char * const status)
         { "get room",                                       "Show the current room JID, if in a chat room" },
         { "log debug|info|warning|error <message>",         "Log a message at the specified level" },
         { "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" },
+        { "ping <jid>",                                     "Send an XMPP ping to the specified Jabber ID" },
         { NULL, NULL }
     };
 
@@ -282,12 +306,13 @@ prof_init(const char * const version, const char * const status)
         "/c-test log debug \"Test debug message\"",
         "/c-test consshow_t c-test cons.show none \"This is themed\"",
         "/c-test consshow_t none none bold_cyan \"This is bold_cyan\"",
+        "/c-test ping buddy@server.org",
         NULL
     };
 
     prof_register_command("/c-test", 1, 5, synopsis, description, args, examples, cmd_ctest);
 
-    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", NULL };
+    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", NULL };
     prof_register_ac("/c-test", cmd_ac);
 
     char *get_ac[] = { "recipient", "room", NULL };
