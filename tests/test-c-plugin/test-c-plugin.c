@@ -249,6 +249,49 @@ cmd_ctest(char **args)
                 prof_win_show(plugin_win, "Error sending ping");
             }
         }
+    } else if (strcmp(args[0], "boolean") == 0) {
+        if (args[1] == NULL) {
+            prof_cons_bad_cmd_usage("/c-test");
+        } else if (strcmp(args[1], "get") == 0) {
+            if (args[2] == NULL || args[3] == NULL) {
+                prof_cons_bad_cmd_usage("/c-test");
+            } else {
+                char *group = args[2];
+                char *key = args[3];
+                int dflt = 0;
+                create_win();
+                prof_win_focus(plugin_win);
+                int res = prof_settings_get_boolean(group, key, dflt);
+                if (res) {
+                    prof_win_show(plugin_win, "Boolean setting: TRUE");
+                } else {
+                    prof_win_show(plugin_win, "Boolean setting: FALSE");
+                }
+            }
+        } else if (strcmp(args[1], "set") == 0) {
+            if (args[2] == NULL || args[3] == NULL || args[4] == NULL) {
+                prof_cons_bad_cmd_usage("/c-test");
+            } else {
+                char *group = args[2];
+                char *key = args[3];
+                if ((strcmp(args[4], "true") != 0) && (strcmp(args[4], "false") != 0)) {
+                    prof_cons_bad_cmd_usage("/c-test");
+                } else {
+                    int value = 0;
+                    if (strcmp(args[4], "true") == 0) {
+                        value = 1;
+                    }
+                    create_win();
+                    prof_win_focus(plugin_win);
+                    prof_settings_set_boolean(group, key, value);
+                    char buf[5 + strlen(group) + 2 + strlen(key) + 4 + strlen(args[4])];
+                    sprintf(buf, "Set [%s] %s to %s", group, key, args[4]);
+                    prof_win_show(plugin_win, buf);
+                }
+            }
+        } else {
+            prof_cons_bad_cmd_usage("/c-test");
+        }
     } else {
         prof_cons_bad_cmd_usage("/c-test");
     }
@@ -281,6 +324,8 @@ prof_init(const char * const version, const char * const status)
         "/c-test log debug|info|warning|error <message>",
         "/c-test count",
         "/c-test ping <jid>",
+        "/c-test boolean get <group> <key>",
+        "/c-test boolean set <group> <key> <value>",
         NULL
     };
     const char *description = "C test plugin. All commands focus the plugin window.";
@@ -298,6 +343,8 @@ prof_init(const char * const version, const char * const status)
         { "log debug|info|warning|error <message>",         "Log a message at the specified level" },
         { "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" },
         { "ping <jid>",                                     "Send an XMPP ping to the specified Jabber ID" },
+        { "boolean get <group> <key>",                      "Get a boolean setting" },
+        { "boolean set <group> <key> <value>",              "Set a boolean setting" },
         { NULL, NULL }
     };
 
@@ -312,7 +359,7 @@ prof_init(const char * const version, const char * const status)
 
     prof_register_command("/c-test", 1, 5, synopsis, description, args, examples, cmd_ctest);
 
-    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", NULL };
+    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean", NULL };
     prof_register_ac("/c-test", cmd_ac);
 
     char *get_ac[] = { "recipient", "room", NULL };
@@ -320,6 +367,9 @@ prof_init(const char * const version, const char * const status)
 
     char *log_ac[] = { "debug", "info", "warning", "error", NULL };
     prof_register_ac("/c-test log", log_ac);
+
+    char *boolean_ac[] = { "get", "set", NULL };
+    prof_register_ac("/c-test boolean", boolean_ac);
 
     prof_register_timed(timed_callback, 30);
 }

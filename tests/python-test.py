@@ -168,6 +168,39 @@ def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
                 prof.win_show(plugin_win, "Ping sent successfully")
             else:
                 prof.win_show(plugin_win, "Error sending ping")
+    elif arg1 == "boolean":
+        if arg2 == "get":
+            if arg3 == None or arg4 == None:
+                prof.cons_bad_cmd_usage("/python-test")
+            else:
+                group = arg3
+                key = arg4
+                dflt = False
+                create_win()
+                prof.win_focus(plugin_win)
+                res = prof.settings_get_boolean(group, key, dflt)
+                if res:
+                    prof.win_show(plugin_win, "Boolean setting: TRUE")
+                else:
+                    prof.win_show(plugin_win, "Boolean setting: FALSE")
+        elif arg2 == "set":
+            if arg3 == None or arg4 == None or arg5 == None:
+                prof.cons_bad_cmd_usage("/python-test")
+            else:
+                group = arg3
+                key = arg4
+                if arg5 != "true" and arg5 != "false":
+                    prof.cons_bad_cmd_usage("/python-test")
+                else:
+                    value = False
+                    if arg5 == "true":
+                        value = True
+                    create_win()
+                    prof.win_focus(plugin_win)
+                    prof.settings_set_boolean(group, key, value)
+                    prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
+        else:
+            prof.cons_bad_cmd_usage("/python-test")
     else:
         prof.cons_bad_cmd_usage("/python-test")
 
@@ -194,7 +227,9 @@ def prof_init(version, status):
         "/python-test get recipient|room",
         "/python-test log debug|info|warning|error <message>",
         "/python-test count",
-        "/python-test ping <jid>"
+        "/python-test ping <jid>",
+        "/python-test boolean get <group> <key>",
+        "/python-test boolean set <group> <key> <value>"
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
@@ -210,7 +245,9 @@ def prof_init(version, status):
         [ "get room",                                       "Show the current room JID, if ina a chat room"],
         [ "log debug|info|warning|error <message>",         "Log a message at the specified level" ],
         [ "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" ],
-        [ "ping <jid>",                                     "Send an XMPP ping to the specified Jabber ID" ]
+        [ "ping <jid>",                                     "Send an XMPP ping to the specified Jabber ID" ],
+        [ "boolean get <group> <key>",                      "Get a boolean setting" ],
+        [ "boolean set <group> <key> <value>",              "Set a boolean setting" ]
     ]
     examples = [
         "/python-test sendline /about",
@@ -223,13 +260,16 @@ def prof_init(version, status):
     prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, cmd_pythontest)
 
     prof.register_ac("/python-test", 
-        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping" ]
+        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean" ]
     )
     prof.register_ac("/python-test get",
         [ "recipient", "room" ]
     )
     prof.register_ac("/python-test log",
         [ "debug", "info", "warning", "error" ]
+    )
+    prof.register_ac("/python-test boolean",
+        [ "get", "set" ]
     )
 
     prof.register_timed(timed_callback, 30)
