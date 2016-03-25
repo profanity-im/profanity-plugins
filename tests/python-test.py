@@ -17,195 +17,205 @@ def _inc_counter():
 def _handle_win_input(win, line):
     prof.win_show(win, "Input received: " + line)
 
-def create_win():
+def _create_win():
     if prof.win_exists(plugin_win) == False:
         prof.win_create(plugin_win, _handle_win_input)
 
-def cmd_pythontest(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
-    global ping_id
-    if arg1 == "consalert":
-        create_win()
-        prof.win_focus(plugin_win)
-        prof.cons_alert()
-        prof.win_show(plugin_win, "called -> prof.cons_alert")
-    elif arg1 == "consshow":
-        if arg2 != None:
-            create_win()
+def _consalert():
+    _create_win()
+    prof.win_focus(plugin_win)
+    prof.cons_alert()
+    prof.win_show(plugin_win, "called -> prof.cons_alert")
+
+def _consshow(msg):
+    if not msg:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    _create_win()
+    prof.win_focus(plugin_win)
+    prof.cons_show(msg)
+    prof.win_show(plugin_win, "called -> prof.cons_show: " + msg)
+
+def _consshow_t(group, key, dflt, msg):
+    if not group or not key or not dflt or not msg:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    _create_win()
+    prof.win_focus(plugin_win)
+    prof.cons_show_themed(group, key, dflt, msg)
+    prof.win_show(plugin_win, "called -> prof.cons_show_themed: " + group + ", " + key + ", " + dflt + ", " + msg)
+
+def _constest():
+    res = prof.current_win_is_console()
+    _create_win()
+    prof.win_focus(plugin_win)
+    if res:
+        prof.win_show(plugin_win, "called -> prof.current_win_is_console: true")
+    else:
+        prof.win_show(plugin_win, "called -> prof.current_win_is_console: false")
+
+def _winshow(msg):
+    if not msg:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    _create_win()
+    prof.win_focus(plugin_win)
+    prof.win_show(plugin_win, msg)
+    prof.win_show(plugin_win, "called -> prof.win_show: " + msg)
+
+def _winshow_t(group, key, dflt, msg):
+    if not group or not key or not dflt or not msg:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    _create_win()
+    prof.win_focus(plugin_win)
+    prof.win_show_themed(plugin_win, group, key, dflt, msg)
+    prof.win_show(plugin_win, "called -> prof_win_show_themed: " + group + ", " + key + ", " + dflt + ", " + msg)
+
+def _sendline(line):
+    if not line:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    _create_win()
+    prof.win_focus(plugin_win)
+    prof.send_line(line)
+    prof.win_show(plugin_win, "called -> prof.send_line: " + line)
+
+def _notify(msg):
+    if not msg:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    _create_win()
+    prof.win_focus(plugin_win)
+    prof.notify(msg, 5000, "python-test plugin")
+    prof.win_show(plugin_win, "called -> prof.notify: " + msg)
+
+def _get(subject):
+    if subject == "recipient":
+        _create_win()
+        recipient = prof.get_current_recipient();
+        if recipient:
             prof.win_focus(plugin_win)
-            prof.cons_show(arg2)
-            prof.win_show(plugin_win, "called -> prof.cons_show: " + arg2)
+            prof.win_show(plugin_win, "called -> prof.get_current_recipient: " + recipient)
         else:
-            prof.cons_bad_cmd_usage("/python-test")
-    elif arg1 == "consshow_t":
-        if arg2 == None or arg3 == None or arg4 == None or arg5 == None:
-            prof.cons_bad_cmd_usage("/python-test");
-        else:
-            group = None if arg2 == "none" else arg2
-            key = None if arg3 == "none" else arg3
-            dflt = None if arg4 == "none" else arg4
-            message = arg5
-            create_win()
             prof.win_focus(plugin_win)
-            prof.cons_show_themed(group, key, dflt, message)
-            prof.win_show(plugin_win, "called -> prof.cons_show_themed: " + arg2 + ", " + arg3 + ", " + arg4 + ", " + arg5)
-    elif arg1 == "constest":
-        res = prof.current_win_is_console()
-        create_win()
-        prof.win_focus(plugin_win)
-        if res:
-            prof.win_show(plugin_win, "called -> prof.current_win_is_console: true")
-        else:
-            prof.win_show(plugin_win, "called -> prof.current_win_is_console: false")
-    elif arg1 == "winshow":
-        if arg2 != None:
-            create_win()
+            prof.win_show(plugin_win, "called -> prof_get_current_recipient: <none>")
+    elif subject == "room":
+        _create_win()
+        room = prof.get_current_muc()
+        if room:
             prof.win_focus(plugin_win)
-            prof.win_show(plugin_win, arg2)
-            prof.win_show(plugin_win, "called -> prof.win_show: " + arg2)
+            prof.win_show(plugin_win, "called -> prof_get_current_muc: " + room)
         else:
-            prof.cons_bad_cmd_usage("/python-test")
-    elif arg1 == "winshow_t":
-        if arg2 == None or arg3 == None or arg4 == None or arg5 == None:
-            prof.cons_bad_cmd_usage("/python-test");
-        else:
-            group = None if arg2 == "none" else arg2
-            key = None if arg3 == "none" else arg3
-            dflt = None if arg4 == "none" else arg4
-            message = arg5
-            create_win()
             prof.win_focus(plugin_win)
-            prof.win_show_themed(plugin_win, group, key, dflt, message)
-            prof.win_show(plugin_win, "called -> prof_win_show_themed: " + arg2 + ", " + arg3 + ", " + arg4 + ", " + arg5)
-    elif arg1 == "sendline":
-        if arg2 != None:
-            create_win()
-            prof.win_focus(plugin_win)
-            prof.send_line(arg2)
-            prof.win_show(plugin_win, "called -> prof.send_line: " + arg2)
-        else:
-            prof.cons_bad_cmd_usage("/python-test")
-    elif arg1 == "notify":
-        if arg2 != None:
-            create_win()
-            prof.win_focus(plugin_win)
-            prof.notify(arg2, 5000, "python-test plugin")
-            prof.win_show(plugin_win, "called -> prof.notify: " + arg2)
-        else:
-            prof.cons_bad_cmd_usage("/python-test")
-    elif arg1 == "get":
-        if arg2 == None:
-            prof.cons_bad_cmd_usage("/python-test")
-        elif arg2 == "recipient":
-            create_win()
-            recipient = prof.get_current_recipient();
-            if recipient != None:
-                prof.win_focus(plugin_win)
-                prof.win_show(plugin_win, "called -> prof.get_current_recipient: " + recipient)
-            else:
-                prof.win_focus(plugin_win)
-                prof.win_show(plugin_win, "called -> prof_get_current_recipient: <none>")
-        elif arg2 == "room":
-            create_win()
-            room = prof.get_current_muc()
-            if room != None:
-                prof.win_focus(plugin_win)
-                prof.win_show(plugin_win, "called -> prof_get_current_muc: " + room)
-            else:
-                prof.win_focus(plugin_win)
-                prof.win_show(plugin_win, "called -> prof_get_current_muc: <none>")
-        else:
-            prof.cons_bad_cmd_usage("/python-test")
-    elif arg1 == "log":
-        if arg2 == None:
-            prof.cons_bad_cmd_usage("/python-test")
-        elif arg2 == "debug":
-            if arg3 == None:
-                prof.cons_bad_cmd_usage("/python-test")
-            else:
-                create_win()
-                prof.win_focus(plugin_win)
-                prof.log_debug(arg3)
-                prof.win_show(plugin_win, "called -> prof.log_debug: " + arg3)
-        elif arg2 == "info":
-            if arg3 == None:
-                prof.cons_bad_cmd_usage("/python-test")
-            else:
-                create_win()
-                prof.win_focus(plugin_win)
-                prof.log_info(arg3)
-                prof.win_show(plugin_win, "called -> prof.log_info: " + arg3)
-        elif arg2 == "warning":
-            if arg3 == None:
-                prof.cons_bad_cmd_usage("/python-test")
-            else:
-                create_win()
-                prof.win_focus(plugin_win)
-                prof.log_warning(arg3)
-                prof.win_show(plugin_win, "called -> prof.log_warning: " + arg3)
-        elif arg2 == "error":
-            if arg3 == None:
-                prof.cons_bad_cmd_usage("/python-test")
-            else:
-                create_win()
-                prof.win_focus(plugin_win)
-                prof.log_error(arg3)
-                prof.win_show(plugin_win, "called -> prof.log_error: " + arg3)
-        else:
-            prof.cons_bad_cmd_usage("/python-test")
-    elif arg1 == "count":
-        create_win()
-        prof.win_focus(plugin_win)
-        prof.win_show(plugin_win, "Count: " + str(count))
-    elif arg1 == "ping":
-        if arg2 == None:
-            prof.cons_bad_cmd_usage("/python-test")
-        else:
-            create_win()
-            prof.win_focus(plugin_win)
-            res = prof.send_stanza("<iq to='" + arg2 + "' id='pythonplugin-" + str(ping_id) + "' type='get'><ping xmlns='urn:xmpp:ping'/></iq>")
-            ping_id = ping_id + 1
-            if res:
-                prof.win_show(plugin_win, "Ping sent successfully")
-            else:
-                prof.win_show(plugin_win, "Error sending ping")
-    elif arg1 == "boolean":
-        if arg2 == "get":
-            if arg3 == None or arg4 == None:
-                prof.cons_bad_cmd_usage("/python-test")
-            else:
-                group = arg3
-                key = arg4
-                dflt = False
-                create_win()
-                prof.win_focus(plugin_win)
-                res = prof.settings_get_boolean(group, key, dflt)
-                if res:
-                    prof.win_show(plugin_win, "Boolean setting: TRUE")
-                else:
-                    prof.win_show(plugin_win, "Boolean setting: FALSE")
-        elif arg2 == "set":
-            if arg3 == None or arg4 == None or arg5 == None:
-                prof.cons_bad_cmd_usage("/python-test")
-            else:
-                group = arg3
-                key = arg4
-                if arg5 != "true" and arg5 != "false":
-                    prof.cons_bad_cmd_usage("/python-test")
-                else:
-                    value = False
-                    if arg5 == "true":
-                        value = True
-                    create_win()
-                    prof.win_focus(plugin_win)
-                    prof.settings_set_boolean(group, key, value)
-                    prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
-        else:
-            prof.cons_bad_cmd_usage("/python-test")
+            prof.win_show(plugin_win, "called -> prof_get_current_muc: <none>")
     else:
         prof.cons_bad_cmd_usage("/python-test")
 
+def _log(level, msg):
+    if not level or not msg:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if level == "debug":
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.log_debug(msg)
+        prof.win_show(plugin_win, "called -> prof.log_debug: " + msg)
+    elif level == "info":
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.log_info(msg)
+        prof.win_show(plugin_win, "called -> prof.log_info: " + msg)
+    elif level == "warning":
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.log_warning(msg)
+        prof.win_show(plugin_win, "called -> prof.log_warning: " + msg)
+    elif level == "error":
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.log_error(msg)
+        prof.win_show(plugin_win, "called -> prof.log_error: " + msg)
+    else:
+        prof.cons_bad_cmd_usage("/python-test")
+
+def _count():
+    _create_win()
+    prof.win_focus(plugin_win)
+    prof.win_show(plugin_win, "Count: " + str(count))
+
+def _ping(jid):
+    global ping_id
+
+    if not jid:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    _create_win()
+    prof.win_focus(plugin_win)
+    res = prof.send_stanza("<iq to='" + jid + "' id='pythonplugin-" + str(ping_id) + "' type='get'><ping xmlns='urn:xmpp:ping'/></iq>")
+    ping_id = ping_id + 1
+    if res:
+        prof.win_show(plugin_win, "Ping sent successfully")
+    else:
+        prof.win_show(plugin_win, "Error sending ping")
+
+def _boolean(op, group, key, value_str):
+    if op != "get" and op != "set":
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if group == None or key == None:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if op == "set" and value_str != "true" and value_str != "false":
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if op == "get":
+        dflt = False
+        _create_win()
+        prof.win_focus(plugin_win)
+        res = prof.settings_get_boolean(group, key, dflt)
+        if res:
+            prof.win_show(plugin_win, "Boolean setting: TRUE")
+        else:
+            prof.win_show(plugin_win, "Boolean setting: FALSE")
+    elif op == "set":
+        value = False
+        if value_str == "true":
+            value = True
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.settings_set_boolean(group, key, value)
+        prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
+
+def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
+    if      subcmd == "consalert":  _consalert()
+    elif    subcmd == "consshow":   _consshow(arg1)
+    elif    subcmd == "consshow_t": _consshow_t(arg1, arg2, arg3, arg4)
+    elif    subcmd == "constest":   _constest()
+    elif    subcmd == "winshow":    _winshow(arg1)
+    elif    subcmd == "winshow_t":  _winshow_t(arg1, arg2, arg3, arg4)
+    elif    subcmd == "sendline":   _sendline(arg1)
+    elif    subcmd == "notify":     _notify(arg1)
+    elif    subcmd == "get":        _get(arg1)
+    elif    subcmd == "log":        _log(arg1, arg2)
+    elif    subcmd == "count":      _count()
+    elif    subcmd == "ping":       _ping(arg1)
+    elif    subcmd == "boolean":    _boolean(arg1, arg2, arg3, arg4)
+    else:   prof.cons_bad_cmd_usage("/python-test")
+
 def timed_callback():
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "timed -> timed_callback called")
 
 def prof_init(version, status):
@@ -257,7 +267,7 @@ def prof_init(version, status):
         "/python-test ping buddy@server.org"
     ]
 
-    prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, cmd_pythontest)
+    prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, _cmd_pythontest)
 
     prof.register_ac("/python-test", 
         [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean" ]
@@ -275,66 +285,66 @@ def prof_init(version, status):
     prof.register_timed(timed_callback, 30)
 
 def prof_on_start():
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_start")
 
 def prof_on_shutdown():
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_shutdown")
 
 def prof_on_connect(account_name, fulljid):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_connect: " + account_name + ", " + fulljid)
 
 def prof_on_disconnect(account_name, fulljid):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_disconnect: " + account_name + ", " + fulljid)
 
 def prof_pre_chat_message_display(jid, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_chat_message_display: " + jid + ", " + message)
 
 def prof_post_chat_message_display(jid, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_chat_message_display: " + jid + ", " + message)
 
 def prof_pre_chat_message_send(jid, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_chat_message_send: " + jid + ", " + message)
 
 def prof_post_chat_message_send(jid, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_chat_message_send: " + jid + ", " + message)
 
 def prof_pre_room_message_display(room, nick, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_room_message_display: " + room + ", " + nick + ", " + message)
 
 def prof_post_room_message_display(room, nick, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_room_message_display: " + room + ", " + nick + ", " + message)
 
 def prof_pre_room_message_send(room, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_room_message_send: " + room + ", " + message)
 
 def prof_post_room_message_send(room, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_room_message_send: " + room + ", " + message)
 
 def prof_pre_priv_message_display(room, nick, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_priv_message_display: " + room + ", " + nick + ", " + message)
 
 def prof_post_priv_message_display(room, nick, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_priv_message_display: " + room + ", " + nick + ", " + message)
 
 def prof_pre_priv_message_send(room, nick, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_priv_message_send: " + room + ", " + nick + ", " + message)
 
 def prof_post_priv_message_send(room, nick, message):
-    create_win()
+    _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_priv_message_send: " + room + ", " + nick + ", " + message)
 
