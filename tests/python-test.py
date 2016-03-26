@@ -204,6 +204,33 @@ def _boolean(op, group, key, value_str):
         prof.settings_set_boolean(group, key, value)
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
 
+def _string(op, group, key, value):
+    if op != "get" and op != "set":
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if group == None or key == None:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if op == "set" and not value:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if op == "get":
+        _create_win()
+        prof.win_focus(plugin_win)
+        res = prof.settings_get_string(group, key, None)
+        if res:
+            prof.win_show(plugin_win, "String setting: " + res)
+        else:
+            prof.win_show(plugin_win, "String setting: None")
+    elif op == "set":
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.settings_set_string(group, key, value)
+        prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + value)
+
 def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     if      subcmd == "consalert":  _consalert()
     elif    subcmd == "consshow":   _consshow(arg1)
@@ -218,6 +245,7 @@ def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     elif    subcmd == "count":      _count()
     elif    subcmd == "ping":       _ping(arg1)
     elif    subcmd == "boolean":    _boolean(arg1, arg2, arg3, arg4)
+    elif    subcmd == "string":     _string(arg1, arg2, arg3, arg4)
     else:                           prof.cons_bad_cmd_usage("/python-test")
 
 def timed_callback():
@@ -245,7 +273,9 @@ def prof_init(version, status):
         "/python-test count",
         "/python-test ping <jid>",
         "/python-test boolean get <group> <key>",
-        "/python-test boolean set <group> <key> <value>"
+        "/python-test boolean set <group> <key> <value>",
+        "/python-test string get <group> <key>",
+        "/python-test string set <group> <key> <value>"
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
@@ -263,7 +293,9 @@ def prof_init(version, status):
         [ "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" ],
         [ "ping <jid>",                                     "Send an XMPP ping to the specified Jabber ID" ],
         [ "boolean get <group> <key>",                      "Get a boolean setting" ],
-        [ "boolean set <group> <key> <value>",              "Set a boolean setting" ]
+        [ "boolean set <group> <key> <value>",              "Set a boolean setting" ],
+        [ "string get <group> <key>",                       "Get a string setting" ],
+        [ "string set <group> <key> <value>",               "Set a string setting" ]
     ]
     examples = [
         "/python-test sendline /about",
@@ -276,7 +308,7 @@ def prof_init(version, status):
     prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, _cmd_pythontest)
 
     prof.register_ac("/python-test", 
-        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean" ]
+        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean", "string" ]
     )
     prof.register_ac("/python-test get",
         [ "recipient", "room" ]
@@ -285,6 +317,9 @@ def prof_init(version, status):
         [ "debug", "info", "warning", "error" ]
     )
     prof.register_ac("/python-test boolean",
+        [ "get", "set" ]
+    )
+    prof.register_ac("/python-test string",
         [ "get", "set" ]
     )
 
