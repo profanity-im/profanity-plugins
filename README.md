@@ -26,16 +26,16 @@ lua-dev
 ruby-dev
 ```
 
-Build with the usual:
+Build with:
 
 ```
 ./bootstrap.sh
-./configure
+./configure --enable-python-plugins
 make
 sudo make install
 ```
 
-By default the build will look for required libraries and add plugin support if they are found.  After building, run `profanity -v` to see which language support is available, example output:
+Only support for Python 2.7 is currently included, after building, run `profanity -v` to see which language support is available, example output:
 
 ```
 Profanity, version 0.5.0dev.plugins-python.63a7316
