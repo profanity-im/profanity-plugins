@@ -1,3 +1,7 @@
+"""
+Convert smileys ( :) :( etc) to the Unicode character representation
+"""
+
 import prof
 
 def _emote(input_str):

@@ -1,3 +1,7 @@
+"""
+Paste the contents of the clipboard when in a chat or room window.
+"""
+
 import prof
 import sys
 import Tkinter as tk

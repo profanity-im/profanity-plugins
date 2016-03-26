@@ -1,3 +1,7 @@
+"""
+Open the last link received in a chat or room window using the systems default browser
+"""
+
 import prof
 import os
 import webbrowser

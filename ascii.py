@@ -1,3 +1,12 @@
+"""
+Print something in ASCII text.
+Running from the console will print the text to the console.
+Running in a chat or room window will send the ASCII text
+
+Requires 'figlet' which is available on most linux distros e.g.:
+    sudo apt-get install figlet
+"""
+
 import prof
 import subprocess
 

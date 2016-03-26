@@ -1,3 +1,12 @@
+"""
+Read message out loud.
+
+On linux requires 'espeak' which is available on most distributions e.g.:
+    sudo apt-get install espeak
+
+On OSX will use the built in 'say' command.
+"""
+
 import prof
 import os
 from sys import platform
