@@ -685,3 +685,44 @@ prof_post_priv_message_send(const char * const room, const char * const nick, co
     sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
     prof_win_show(plugin_win, buf);
 }
+
+char*
+prof_on_message_stanza_send(const char *const stanza)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_message_stanza_send: ";
+    char buf[strlen(str) + strlen(stanza)];
+    sprintf(buf, "%s%s", str, stanza);
+    prof_win_show(plugin_win, buf);
+
+    return NULL;
+    // char *new_stanza = strdup("<message id='ktx72v49' to='chanleemoon@ejabberd.local' type='chat' xml:lang='en'><body>Art thou not Romeo, and a Montague?</body></message>");
+    // return (char *)new_stanza;
+}
+
+char*
+prof_on_presence_stanza_send(const char *const stanza)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_presence_stanza_send: ";
+    char buf[strlen(str) + strlen(stanza)];
+    sprintf(buf, "%s%s", str, stanza);
+    prof_win_show(plugin_win, buf);
+
+    return NULL;
+}
+
+char*
+prof_on_iq_stanza_send(const char *const stanza)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_iq_stanza_send: ";
+    char buf[strlen(str) + strlen(stanza)];
+    sprintf(buf, "%s%s", str, stanza);
+    prof_win_show(plugin_win, buf);
+
+    return NULL;
+}

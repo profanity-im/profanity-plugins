@@ -2,6 +2,7 @@ import prof
 
 import threading
 import time
+import sys
 
 plugin_win = "Python Test"
 
@@ -417,3 +418,14 @@ def prof_post_priv_message_send(room, nick, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_priv_message_send: " + room + ", " + nick + ", " + message)
 
+def prof_on_message_stanza_send(stanza):
+    _create_win()
+    prof.win_show(plugin_win, "fired -> prof_on_message_stanza_send: " + stanza)
+
+def prof_on_presence_stanza_send(stanza):
+    _create_win()
+    prof.win_show(plugin_win, "fired -> prof_on_presence_stanza_send: " + stanza)
+
+def prof_on_iq_stanza_send(stanza):
+    _create_win()
+    prof.win_show(plugin_win, "fired -> prof_on_iq_stanza_send: " + stanza)
