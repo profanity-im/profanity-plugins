@@ -40,261 +40,309 @@ create_win(void)
 }
 
 void
-cmd_ctest(char **args)
+consalert(void)
 {
-    if (strcmp(args[0], "consalert") == 0) {
+    create_win();
+    prof_win_focus(plugin_win);
+    prof_cons_alert();
+    prof_win_show(plugin_win, "called -> prof_cons_alert");
+}
+
+void
+consshow(char *msg)
+{
+    if (msg == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+    create_win();
+    prof_win_focus(plugin_win);
+    prof_cons_show(msg);
+    char *str = "called -> prof_cons_show: ";
+    char buf[strlen(str) + strlen(msg)];
+    sprintf(buf, "%s%s", str, msg);
+    prof_win_show(plugin_win, buf);
+}
+
+void
+consshow_t(char *group, char *key, char *def, char *msg)
+{
+    if (group == NULL || key == NULL || def == NULL || msg == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+    create_win();
+    prof_win_focus(plugin_win);
+    char *groupval = strcmp(group, "none") == 0 ? NULL : group;
+    char *keyval = strcmp(key, "none") == 0 ? NULL : key;
+    char *defval = strcmp(def, "none") == 0 ? NULL : def;
+    prof_cons_show_themed(groupval, keyval, defval, msg);
+    char *str = "called -> prof_cons_show_themed: ";
+    char buf[strlen(str) + strlen(group) + 2 + strlen(key) + 2 + strlen(def) + 2 + strlen(msg)];
+    sprintf(buf, "%s%s, %s, %s, %s", str, group, key, def, msg);
+    prof_win_show(plugin_win, buf);
+}
+
+void
+constest(void)
+{
+    int res = prof_current_win_is_console();
+    create_win();
+    prof_win_focus(plugin_win);
+    if (res) {
+        prof_win_show(plugin_win, "called -> prof_current_win_is_console: true");
+    } else {
+        prof_win_show(plugin_win, "called -> prof_current_win_is_console: false");
+    }
+}
+
+void
+winshow(char *msg)
+{
+    if (msg == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+    create_win();
+    prof_win_focus(plugin_win);
+    prof_win_show(plugin_win, msg);
+    char *str = "called -> prof_win_show: ";
+    char buf[strlen(str) + strlen(msg)];
+    sprintf(buf, "%s%s", str, msg);
+    prof_win_show(plugin_win, buf);
+}
+
+void
+winshow_t(char *group, char *key, char *def, char *msg)
+{
+    if (group == NULL || key == NULL || def == NULL || msg == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+    create_win();
+    prof_win_focus(plugin_win);
+    char *groupval = strcmp(group, "none") == 0 ? NULL : group;
+    char *keyval = strcmp(key, "none") == 0 ? NULL : key;
+    char *defval = strcmp(def, "none") == 0 ? NULL : def;
+    prof_win_show_themed(plugin_win, groupval, keyval, defval, msg);
+    char *str = "called -> prof_win_show_themed: ";
+    char buf[strlen(str) + strlen(group) + 2 + strlen(key) + 2 + strlen(def) + 2 + strlen(msg)];
+    sprintf(buf, "%s%s, %s, %s, %s", str, group, key, def, msg);
+    prof_win_show(plugin_win, buf);
+}
+
+void
+sendline(char *line)
+{
+    if (line == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+    create_win();
+    prof_win_focus(plugin_win);
+    prof_send_line(line);
+    char *str = "called -> prof_send_line: ";
+    char buf[strlen(str) + strlen(line)];
+    sprintf(buf, "%s%s", str, line);
+    prof_win_show(plugin_win, buf);
+}
+
+void
+donotify(char *msg)
+{
+    if (msg == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+    create_win();
+    prof_win_focus(plugin_win);
+    prof_notify(msg, 5000, "c-test plugin");
+    char *str = "called -> prof_notify: ";
+    char buf[strlen(str) + strlen(msg)];
+    sprintf(buf, "%s%s", str, msg);
+    prof_win_show(plugin_win, buf);
+}
+
+void
+getsubject(char *subject)
+{
+    if (subject == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+
+    if (strcmp(subject, "recipient") == 0) {
         create_win();
-        prof_win_focus(plugin_win);
-        prof_cons_alert();
-        prof_win_show(plugin_win, "called -> prof_cons_alert");
-    } else if (strcmp(args[0], "consshow") == 0) {
-        if (args[1]) {
-            create_win();
+        char *recipient = prof_get_current_recipient();
+        if (recipient) {
             prof_win_focus(plugin_win);
-            prof_cons_show(args[1]);
-            char *str = "called -> prof_cons_show: ";
-            char buf[strlen(str) + strlen(args[1])];
-            sprintf(buf, "%s%s", str, args[1]);
+            char *str = "called -> prof_get_current_recipient: ";
+            char buf[strlen(str) + strlen(recipient)];
+            sprintf(buf, "%s%s", str, recipient);
             prof_win_show(plugin_win, buf);
         } else {
-            prof_cons_bad_cmd_usage("/c-test");
-        }
-    } else if (strcmp(args[0], "consshow_t") == 0) {
-        if (args[1] == NULL || args[2] == NULL || args[3] == NULL || args[4] == NULL) {
-            prof_cons_bad_cmd_usage("/c-test");
-        } else {
-            char *group = strcmp(args[1], "none") == 0 ? NULL : args[1];
-            char *key = strcmp(args[2], "none") == 0 ? NULL : args[2];
-            char *def = strcmp(args[3], "none") == 0 ? NULL : args[3];
-            char *message = args[4];
-            create_win();
             prof_win_focus(plugin_win);
-            prof_cons_show_themed(group, key, def, message);
-            char *str = "called -> prof_cons_show_themed: ";
-            char buf[strlen(str) + strlen(args[1]) + 2 + strlen(args[2]) + 2 + strlen(args[3]) + 2 + strlen(args[4])];
-            sprintf(buf, "%s%s, %s, %s, %s", str, args[1], args[2], args[3], args[4]);
-            prof_win_show(plugin_win, buf);
+            prof_win_show(plugin_win, "called -> prof_get_current_recipient: <none>");
         }
-    } else if (strcmp(args[0], "constest") == 0) {
-        int res = prof_current_win_is_console();
+    } else if (strcmp(subject, "room") == 0) {
         create_win();
-        prof_win_focus(plugin_win);
-        if (res) {
-            prof_win_show(plugin_win, "called -> prof_current_win_is_console: true");
-        } else {
-            prof_win_show(plugin_win, "called -> prof_current_win_is_console: false");
-        }
-    } else if (strcmp(args[0], "winshow") == 0) {
-        if (args[1]) {
-            create_win();
+        char *room = prof_get_current_muc();
+        if (room) {
             prof_win_focus(plugin_win);
-            prof_win_show(plugin_win, args[1]);
-            char *str = "called -> prof_win_show: ";
-            char buf[strlen(str) + strlen(args[1])];
-            sprintf(buf, "%s%s", str, args[1]);
+            char *str = "called -> prof_get_current_muc: ";
+            char buf[strlen(str) + strlen(room)];
+            sprintf(buf, "%s%s", str, room);
             prof_win_show(plugin_win, buf);
         } else {
-            prof_cons_bad_cmd_usage("/c-test");
-        }
-    } else if (strcmp(args[0], "winshow_t") == 0) {
-        if (args[1] == NULL || args[2] == NULL || args[3] == NULL || args[4] == NULL) {
-            prof_cons_bad_cmd_usage("/c-test");
-        } else {
-            char *group = strcmp(args[1], "none") == 0 ? NULL : args[1];
-            char *key = strcmp(args[2], "none") == 0 ? NULL : args[2];
-            char *def = strcmp(args[3], "none") == 0 ? NULL : args[3];
-            char *message = args[4];
-            create_win();
             prof_win_focus(plugin_win);
-            prof_win_show_themed(plugin_win, group, key, def, message);
-            char *str = "called -> prof_win_show_themed: ";
-            char buf[strlen(str) + strlen(args[1]) + 2 + strlen(args[2]) + 2 + strlen(args[3]) + 2 + strlen(args[4])];
-            sprintf(buf, "%s%s, %s, %s, %s", str, args[1], args[2], args[3], args[4]);
-            prof_win_show(plugin_win, buf);
-        }
-    } else if (strcmp(args[0], "sendline") == 0) {
-        if (args[1]) {
-            create_win();
-            prof_win_focus(plugin_win);
-            prof_send_line(args[1]);
-            char *str = "called -> prof_send_line: ";
-            char buf[strlen(str) + strlen(args[1])];
-            sprintf(buf, "%s%s", str, args[1]);
-            prof_win_show(plugin_win, buf);
-        } else {
-            prof_cons_bad_cmd_usage("/c-test");
-        }
-    } else if (strcmp(args[0], "notify") == 0) {
-        if (args[1]) {
-            create_win();
-            prof_win_focus(plugin_win);
-            prof_notify(args[1], 5000, "c-test plugin");
-            char *str = "called -> prof_notify: ";
-            char buf[strlen(str) + strlen(args[1])];
-            sprintf(buf, "%s%s", str, args[1]);
-            prof_win_show(plugin_win, buf);
-        } else {
-            prof_cons_bad_cmd_usage("/c-test");
-        }
-    } else if (strcmp(args[0], "get") == 0) {
-        if (!args[1]) {
-            prof_cons_bad_cmd_usage("/c-test");
-        } else if (strcmp(args[1], "recipient") == 0) {
-            create_win();
-            char *recipient = prof_get_current_recipient();
-            if (recipient) {
-                prof_win_focus(plugin_win);
-                char *str = "called -> prof_get_current_recipient: ";
-                char buf[strlen(str) + strlen(recipient)];
-                sprintf(buf, "%s%s", str, recipient);
-                prof_win_show(plugin_win, buf);
-            } else {
-                prof_win_focus(plugin_win);
-                prof_win_show(plugin_win, "called -> prof_get_current_recipient: <none>");
-            }
-        } else if (strcmp(args[1], "room") == 0) {
-            create_win();
-            char *room = prof_get_current_muc();
-            if (room) {
-                prof_win_focus(plugin_win);
-                char *str = "called -> prof_get_current_muc: ";
-                char buf[strlen(str) + strlen(room)];
-                sprintf(buf, "%s%s", str, room);
-                prof_win_show(plugin_win, buf);
-            } else {
-                prof_win_focus(plugin_win);
-                prof_win_show(plugin_win, "called -> prof_get_current_muc: <none>");
-            }
-        } else {
-            prof_cons_bad_cmd_usage("/c-test");
-        }
-    } else if (strcmp(args[0], "log") == 0) {
-        if (!args[1]) {
-            prof_cons_bad_cmd_usage("/c-test");
-        } else if (strcmp(args[1], "debug") == 0) {
-            if (!args[2]) {
-                prof_cons_bad_cmd_usage("/c-test");
-            } else {
-                create_win();
-                prof_win_focus(plugin_win);
-                prof_log_debug(args[2]);
-                char *str = "called -> prof_log_debug: ";
-                char buf[strlen(str) + strlen(args[2])];
-                sprintf(buf, "%s%s", str, args[2]);
-                prof_win_show(plugin_win, buf);
-            }
-        } else if (strcmp(args[1], "info") == 0) {
-            if (!args[2]) {
-                prof_cons_bad_cmd_usage("/c-test");
-            } else {
-                create_win();
-                prof_win_focus(plugin_win);
-                prof_log_info(args[2]);
-                char *str = "called -> prof_log_info: ";
-                char buf[strlen(str) + strlen(args[2])];
-                sprintf(buf, "%s%s", str, args[2]);
-                prof_win_show(plugin_win, buf);
-            }
-        } else if (strcmp(args[1], "warning") == 0) {
-            if (!args[2]) {
-                prof_cons_bad_cmd_usage("/c-test");
-            } else {
-                create_win();
-                prof_win_focus(plugin_win);
-                prof_log_warning(args[2]);
-                char *str = "called -> prof_log_warning: ";
-                char buf[strlen(str) + strlen(args[2])];
-                sprintf(buf, "%s%s", str, args[2]);
-                prof_win_show(plugin_win, buf);
-            }
-        } else if (strcmp(args[1], "error") == 0) {
-            if (!args[2]) {
-                prof_cons_bad_cmd_usage("/c-test");
-            } else {
-                create_win();
-                prof_win_focus(plugin_win);
-                prof_log_error(args[2]);
-                char *str = "called -> prof_log_error: ";
-                char buf[strlen(str) + strlen(args[2])];
-                sprintf(buf, "%s%s", str, args[2]);
-                prof_win_show(plugin_win, buf);
-            }
-        } else {
-            prof_cons_bad_cmd_usage("/c-test");
-        }
-    } else if (strcmp(args[0], "count") == 0) {
-        create_win();
-        prof_win_focus(plugin_win);
-        char buf[100];
-        sprintf(buf, "Count: %d", count);
-        prof_win_show(plugin_win, buf);
-    } else if (strcmp(args[0], "ping") == 0) {
-        if (args[1] == NULL) {
-            prof_cons_bad_cmd_usage("/c-test");
-        } else {
-            create_win();
-            prof_win_focus(plugin_win);
-            char *strstart = "<iq to='";
-            char *strend = "' type='get'><ping xmlns='urn:xmpp:ping'/></iq>";
-            char *idstart = "' id='cplugin-";
-            char idbuf[strlen(idstart) + 10];
-            sprintf(idbuf, "%s%d", idstart, ping_id);
-            char buf[strlen(strstart) + strlen(args[1]) + strlen(idbuf) + strlen(strend)];
-            sprintf(buf, "%s%s%s%s", strstart, args[1], idbuf, strend);
-            int res = prof_send_stanza(buf);
-            ping_id++;
-            if (res) {
-                prof_win_show(plugin_win, "Ping sent successfully");
-            } else {
-                prof_win_show(plugin_win, "Error sending ping");
-            }
-        }
-    } else if (strcmp(args[0], "boolean") == 0) {
-        if (args[1] == NULL) {
-            prof_cons_bad_cmd_usage("/c-test");
-        } else if (strcmp(args[1], "get") == 0) {
-            if (args[2] == NULL || args[3] == NULL) {
-                prof_cons_bad_cmd_usage("/c-test");
-            } else {
-                char *group = args[2];
-                char *key = args[3];
-                int dflt = 0;
-                create_win();
-                prof_win_focus(plugin_win);
-                int res = prof_settings_get_boolean(group, key, dflt);
-                if (res) {
-                    prof_win_show(plugin_win, "Boolean setting: TRUE");
-                } else {
-                    prof_win_show(plugin_win, "Boolean setting: FALSE");
-                }
-            }
-        } else if (strcmp(args[1], "set") == 0) {
-            if (args[2] == NULL || args[3] == NULL || args[4] == NULL) {
-                prof_cons_bad_cmd_usage("/c-test");
-            } else {
-                char *group = args[2];
-                char *key = args[3];
-                if ((strcmp(args[4], "true") != 0) && (strcmp(args[4], "false") != 0)) {
-                    prof_cons_bad_cmd_usage("/c-test");
-                } else {
-                    int value = 0;
-                    if (strcmp(args[4], "true") == 0) {
-                        value = 1;
-                    }
-                    create_win();
-                    prof_win_focus(plugin_win);
-                    prof_settings_set_boolean(group, key, value);
-                    char buf[5 + strlen(group) + 2 + strlen(key) + 4 + strlen(args[4])];
-                    sprintf(buf, "Set [%s] %s to %s", group, key, args[4]);
-                    prof_win_show(plugin_win, buf);
-                }
-            }
-        } else {
-            prof_cons_bad_cmd_usage("/c-test");
+            prof_win_show(plugin_win, "called -> prof_get_current_muc: <none>");
         }
     } else {
         prof_cons_bad_cmd_usage("/c-test");
     }
+}
+
+void
+logmsg(char *level, char *msg)
+{
+    if (level == NULL || msg == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+
+    if (strcmp(level, "debug") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        prof_log_debug(msg);
+        char *str = "called -> prof_log_debug: ";
+        char buf[strlen(str) + strlen(msg)];
+        sprintf(buf, "%s%s", str, msg);
+        prof_win_show(plugin_win, buf);
+    } else if (strcmp(level, "info") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        prof_log_info(msg);
+        char *str = "called -> prof_log_info: ";
+        char buf[strlen(str) + strlen(msg)];
+        sprintf(buf, "%s%s", str, msg);
+        prof_win_show(plugin_win, buf);
+    } else if (strcmp(level, "warning") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        prof_log_warning(msg);
+        char *str = "called -> prof_log_warning: ";
+        char buf[strlen(str) + strlen(msg)];
+        sprintf(buf, "%s%s", str, msg);
+        prof_win_show(plugin_win, buf);
+    } else if (strcmp(level, "error") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        prof_log_error(msg);
+        char *str = "called -> prof_log_error: ";
+        char buf[strlen(str) + strlen(msg)];
+        sprintf(buf, "%s%s", str, msg);
+        prof_win_show(plugin_win, buf);
+    } else {
+        prof_cons_bad_cmd_usage("/c-test");
+    }
+}
+
+void
+docount(void)
+{
+    create_win();
+    prof_win_focus(plugin_win);
+    char buf[100];
+    sprintf(buf, "Count: %d", count);
+    prof_win_show(plugin_win, buf);
+}
+
+void
+doping(char *jid)
+{
+    if (jid == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+    create_win();
+    prof_win_focus(plugin_win);
+    char *strstart = "<iq to='";
+    char *strend = "' type='get'><ping xmlns='urn:xmpp:ping'/></iq>";
+    char *idstart = "' id='cplugin-";
+    char idbuf[strlen(idstart) + 10];
+    sprintf(idbuf, "%s%d", idstart, ping_id);
+    char buf[strlen(strstart) + strlen(jid) + strlen(idbuf) + strlen(strend)];
+    sprintf(buf, "%s%s%s%s", strstart, jid, idbuf, strend);
+    int res = prof_send_stanza(buf);
+    ping_id++;
+    if (res) {
+        prof_win_show(plugin_win, "Ping sent successfully");
+    } else {
+        prof_win_show(plugin_win, "Error sending ping");
+    }
+}
+
+void
+booleansetting(char *op, char *group, char *key, char *value_str)
+{
+    if (op == NULL || group == NULL || key == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+
+    if ((strcmp(op, "get") != 0) && (strcmp(op, "set") != 0)) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+
+    if ((strcmp(op, "set") == 0) && (strcmp(value_str, "true") != 0) && (strcmp(value_str, "false") != 0)) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+
+    if (strcmp(op, "get") == 0) {
+        int dflt = 0;
+        create_win();
+        prof_win_focus(plugin_win);
+        int res = prof_settings_get_boolean(group, key, dflt);
+        if (res) {
+            prof_win_show(plugin_win, "Boolean setting: TRUE");
+        } else {
+            prof_win_show(plugin_win, "Boolean setting: FALSE");
+        }
+    } else if (strcmp(op, "set") == 0) {
+        int value = 0;
+        if (strcmp(value_str, "true") == 0) {
+            value = 1;
+        }
+        create_win();
+        prof_win_focus(plugin_win);
+        prof_settings_set_boolean(group, key, value);
+        char buf[5 + strlen(group) + 2 + strlen(key) + 4 + strlen(value_str)];
+        sprintf(buf, "Set [%s] %s to %s", group, key, value_str);
+        prof_win_show(plugin_win, buf);
+    } else {
+        prof_cons_bad_cmd_usage("/c-test");
+    }
+}
+
+void
+cmd_ctest(char **args)
+{
+    if      (strcmp(args[0], "consalert") == 0)     consalert();
+    else if (strcmp(args[0], "consshow") == 0)      consshow(args[1]);
+    else if (strcmp(args[0], "consshow_t") == 0)    consshow_t(args[1], args[2], args[3], args[4]);
+    else if (strcmp(args[0], "constest") == 0)      constest();
+    else if (strcmp(args[0], "winshow") == 0)       winshow(args[1]);
+    else if (strcmp(args[0], "winshow_t") == 0)     winshow_t(args[1], args[2], args[3], args[4]);
+    else if (strcmp(args[0], "sendline") == 0)      sendline(args[1]);
+    else if (strcmp(args[0], "notify") == 0)        donotify(args[1]);
+    else if (strcmp(args[0], "get") == 0)           getsubject(args[1]);
+    else if (strcmp(args[0], "log") == 0)           logmsg(args[1], args[2]);
+    else if (strcmp(args[0], "count") == 0)         docount();
+    else if (strcmp(args[0], "ping") == 0)          doping(args[1]);
+    else if (strcmp(args[0], "boolean") == 0)       booleansetting(args[1], args[2], args[3], args[4]);
+    else                                            prof_cons_bad_cmd_usage("/c-test");
 }
 
 void

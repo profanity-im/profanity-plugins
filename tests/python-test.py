@@ -44,7 +44,10 @@ def _consshow_t(group, key, dflt, msg):
 
     _create_win()
     prof.win_focus(plugin_win)
-    prof.cons_show_themed(group, key, dflt, msg)
+    groupval = None if group == "none" else group
+    keyval = None if key == "none" else key
+    dfltval = None if dflt == "none" else dflt
+    prof.cons_show_themed(groupval, keyval, dfltval, msg)
     prof.win_show(plugin_win, "called -> prof.cons_show_themed: " + group + ", " + key + ", " + dflt + ", " + msg)
 
 def _constest():
@@ -73,7 +76,10 @@ def _winshow_t(group, key, dflt, msg):
 
     _create_win()
     prof.win_focus(plugin_win)
-    prof.win_show_themed(plugin_win, group, key, dflt, msg)
+    groupval = None if group == "none" else group
+    keyval = None if key == "none" else key
+    dfltval = None if dflt == "none" else dflt
+    prof.win_show_themed(plugin_win, groupval, keyval, dfltval, msg)
     prof.win_show(plugin_win, "called -> prof_win_show_themed: " + group + ", " + key + ", " + dflt + ", " + msg)
 
 def _sendline(line):
@@ -212,7 +218,7 @@ def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     elif    subcmd == "count":      _count()
     elif    subcmd == "ping":       _ping(arg1)
     elif    subcmd == "boolean":    _boolean(arg1, arg2, arg3, arg4)
-    else:   prof.cons_bad_cmd_usage("/python-test")
+    else:                           prof.cons_bad_cmd_usage("/python-test")
 
 def timed_callback():
     _create_win()
