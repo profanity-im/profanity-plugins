@@ -231,6 +231,26 @@ def _string(op, group, key, value):
         prof.settings_set_string(group, key, value)
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + value)
 
+def _int(op, group, key, value):
+    if op != "get" and op != "set":
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if group == None or key == None:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if op == "get":
+        _create_win()
+        prof.win_focus(plugin_win)
+        res = prof.settings_get_int(group, key, 0)
+        prof.win_show(plugin_win, "Integer setting: " + str(res))
+    elif op == "set":
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.settings_set_int(group, key, int(value))
+        prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
+
 def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     if      subcmd == "consalert":  _consalert()
     elif    subcmd == "consshow":   _consshow(arg1)
@@ -246,6 +266,7 @@ def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     elif    subcmd == "ping":       _ping(arg1)
     elif    subcmd == "boolean":    _boolean(arg1, arg2, arg3, arg4)
     elif    subcmd == "string":     _string(arg1, arg2, arg3, arg4)
+    elif    subcmd == "int":        _int(arg1, arg2, arg3, arg4)
     else:                           prof.cons_bad_cmd_usage("/python-test")
 
 def timed_callback():
@@ -275,7 +296,9 @@ def prof_init(version, status):
         "/python-test boolean get <group> <key>",
         "/python-test boolean set <group> <key> <value>",
         "/python-test string get <group> <key>",
-        "/python-test string set <group> <key> <value>"
+        "/python-test string set <group> <key> <value>",
+        "/python-test int get <group> <key>",
+        "/python-test int set <group> <key> <value>"
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
@@ -295,7 +318,9 @@ def prof_init(version, status):
         [ "boolean get <group> <key>",                      "Get a boolean setting" ],
         [ "boolean set <group> <key> <value>",              "Set a boolean setting" ],
         [ "string get <group> <key>",                       "Get a string setting" ],
-        [ "string set <group> <key> <value>",               "Set a string setting" ]
+        [ "string set <group> <key> <value>",               "Set a string setting" ],
+        [ "int get <group> <key>",                          "Get a integer setting" ],
+        [ "int set <group> <key> <value>",                  "Set a integer setting" ]
     ]
     examples = [
         "/python-test sendline /about",
@@ -308,7 +333,7 @@ def prof_init(version, status):
     prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, _cmd_pythontest)
 
     prof.register_ac("/python-test", 
-        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean", "string" ]
+        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean", "string", "int" ]
     )
     prof.register_ac("/python-test get",
         [ "recipient", "room" ]
@@ -320,6 +345,9 @@ def prof_init(version, status):
         [ "get", "set" ]
     )
     prof.register_ac("/python-test string",
+        [ "get", "set" ]
+    )
+    prof.register_ac("/python-test int",
         [ "get", "set" ]
     )
 

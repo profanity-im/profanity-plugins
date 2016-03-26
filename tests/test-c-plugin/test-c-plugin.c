@@ -364,6 +364,37 @@ stringsetting(char *op, char *group, char *key, char *value)
 }
 
 void
+intsetting(char *op, char *group, char *key, char *value)
+{
+    if (op == NULL || group == NULL || key == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+
+    if ((strcmp(op, "get") != 0) && (strcmp(op, "set") != 0)) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+
+    if (strcmp(op, "get") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        int res = prof_settings_get_int(group, key, 0);
+        char buf[256];
+        sprintf(buf, "Integer setting: %d", res);
+        prof_win_show(plugin_win, buf);
+    } else if (strcmp(op, "set") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        int int_value = atoi(value);
+        prof_settings_set_int(group, key, int_value);
+        char buf[256];
+        sprintf(buf, "Set [%s] %s to %d", group, key, int_value);
+        prof_win_show(plugin_win, buf);
+    }
+}
+
+void
 cmd_ctest(char **args)
 {
     if      (strcmp(args[0], "consalert") == 0)     consalert();
@@ -380,6 +411,7 @@ cmd_ctest(char **args)
     else if (strcmp(args[0], "ping") == 0)          doping(args[1]);
     else if (strcmp(args[0], "boolean") == 0)       booleansetting(args[1], args[2], args[3], args[4]);
     else if (strcmp(args[0], "string") == 0)        stringsetting(args[1], args[2], args[3], args[4]);
+    else if (strcmp(args[0], "int") == 0)           intsetting(args[1], args[2], args[3], args[4]);
     else                                            prof_cons_bad_cmd_usage("/c-test");
 }
 
@@ -414,6 +446,8 @@ prof_init(const char * const version, const char * const status)
         "/c-test boolean set <group> <key> <value>",
         "/c-test string get <group> <key>",
         "/c-test string set <group> <key> <value>",
+        "/c-test int get <group> <key>",
+        "/c-test int set <group> <key> <value>",
         NULL
     };
     const char *description = "C test plugin. All commands focus the plugin window.";
@@ -435,6 +469,8 @@ prof_init(const char * const version, const char * const status)
         { "boolean set <group> <key> <value>",              "Set a boolean setting" },
         { "string get <group> <key>",                       "Get a string setting" },
         { "string set <group> <key> <value>",               "Set a string setting" },
+        { "int get <group> <key>",                          "Get a integer setting" },
+        { "int set <group> <key> <value>",                  "Set a integer setting" },
         { NULL, NULL }
     };
 
@@ -449,7 +485,7 @@ prof_init(const char * const version, const char * const status)
 
     prof_register_command("/c-test", 1, 5, synopsis, description, args, examples, cmd_ctest);
 
-    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean", "string", NULL };
+    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean", "string", "int", NULL };
     prof_register_ac("/c-test", cmd_ac);
 
     char *get_ac[] = { "recipient", "room", NULL };
@@ -463,6 +499,9 @@ prof_init(const char * const version, const char * const status)
 
     char *string_ac[] = { "get", "set", NULL };
     prof_register_ac("/c-test string", string_ac);
+
+    char *int_ac[] = { "get", "set", NULL };
+    prof_register_ac("/c-test int", int_ac);
 
     prof_register_timed(timed_callback, 30);
 }
