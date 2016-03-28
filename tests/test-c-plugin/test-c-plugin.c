@@ -701,6 +701,19 @@ prof_on_message_stanza_send(const char *const stanza)
     // return (char *)new_stanza;
 }
 
+int
+prof_on_message_stanza_receive(const char *const stanza)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_message_stanza_receive: ";
+    char buf[strlen(str) + strlen(stanza)];
+    sprintf(buf, "%s%s", str, stanza);
+    prof_win_show(plugin_win, buf);
+
+    return 1;
+}
+
 char*
 prof_on_presence_stanza_send(const char *const stanza)
 {
@@ -714,6 +727,19 @@ prof_on_presence_stanza_send(const char *const stanza)
     return NULL;
 }
 
+int
+prof_on_presence_stanza_receive(const char *const stanza)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_presence_stanza_receive: ";
+    char buf[strlen(str) + strlen(stanza)];
+    sprintf(buf, "%s%s", str, stanza);
+    prof_win_show(plugin_win, buf);
+
+    return 1;
+}
+
 char*
 prof_on_iq_stanza_send(const char *const stanza)
 {
@@ -725,4 +751,17 @@ prof_on_iq_stanza_send(const char *const stanza)
     prof_win_show(plugin_win, buf);
 
     return NULL;
+}
+
+int
+prof_on_iq_stanza_receive(const char *const stanza)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_iq_stanza_receive: ";
+    char buf[strlen(str) + strlen(stanza)];
+    sprintf(buf, "%s%s", str, stanza);
+    prof_win_show(plugin_win, buf);
+
+    return 1;
 }
