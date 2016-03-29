@@ -11,7 +11,7 @@ all: pid.so
 	$(CC) $(LINK_FLAGS) -lprofanity -o $@ $^
 
 %.o:%.c
-	$(CC) $(INCLUDE) -D_GNU_SOURCE -D_BSD_SOURCE -fpic -O3 -std=c99 \
+	$(CC) $(INCLUDE) -D_GNU_SOURCE -D_BSD_SOURCE -fpic -g3 -O0 -std=c99 \
         -Wextra -pedantic -c -o $@ $<
 
 clean:
