@@ -395,6 +395,12 @@ intsetting(char *op, char *group, char *key, char *value)
 }
 
 void
+incomingmsg(char *barejid, char *resource, char *message)
+{
+    prof_incoming_message(barejid, resource, message);
+}
+
+void
 cmd_ctest(char **args)
 {
     if      (strcmp(args[0], "consalert") == 0)     consalert();
@@ -412,6 +418,7 @@ cmd_ctest(char **args)
     else if (strcmp(args[0], "boolean") == 0)       booleansetting(args[1], args[2], args[3], args[4]);
     else if (strcmp(args[0], "string") == 0)        stringsetting(args[1], args[2], args[3], args[4]);
     else if (strcmp(args[0], "int") == 0)           intsetting(args[1], args[2], args[3], args[4]);
+    else if (strcmp(args[0], "incoming") == 0)      incomingmsg(args[1], args[2], args[3]);
     else                                            prof_cons_bad_cmd_usage("/c-test");
 }
 
@@ -448,6 +455,7 @@ prof_init(const char * const version, const char * const status)
         "/c-test string set <group> <key> <value>",
         "/c-test int get <group> <key>",
         "/c-test int set <group> <key> <value>",
+        "/c-test incoming <barejid> <resource> <message>",
         NULL
     };
     const char *description = "C test plugin. All commands focus the plugin window.";
@@ -471,6 +479,7 @@ prof_init(const char * const version, const char * const status)
         { "string set <group> <key> <value>",               "Set a string setting" },
         { "int get <group> <key>",                          "Get a integer setting" },
         { "int set <group> <key> <value>",                  "Set a integer setting" },
+        { "incoming <barejid> <resource> <message>",        "Show an incoming message." },
         { NULL, NULL }
     };
 
@@ -485,7 +494,25 @@ prof_init(const char * const version, const char * const status)
 
     prof_register_command("/c-test", 1, 5, synopsis, description, args, examples, cmd_ctest);
 
-    char *cmd_ac[] = { "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean", "string", "int", NULL };
+    char *cmd_ac[] = {
+        "consalert",
+        "consshow",
+        "consshow_t",
+        "constest",
+        "winshow",
+        "winshow_t",
+        "notify",
+        "sendline",
+        "get",
+        "log",
+        "count",
+        "ping",
+        "boolean",
+        "string",
+        "int",
+        "incoming",
+        NULL
+    };
     prof_register_ac("/c-test", cmd_ac);
 
     char *get_ac[] = { "recipient", "room", NULL };

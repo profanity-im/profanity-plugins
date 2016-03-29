@@ -251,6 +251,13 @@ def _int(op, group, key, value):
         prof.settings_set_int(group, key, int(value))
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
 
+def _incoming(barejid, resource, message):
+    if not barejid or not resource or not message:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    prof.incoming_message(barejid, resource, message)
+
 def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     if      subcmd == "consalert":  _consalert()
     elif    subcmd == "consshow":   _consshow(arg1)
@@ -267,6 +274,7 @@ def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     elif    subcmd == "boolean":    _boolean(arg1, arg2, arg3, arg4)
     elif    subcmd == "string":     _string(arg1, arg2, arg3, arg4)
     elif    subcmd == "int":        _int(arg1, arg2, arg3, arg4)
+    elif    subcmd == "incoming":   _incoming(arg1, arg2, arg3)
     else:                           prof.cons_bad_cmd_usage("/python-test")
 
 def timed_callback():
@@ -298,7 +306,8 @@ def prof_init(version, status):
         "/python-test string get <group> <key>",
         "/python-test string set <group> <key> <value>",
         "/python-test int get <group> <key>",
-        "/python-test int set <group> <key> <value>"
+        "/python-test int set <group> <key> <value>",
+        "/python-test incoming <barejid> <resource> <message>"
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
@@ -320,7 +329,8 @@ def prof_init(version, status):
         [ "string get <group> <key>",                       "Get a string setting" ],
         [ "string set <group> <key> <value>",               "Set a string setting" ],
         [ "int get <group> <key>",                          "Get a integer setting" ],
-        [ "int set <group> <key> <value>",                  "Set a integer setting" ]
+        [ "int set <group> <key> <value>",                  "Set a integer setting" ],
+        [ "incoming <barejid> <resource> <message>",        "Show an incoming message." ]
     ]
     examples = [
         "/python-test sendline /about",
@@ -332,8 +342,24 @@ def prof_init(version, status):
 
     prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, _cmd_pythontest)
 
-    prof.register_ac("/python-test", 
-        [ "consalert", "consshow", "consshow_t", "constest", "winshow", "winshow_t", "notify", "sendline", "get", "log", "count", "ping", "boolean", "string", "int" ]
+    prof.register_ac("/python-test",
+        [
+            "consalert",
+            "consshow",
+            "consshow_t",
+            "constest",
+            "winshow",
+            "winshow_t",
+            "notify",
+            "sendline",
+            "get",
+            "log",
+            "count",
+            "ping",
+            "boolean",
+            "string",
+            "int",
+            "incoming" ]
     )
     prof.register_ac("/python-test get",
         [ "recipient", "room" ]
