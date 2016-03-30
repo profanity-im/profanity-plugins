@@ -792,3 +792,35 @@ prof_on_iq_stanza_receive(const char *const stanza)
 
     return 1;
 }
+
+void
+prof_on_contact_offline(const char *const barejid, const char *const resource, const char *const status)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_contact_offline: ";
+    int status_len = status == NULL ? 0 : strlen(status) + 2;
+    char buf[strlen(str) + strlen(barejid) + 1 + strlen(resource) + 1 + status_len + 1];
+    if (status) {
+        sprintf(buf, "%s%s/%s \"%s\"", str, barejid, resource, status);
+    } else {
+        sprintf(buf, "%s%s/%s", str, barejid, resource);
+    }
+    prof_win_show(plugin_win, buf);
+}
+
+void
+prof_on_contact_presence(const char *const barejid, const char *const resource, const char *const presence, const char *const status, const int priority)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_contact_presence: ";
+    int status_len = status == NULL ? 0 : strlen(status) + 2;
+    char buf[strlen(str) + strlen(barejid) + 1 + strlen(resource) + 1 + strlen(presence) + 1 + 10 + status_len + 1];
+    if (status) {
+        sprintf(buf, "%s%s/%s %s %d \"%s\"", str, barejid, resource, presence, priority, status);
+    } else {
+        sprintf(buf, "%s%s/%s %s %d", str, barejid, resource, presence, priority);
+    }
+    prof_win_show(plugin_win, buf);
+}

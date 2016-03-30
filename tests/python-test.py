@@ -469,3 +469,17 @@ def prof_on_iq_stanza_receive(stanza):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_iq_stanza_receive: " + stanza)
     return True
+
+def prof_on_contact_offline(barejid, resource, status):
+    _create_win()
+    if status:
+        prof.win_show(plugin_win, "fired -> prof_on_contact_offline: " + barejid + "/" + resource + " \"" + status + "\"")
+    else:
+        prof.win_show(plugin_win, "fired -> prof_on_contact_offline: " + barejid + "/" + resource)
+
+def prof_on_contact_presence(barejid, resource, presence, status, priority):
+    _create_win()
+    if status:
+        prof.win_show(plugin_win, "fired -> prof_on_contact_presence: " + barejid + "/" + resource + " " + presence + " " + str(priority) + " \"" + status + "\"")
+    else:
+        prof.win_show(plugin_win, "fired -> prof_on_contact_presence: " + barejid + "/" + resource + " " + presence + " " + str(priority))
