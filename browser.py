@@ -7,6 +7,7 @@ import os
 import webbrowser
 import re
 
+_links = {}
 _lastlink = {}
 
 
@@ -76,15 +77,47 @@ def prof_init(version, status):
     prof.register_command("/browser", 0, 1, synopsis, description, args, examples, _cmd_browser)
 
 
+def prof_on_chat_win_focus(jid):
+    prof.completer_clear("/browser")
+    if _links[jid]:
+        prof.completer_add("/browser", _links[jid])
+
+
+def prof_on_room_win_focus(room):
+    prof.completer_clear("/browser")
+    if _links[room]:
+        prof.completer_add("/browser", _links[room])
+
+
 def prof_post_chat_message_display(jid, message):
-    global _lastlink
     links = re.findall(r'(https?://\S+)', message)
     if (len(links) > 0):
+        if jid not in _links:
+            _links[jid] = []
+        # add to list of links for jid
+        for link in links:
+            if link not in _links[jid]:
+                _links[jid].append(link)
+        # add to autocompleter if in chat with jid
+        current_jid = prof.get_current_recipient()
+        if current_jid == jid:
+            prof.completer_add("/browser", _links[jid])
+        # set last link for jid
         _lastlink[jid] = links[len(links)-1]
 
 
 def prof_post_room_message_display(room, nick, message):
-    global _lastlink
     links = re.findall(r'(https?://\S+)', message)
     if (len(links) > 0):
+        if room not in _links:
+            _links[room] = []
+        # add to list of links for room
+        for link in links:
+            if link not in _links[room]:
+                _links[room].append(link)
+        # add to autocompleter if in room
+        current_room = prof.get_current_muc()
+        if current_room == room:
+            prof.completer_add("/browser", _links[room])
+        # set last link for room
         _lastlink[room] = links[len(links)-1]
