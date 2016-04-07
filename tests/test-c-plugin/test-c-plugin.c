@@ -704,6 +704,23 @@ prof_post_room_message_send(const char * const room, const char *message)
     prof_win_show(plugin_win, buf);
 }
 
+void
+prof_on_room_history_message(const char * const room, const char *const nick, const char *const message, const char *const timestamp)
+{
+    create_win();
+
+    char *str = "fired -> prof_on_room_history_message: ";
+    if (timestamp == NULL) {
+        char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+        sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
+        prof_win_show(plugin_win, buf);
+    } else {
+        char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 2 + strlen(timestamp) + 1];
+        sprintf(buf, "%s%s, %s, %s, %s", str, room, nick, message, timestamp);
+        prof_win_show(plugin_win, buf);
+    }
+}
+
 char *
 prof_pre_priv_message_display(const char * const room, const char * const nick, const char *message)
 {

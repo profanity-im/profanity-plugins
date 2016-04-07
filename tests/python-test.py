@@ -457,6 +457,13 @@ def prof_post_room_message_send(room, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_room_message_send: " + room + ", " + message)
 
+def prof_on_room_history_message(room, nick, message, timestamp):
+    _create_win()
+    if timestamp:
+        prof.win_show(plugin_win, "fired -> prof_on_room_history_message: " + room + ", " + nick + ", " + message + ", " + timestamp)
+    else:
+        prof.win_show(plugin_win, "fired -> prof_on_room_history_message: " + room + ", " + nick + ", " + message)
+
 def prof_pre_priv_message_display(room, nick, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_priv_message_display: " + room + ", " + nick + ", " + message)
