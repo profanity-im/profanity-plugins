@@ -66,7 +66,8 @@ def prof_init(version, status):
         "/browser",
         "/browser <url>"
     ]
-    description = "View a URL in the systems default browser. If no argument is supplied, the last URL in the current chat or room will be used."
+    description = "View a URL in the systems default browser. If no argument is supplied, the last URL in the current chat or room will be used. " \
+        "Tab autocompletion will go through all previous links in the current chat/room"
     args = [
         [ "<url>", "URL to open in the browser" ]
     ]
