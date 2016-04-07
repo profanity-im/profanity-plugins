@@ -258,6 +258,27 @@ def _incoming(barejid, resource, message):
 
     prof.incoming_message(barejid, resource, message)
 
+def _completer(op, item):
+    if not item:
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if op == "add":
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.completer_add("/python-test", [item])
+        prof.win_show(plugin_win, "Added \"" + item + "\" to /python-test completer")
+        prof.completer_add("/python-test completer remove", [item])
+    elif op == "remove":
+        _create_win()
+        prof.win_focus(plugin_win)
+        prof.completer_remove("/python-test", [item])
+        prof.win_show(plugin_win, "Removed \"" + item + "\" to /python-test completer")
+        prof.completer_remove("/python-test completer remove", [item])
+    else:
+        prof.cons_bad_cmd_usage("/python-test")
+
+
 def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     if      subcmd == "consalert":  _consalert()
     elif    subcmd == "consshow":   _consshow(arg1)
@@ -275,6 +296,7 @@ def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     elif    subcmd == "string":     _string(arg1, arg2, arg3, arg4)
     elif    subcmd == "int":        _int(arg1, arg2, arg3, arg4)
     elif    subcmd == "incoming":   _incoming(arg1, arg2, arg3)
+    elif    subcmd == "completer":  _completer(arg1, arg2)
     else:                           prof.cons_bad_cmd_usage("/python-test")
 
 def timed_callback():
@@ -307,7 +329,8 @@ def prof_init(version, status):
         "/python-test string set <group> <key> <value>",
         "/python-test int get <group> <key>",
         "/python-test int set <group> <key> <value>",
-        "/python-test incoming <barejid> <resource> <message>"
+        "/python-test incoming <barejid> <resource> <message>",
+        "/python-test completer add|remove <item>"
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
@@ -330,7 +353,9 @@ def prof_init(version, status):
         [ "string set <group> <key> <value>",               "Set a string setting" ],
         [ "int get <group> <key>",                          "Get a integer setting" ],
         [ "int set <group> <key> <value>",                  "Set a integer setting" ],
-        [ "incoming <barejid> <resource> <message>",        "Show an incoming message." ]
+        [ "incoming <barejid> <resource> <message>",        "Show an incoming message." ],
+        [ "completer add <item>",                           "Add an autocomplete item to the /c-test command." ],
+        [ "completer remove <item>",                        "Remove an autocomplete item from the /c-test command." ]
     ]
     examples = [
         "/python-test sendline /about",
@@ -359,7 +384,9 @@ def prof_init(version, status):
             "boolean",
             "string",
             "int",
-            "incoming" ]
+            "incoming",
+            "completer" 
+        ]
     )
     prof.completer_add("/python-test get",
         [ "recipient", "room" ]
@@ -375,6 +402,9 @@ def prof_init(version, status):
     )
     prof.completer_add("/python-test int",
         [ "get", "set" ]
+    )
+    prof.completer_add("/python-test completer",
+        [ "add", "remove" ]
     )
 
     prof.register_timed(timed_callback, 30)
@@ -483,3 +513,7 @@ def prof_on_contact_presence(barejid, resource, presence, status, priority):
         prof.win_show(plugin_win, "fired -> prof_on_contact_presence: " + barejid + "/" + resource + " " + presence + " " + str(priority) + " \"" + status + "\"")
     else:
         prof.win_show(plugin_win, "fired -> prof_on_contact_presence: " + barejid + "/" + resource + " " + presence + " " + str(priority))
+
+def prof_on_chat_win_focus(barejid):
+    _create_win()
+    prof.win_show(plugin_win, "fired -> prof_on_chat_win_focus: " + barejid)

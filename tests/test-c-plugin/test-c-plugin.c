@@ -401,6 +401,37 @@ incomingmsg(char *barejid, char *resource, char *message)
 }
 
 void
+completer(char *op, char *item)
+{
+    if (item == NULL) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;        
+    }
+
+    if (strcmp(op, "add") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        char *ac[] = { item, NULL };
+        prof_completer_add("/c-test", ac);
+        char buf[256];
+        sprintf(buf, "Added \"%s\" to /c-test completer", item);
+        prof_win_show(plugin_win, buf);
+        prof_completer_add("/c-test completer remove", ac);
+    } else if (strcmp(op, "remove") == 0) {
+        create_win();
+        prof_win_focus(plugin_win);
+        char *ac[] = { item, NULL };
+        prof_completer_remove("/c-test", ac);
+        char buf[256];
+        sprintf(buf, "Removed \"%s\" from /c-test completer", item);
+        prof_win_show(plugin_win, buf);
+        prof_completer_remove("/c-test completer remove", ac);
+    } else {
+        prof_cons_bad_cmd_usage("/c-test");
+    }
+}
+
+void
 cmd_ctest(char **args)
 {
     if      (strcmp(args[0], "consalert") == 0)     consalert();
@@ -419,6 +450,7 @@ cmd_ctest(char **args)
     else if (strcmp(args[0], "string") == 0)        stringsetting(args[1], args[2], args[3], args[4]);
     else if (strcmp(args[0], "int") == 0)           intsetting(args[1], args[2], args[3], args[4]);
     else if (strcmp(args[0], "incoming") == 0)      incomingmsg(args[1], args[2], args[3]);
+    else if (strcmp(args[0], "completer") == 0)     completer(args[1], args[2]);
     else                                            prof_cons_bad_cmd_usage("/c-test");
 }
 
@@ -456,6 +488,7 @@ prof_init(const char * const version, const char * const status)
         "/c-test int get <group> <key>",
         "/c-test int set <group> <key> <value>",
         "/c-test incoming <barejid> <resource> <message>",
+        "/c-test completer add|remove <item>",
         NULL
     };
     const char *description = "C test plugin. All commands focus the plugin window.";
@@ -480,6 +513,8 @@ prof_init(const char * const version, const char * const status)
         { "int get <group> <key>",                          "Get a integer setting" },
         { "int set <group> <key> <value>",                  "Set a integer setting" },
         { "incoming <barejid> <resource> <message>",        "Show an incoming message." },
+        { "completer add <item>",                           "Add an autocomplete item to the /c-test command." },
+        { "completer remove <item>",                        "Remove an autocomplete item from the /c-test command." },
         { NULL, NULL }
     };
 
@@ -511,6 +546,7 @@ prof_init(const char * const version, const char * const status)
         "string",
         "int",
         "incoming",
+        "completer",
         NULL
     };
     prof_completer_add("/c-test", cmd_ac);
@@ -529,6 +565,9 @@ prof_init(const char * const version, const char * const status)
 
     char *int_ac[] = { "get", "set", NULL };
     prof_completer_add("/c-test int", int_ac);
+
+    char *completer_ac[] = { "add", "remove", NULL };
+    prof_completer_add("/c-test completer", completer_ac);
 
     prof_register_timed(timed_callback, 30);
 }
@@ -822,5 +861,15 @@ prof_on_contact_presence(const char *const barejid, const char *const resource, 
     } else {
         sprintf(buf, "%s%s/%s %s %d", str, barejid, resource, presence, priority);
     }
+    prof_win_show(plugin_win, buf);
+}
+
+void
+prof_on_chat_win_focus(const char *const barejid)
+{
+    create_win();
+    char *str = "fired -> prof_on_chat_win_focus: ";
+    char buf[strlen(str) + strlen(barejid) + 1];
+    sprintf(buf, "%s%s", str, barejid);
     prof_win_show(plugin_win, buf);
 }
