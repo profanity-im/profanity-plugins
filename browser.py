@@ -121,3 +121,20 @@ def prof_post_room_message_display(room, nick, message):
             prof.completer_add("/browser", _links[room])
         # set last link for room
         _lastlink[room] = links[len(links)-1]
+
+
+def prof_on_room_history_message(room, nick, message, timestamp):
+    links = re.findall(r'(https?://\S+)', message)
+    if (len(links) > 0):
+        if room not in _links:
+            _links[room] = []
+        # add to list of links for room
+        for link in links:
+            if link not in _links[room]:
+                _links[room].append(link)
+        # add to autocompleter if in room
+        current_room = prof.get_current_muc()
+        if current_room == room:
+            prof.completer_add("/browser", _links[room])
+        # set last link for room
+        _lastlink[room] = links[len(links)-1]
