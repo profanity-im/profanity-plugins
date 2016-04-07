@@ -222,9 +222,9 @@ def _jenkins_poll():
                     job_ac.append(name)
 
             if not job_list:
-                prof.register_ac("/jenkins build", job_ac)
-                prof.register_ac("/jenkins open", job_ac)
-                prof.register_ac("/jenkins log", job_ac)
+                prof.completer_add("/jenkins build", job_ac)
+                prof.completer_add("/jenkins open", job_ac)
+                prof.completer_add("/jenkins log", job_ac)
 
             job_list = new_job_list
             changes_list = new_changes_list
@@ -449,7 +449,7 @@ def prof_init(version, status):
     prof.register_timed(_prof_callback, prof_cb_interval)
     prof.register_timed(_remind, prof_remind_interval)
 
-    prof.register_ac(
+    prof.completer_add(
         "/jenkins", [
             "help",
             "jobs",
@@ -464,13 +464,13 @@ def prof_init(version, status):
             "settings"
         ]
     );
-    prof.register_ac(
+    prof.completer_add(
         "/jenkins remind", [
             "on",
             "off"
         ]
     );
-    prof.register_ac(
+    prof.completer_add(
         "/jenkins notify", [
             "on",
             "off"

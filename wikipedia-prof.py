@@ -59,11 +59,11 @@ def create_win():
         prof.win_create(win, _handle_win_input)
 
 def _update_autocomplete():
-    prof.register_ac("/wikipedia page", page_ac)
-    prof.register_ac("/wikipedia summary", page_ac)
-    prof.register_ac("/wikipedia images", page_ac)
-    prof.register_ac("/wikipedia links", page_ac)
-    prof.register_ac("/wikipedia refs", page_ac)
+    prof.completer_add("/wikipedia page", page_ac)
+    prof.completer_add("/wikipedia summary", page_ac)
+    prof.completer_add("/wikipedia images", page_ac)
+    prof.completer_add("/wikipedia links", page_ac)
+    prof.completer_add("/wikipedia refs", page_ac)
 
 def _search(search_terms):
     global page_ac
@@ -93,7 +93,7 @@ def _summary(page_str):
         return
 
     link_ac.append(page.url.encode("utf-8"))
-    prof.register_ac("/wikipedia open", link_ac)
+    prof.completer_add("/wikipedia open", link_ac)
 
     prof.win_show_themed(win, "wikipedia", "summary.title", None, page.title.encode("utf-8"))
     prof.win_show_themed(win, "wikipedia", "summary.url", None, page.url.encode("utf-8"))
@@ -132,7 +132,7 @@ def _images(page_str):
     for image in page.images:
         prof.win_show_themed(win, "wikipedia", "images.url", None, image.encode("utf-8"))
         link_ac.append(image.encode("utf-8"))
-    prof.register_ac("/wikipedia open", link_ac)
+    prof.completer_add("/wikipedia open", link_ac)
     prof.win_show(win, "")
     prof.win_focus(win)
 
@@ -171,7 +171,7 @@ def _refs(page_str):
     for ref in page.references:
         prof.win_show_themed(win, "wikipedia", "refs.url", None, ref.encode("utf-8"))
         link_ac.append(ref.encode("utf-8"))
-    prof.register_ac("/wikipedia open", link_ac)
+    prof.completer_add("/wikipedia open", link_ac)
     prof.win_show(win, "")
     prof.win_focus(win)
 
@@ -221,6 +221,6 @@ def prof_init(version, status):
 
     prof.register_command("/wikipedia", 2, 2, synopsis, description, args, examples, cmd_wp)
 
-    prof.register_ac("/wikipedia", 
+    prof.completer_add("/wikipedia", 
         [ "search", "summary", "page", "images", "links", "refs", "open" ]
     )

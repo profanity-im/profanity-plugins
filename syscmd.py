@@ -71,4 +71,4 @@ def prof_init(version, status):
         "/system send uname -a"
     ]
     prof.register_command("/system", 0, 2, synopsis, description, args, examples, _cmd_system)
-    prof.register_ac("/system", [ "exec", "send" ])
+    prof.completer_add("/system", [ "exec", "send" ])

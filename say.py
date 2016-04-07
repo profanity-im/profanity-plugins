@@ -64,4 +64,4 @@ def prof_init(version, status):
     examples = []
 
     prof.register_command("/say", 1, 2, synopsis, description, args, examples, _cmd_say)
-    prof.register_ac("/say", [ "on", "off", "test" ])
+    prof.completer_add("/say", [ "on", "off", "test" ])

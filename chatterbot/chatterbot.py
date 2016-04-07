@@ -44,4 +44,4 @@ def prof_init(version, status):
     examples = []
 
     prof.register_command("/chatterbot", 0, 1, synopsis, description, args, examples, _cmd_chatterbot)
-    prof.register_ac("/chatterbot", [ "enable", "disable" ])
+    prof.completer_add("/chatterbot", [ "enable", "disable" ])

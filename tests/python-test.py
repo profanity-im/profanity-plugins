@@ -342,7 +342,7 @@ def prof_init(version, status):
 
     prof.register_command("/python-test", 1, 5, synopsis, description, args, examples, _cmd_pythontest)
 
-    prof.register_ac("/python-test",
+    prof.completer_add("/python-test",
         [
             "consalert",
             "consshow",
@@ -361,19 +361,19 @@ def prof_init(version, status):
             "int",
             "incoming" ]
     )
-    prof.register_ac("/python-test get",
+    prof.completer_add("/python-test get",
         [ "recipient", "room" ]
     )
-    prof.register_ac("/python-test log",
+    prof.completer_add("/python-test log",
         [ "debug", "info", "warning", "error" ]
     )
-    prof.register_ac("/python-test boolean",
+    prof.completer_add("/python-test boolean",
         [ "get", "set" ]
     )
-    prof.register_ac("/python-test string",
+    prof.completer_add("/python-test string",
         [ "get", "set" ]
     )
-    prof.register_ac("/python-test int",
+    prof.completer_add("/python-test int",
         [ "get", "set" ]
     )
 

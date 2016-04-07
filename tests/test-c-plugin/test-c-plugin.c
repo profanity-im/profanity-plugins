@@ -513,22 +513,22 @@ prof_init(const char * const version, const char * const status)
         "incoming",
         NULL
     };
-    prof_register_ac("/c-test", cmd_ac);
+    prof_completer_add("/c-test", cmd_ac);
 
     char *get_ac[] = { "recipient", "room", NULL };
-    prof_register_ac("/c-test get", get_ac);
+    prof_completer_add("/c-test get", get_ac);
 
     char *log_ac[] = { "debug", "info", "warning", "error", NULL };
-    prof_register_ac("/c-test log", log_ac);
+    prof_completer_add("/c-test log", log_ac);
 
     char *boolean_ac[] = { "get", "set", NULL };
-    prof_register_ac("/c-test boolean", boolean_ac);
+    prof_completer_add("/c-test boolean", boolean_ac);
 
     char *string_ac[] = { "get", "set", NULL };
-    prof_register_ac("/c-test string", string_ac);
+    prof_completer_add("/c-test string", string_ac);
 
     char *int_ac[] = { "get", "set", NULL };
-    prof_register_ac("/c-test int", int_ac);
+    prof_completer_add("/c-test int", int_ac);
 
     prof_register_timed(timed_callback, 30);
 }
