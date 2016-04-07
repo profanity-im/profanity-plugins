@@ -873,3 +873,13 @@ prof_on_chat_win_focus(const char *const barejid)
     sprintf(buf, "%s%s", str, barejid);
     prof_win_show(plugin_win, buf);
 }
+
+void
+prof_on_room_win_focus(const char *const roomjid)
+{
+    create_win();
+    char *str = "fired -> prof_on_room_win_focus: ";
+    char buf[strlen(str) + strlen(roomjid) + 1];
+    sprintf(buf, "%s%s", str, roomjid);
+    prof_win_show(plugin_win, buf);
+}

@@ -517,3 +517,7 @@ def prof_on_contact_presence(barejid, resource, presence, status, priority):
 def prof_on_chat_win_focus(barejid):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_chat_win_focus: " + barejid)
+
+def prof_on_room_win_focus(roomjid):
+    _create_win()
+    prof.win_show(plugin_win, "fired -> prof_on_room_win_focus: " + roomjid)
