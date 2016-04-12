@@ -10,11 +10,13 @@ line=cyan
 import prof
 import platform
 
+
 def _cmd_platform():
     result_summary = platform.platform()
     prof.cons_show_themed("platform", "line", None, result_summary)
 
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/platform"
     ]

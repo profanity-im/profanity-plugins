@@ -13,8 +13,10 @@ import subprocess
 
 system_win = "System"
 
+
 def _get_result(command):
     return subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read()
+
 
 def _handle_win_input(win, command):
     prof.win_show_themed(win, "system", "command", None, command)
@@ -25,9 +27,11 @@ def _handle_win_input(win, command):
         prof.win_show_themed(win, "system", "result", None, s)
     prof.win_show(win, "")
 
+
 def create_win():
     if prof.win_exists(system_win) == False:
         prof.win_create(system_win, _handle_win_input)
+
 
 def _cmd_system(arg1=None, arg2=None):
     if not arg1:
@@ -55,7 +59,8 @@ def _cmd_system(arg1=None, arg2=None):
     else:
         prof.cons_bad_cmd_usage("/system")
 
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     synopsis = [
         "/system",
         "/system exec <comman>",

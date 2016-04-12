@@ -61,7 +61,7 @@ def _open_browser(url):
         os.dup2(saverr, 2)
 
 
-def prof_init(version, status):
+def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/browser",
         "/browser <url>"

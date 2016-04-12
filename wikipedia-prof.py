@@ -39,6 +39,7 @@ win = "Wikipedia"
 page_ac = []
 link_ac = []
 
+
 def _open_browser(url):
     savout = os.dup(1)
     saverr = os.dup(2)
@@ -51,12 +52,15 @@ def _open_browser(url):
         os.dup2(savout, 1)
         os.dup2(saverr, 2)
 
+
 def _handle_win_input():
     pass
+
 
 def create_win():
     if prof.win_exists(win) == False:
         prof.win_create(win, _handle_win_input)
+
 
 def _update_autocomplete():
     prof.completer_add("/wikipedia page", page_ac)
@@ -64,6 +68,7 @@ def _update_autocomplete():
     prof.completer_add("/wikipedia images", page_ac)
     prof.completer_add("/wikipedia links", page_ac)
     prof.completer_add("/wikipedia refs", page_ac)
+
 
 def _search(search_terms):
     global page_ac
@@ -80,6 +85,7 @@ def _search(search_terms):
         prof.win_show_themed(win, "wikipedia", "search.noresults", None, "No search results found for \"" + search_terms + "\"")
     prof.win_show(win, "")
     prof.win_focus(win)
+
 
 def _summary(page_str):
     global link_ac
@@ -103,6 +109,7 @@ def _summary(page_str):
     prof.win_show(win, "")
     prof.win_focus(win)
 
+
 def _page(page_str):
     page = wikipedia.page(page_str)
     create_win()
@@ -116,6 +123,7 @@ def _page(page_str):
     prof.win_show_themed(win, "wikipedia", "page.text", None, page.content.encode("utf-8"))
     prof.win_show(win, "")
     prof.win_focus(win)
+
 
 def _images(page_str):
     global link_ac
@@ -135,6 +143,7 @@ def _images(page_str):
     prof.completer_add("/wikipedia open", link_ac)
     prof.win_show(win, "")
     prof.win_focus(win)
+
 
 def _links(page_str):
     global page_ac
@@ -156,6 +165,7 @@ def _links(page_str):
     prof.win_show(win, "")
     prof.win_focus(win)
 
+
 def _refs(page_str):
     global link_ac
 
@@ -174,6 +184,7 @@ def _refs(page_str):
     prof.completer_add("/wikipedia open", link_ac)
     prof.win_show(win, "")
     prof.win_focus(win)
+
 
 def cmd_wp(subcmd, arg):
     try:
@@ -195,7 +206,8 @@ def cmd_wp(subcmd, arg):
         prof.win_show(win, "")
         prof.win_focus(win)
 
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     synopsis = [
         "/wikipedia search <text>",
         "/wikipedia summary <title>",

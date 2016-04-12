@@ -10,11 +10,13 @@ result=bold_magenta
 import prof
 import getpass
 
+
 def _cmd_whoami():
     me = getpass.getuser()
     prof.cons_show_themed("whoami", "result", None, me)
 
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     synopsis = [ "/whoami" ]
     description = "Calls the system whoami command"
     args = []

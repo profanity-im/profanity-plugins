@@ -303,12 +303,16 @@ def timed_callback():
     _create_win()
     prof.win_show(plugin_win, "timed -> timed_callback called")
 
-def prof_init(version, status):
+def prof_init(version, status, account_name, fulljid):
     t = threading.Thread(target=_inc_counter)
     t.daemon = True
     t.start()
 
     prof.win_create(plugin_win, _handle_win_input)
+    if account_name and fulljid:
+        prof.win_show(plugin_win, "fired -> prof_init: " + version + ", " + status + ", " + account_name + ", " + fulljid)
+    else:
+        prof.win_show(plugin_win, "fired -> prof_init: " + version + ", " + status)
 
     synopsis = [
         "/python-test consalert",

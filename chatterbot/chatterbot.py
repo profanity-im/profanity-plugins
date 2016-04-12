@@ -1,6 +1,7 @@
 import prof
 from chatterbotapi import ChatterBotFactory, ChatterBotType
 
+
 factory = ChatterBotFactory()
 bot = factory.create(ChatterBotType.CLEVERBOT)
 # bot = factory.create(ChatterBotType.JABBERWACKY)
@@ -8,12 +9,14 @@ bot = factory.create(ChatterBotType.CLEVERBOT)
 bot_session = {}
 bot_state = False
 
+
 def prof_post_chat_message_display(jid, message):
     if bot_state:
         if jid not in bot_session:
             bot_session[jid] = bot.create_session()
         response = bot_session[jid].think(message)
         prof.send_line("/msg " + jid + " " + response)
+
 
 def _cmd_chatterbot(state):
     global bot_state
@@ -31,7 +34,8 @@ def _cmd_chatterbot(state):
         else:
             prof.cons_show("ChatterBot is stopped - /chatterbot enable to activate.")
         
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/chatterbot",
         "/chatterbot enable|disable"

@@ -462,11 +462,19 @@ timed_callback(void)
 }
 
 void
-prof_init(const char * const version, const char * const status)
+prof_init(const char * const version, const char * const status, const char *const account_name, const char *const fulljid)
 {
     pthread_create(&worker_thread, NULL, inc_counter, NULL);
 
     prof_win_create(plugin_win, handle_win_input);
+
+    char buf[256];
+    if (account_name != NULL && fulljid != NULL) {
+        sprintf(buf, "fired -> prof_init: %s, %s, %s, %s", version, status, account_name, fulljid);
+    } else {
+        sprintf(buf, "fired -> prof_init: %s, %s", version, status);
+    }
+    prof_win_show(plugin_win, buf);
 
     const char *synopsis[] = {
         "/c-test consalert",

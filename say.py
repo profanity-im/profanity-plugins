@@ -13,11 +13,13 @@ from sys import platform
 
 enabled = False
 
+
 def say(message):
     if platform == "darwin":
         os.system("say '" + message + "' 2>/dev/null")
     elif platform == "linux" or platform == "linux2":
         os.system("echo '" + message + "' | espeak 2>/dev/null")
+
 
 def prof_post_chat_message_display(jid, message):
     global enabled
@@ -25,17 +27,20 @@ def prof_post_chat_message_display(jid, message):
         say(jid + " says " + message)
     return message
 
+
 def prof_post_room_message_display(room, nick, message):
     global enabled
     if enabled:
         say(nick + " says " + message + " in " + room)
     return message
 
+
 def prof_post_priv_message_display(room, nick, message):
     global enabled
     if enabled:
         say(nick + " says " + message)
     return message
+
 
 def _cmd_say(arg1=None, arg2=None):
     global enabled
@@ -51,7 +56,8 @@ def _cmd_say(arg1=None, arg2=None):
     else:
         prof.cons_bad_cmd_usage("/say")
 
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/say on|off",
         "/say test <message>"

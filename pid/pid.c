@@ -28,7 +28,7 @@ cmd_pid(char **args)
 }
 
 void
-prof_init(const char * const version, const char * const status)
+prof_init(const char * const version, const char * const status, const char *const account_name, const char *const fulljid)
 {
     const char *synopsis[] = { "/pid", NULL };
     const char *description = "Show process ID and parent Process ID in the console window.";

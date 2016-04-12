@@ -10,6 +10,7 @@ Requires 'figlet' which is available on most linux distros e.g.:
 import prof
 import subprocess
 
+
 def _cmd_ascii(text):
     proc = subprocess.Popen(['figlet', '--', text], stdout=subprocess.PIPE)
     ascii_out = proc.communicate()[0].decode('utf-8')
@@ -22,7 +23,8 @@ def _cmd_ascii(text):
     elif prof.current_win_is_console():
         prof.cons_show(u'\u000A' + ascii_out)
 
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     synopsis = [ "/ascii <message>" ]
     description = "ASCIIfy a message."
     args = [

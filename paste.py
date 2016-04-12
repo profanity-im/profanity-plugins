@@ -6,13 +6,15 @@ import prof
 import sys
 import Tkinter as tk
 
+
 def _cmd_paste():
     root = tk.Tk(baseName="")
     root.withdraw()
     result = root.clipboard_get()
     prof.send_line(u'\u000A' + result)
 
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     synopsis = [
         "/paste"
     ]

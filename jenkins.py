@@ -53,6 +53,7 @@ poll_fail_message = None
 job_list = None
 changes_list = None
 
+
 def _help():
     prof.win_show(win_tag, "Commands:")
     prof.win_show(win_tag, " /jenkins help - Show this help")
@@ -67,6 +68,7 @@ def _help():
     prof.win_show(win_tag, " /jenkins notify on|off - Enable/disable build notifications")
     prof.win_show(win_tag, " /jenkins settings - Show current settings")
 
+
 def _settings():
     prof.win_show(win_tag, "Jenkins settings:")
     prof.win_show(win_tag, "  Jenkins URL               : " + jenkins_url)
@@ -76,9 +78,11 @@ def _settings():
     prof.win_show(win_tag, "  Notifications enabled     : " + str(enable_notify))
     prof.win_show(win_tag, "  Reminders enabled         : " + str(enable_remind))
 
+
 def _safe_remove(jobname, state):
     if jobname in last_state[state]:
         last_state[state].remove(jobname)
+
 
 def _set_state(jobname, state):
     if not jobname in last_state[state]:
@@ -94,6 +98,7 @@ def _set_state(jobname, state):
     else:
         return False
 
+
 def _open_job_url(url):
     savout = os.dup(1)
     saverr = os.dup(2)
@@ -105,6 +110,7 @@ def _open_job_url(url):
     finally:
         os.dup2(savout, 1)
         os.dup2(saverr, 2)
+
 
 class JobList():
     def __init__(self):
@@ -142,6 +148,7 @@ class JobList():
                 count = count + 1
         return count
 
+
 class JobUpdates():
     def __init__(self):
         self.states = {}
@@ -160,6 +167,7 @@ class JobUpdates():
     def get_in_state(self, state):
         return self.states[state]
 
+
 def _process_build(name, build, new_job_list, new_changes_list):
     if build.get_status() == STATE_FAILURE:
         new_job_list.add_job(name, build.get_number(), STATE_FAILURE)
@@ -177,6 +185,7 @@ def _process_build(name, build, new_job_list, new_changes_list):
         if changed:
             new_changes_list.add_update(STATE_UNSTABLE, name, build.get_number())
 
+
 def _process_queued_or_running(name, job, new_job_list, new_changes_list):
     if job.is_queued():
         new_job_list.add_job(name, None, STATE_QUEUED)
@@ -188,6 +197,7 @@ def _process_queued_or_running(name, job, new_job_list, new_changes_list):
         changed = _set_state(name, STATE_RUNNING)
         if changed:
             new_changes_list.add_update(STATE_RUNNING, name)
+
 
 def _jenkins_poll():
     global poll_fail
@@ -229,6 +239,7 @@ def _jenkins_poll():
             job_list = new_job_list
             changes_list = new_changes_list
 
+
 def _prof_callback():
     global changes_list
     if poll_fail:
@@ -269,8 +280,10 @@ def _prof_callback():
 
         changes_list = None
 
+
 def _handle_input(win, line):
     pass
+
 
 def _list_jobs(jobs):
     for name, build_number, state in jobs:
@@ -284,6 +297,7 @@ def _list_jobs(jobs):
             prof.win_show(win_tag, "  " + name + ", no builds")
         else:
             prof.win_show_themed(win_tag, None, None, "cyan", "  " + name + " " + state)
+
 
 def _build_job(job):
     try:
@@ -299,6 +313,7 @@ def _build_job(job):
     else:
         prof.win_show(win_tag, "Build request sent for " + job)
 
+
 def _job_log(job):
     name = job[0]
     build_no = job[1]
@@ -313,6 +328,7 @@ def _job_log(job):
             prof.win_show(win_tag, log_str)
     else:
         prof.win_show(win_tag, "No build found for " + name)
+
 
 def _cmd_jenkins(cmd=None, arg=None):
     global enable_remind
@@ -411,6 +427,7 @@ def _cmd_jenkins(cmd=None, arg=None):
     else:
         prof.win_show(win_tag, "Unknown command.")
 
+
 def _remind():
     if enable_remind and job_list:
         notify_string = ""
@@ -433,7 +450,8 @@ def _remind():
         if not notify_string == "":
             prof.notify(notify_string, 5000, "Jenkins")
 
-def prof_init(version, status):
+
+def prof_init(version, status, account_name, fulljid):
     last_state[STATE_SUCCESS] = []
     last_state[STATE_UNSTABLE] = []
     last_state[STATE_FAILURE] = []
@@ -506,6 +524,7 @@ def prof_init(version, status):
     ]
 
     prof.register_command("/jenkins", 0, 2, synopsis, description, args, examples, _cmd_jenkins)
+
 
 def prof_on_start():
     prof.win_create(win_tag, _handle_input)
