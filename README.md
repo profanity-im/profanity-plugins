@@ -63,9 +63,9 @@ For Python, Ruby and Lua plugins, copy the plugin to `$XDG_DATA/profanity/plugin
 
 For C plugins, build the plugin using the supplied Makefile, and then copy the `.so` file to the same location.
 
-2 - Add to profrc
+2 - Load the plugin
 
-For all types of plugins, the list of plugins to acutally load when starting Profanity is defined in `$XDG_CONFIG/profanity/profrc` (`~/.config/profanity/profrc` on most systems).
+Run the `/plugins load <plugin>` command to load the plugin, e.g. `/plugins load browser.py`, the plugin can also be manually added to the config file `$XDG_CONFIG/profanity/profrc` (`~/.config/profanity/profrc` on most systems).
 
 For example:
 
