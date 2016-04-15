@@ -121,6 +121,26 @@ def _get(subject):
         else:
             prof.win_focus(plugin_win)
             prof.win_show(plugin_win, "called -> prof_get_current_muc: <none>")
+    elif subject == "nick":
+        _create_win()
+        nick = prof.get_current_nick()
+        if nick:
+            prof.win_focus(plugin_win)
+            prof.win_show(plugin_win, "called -> prof_get_current_nick: " + nick)
+        else:
+            prof.win_focus(plugin_win)
+            prof.win_show(plugin_win, "called -> prof_get_current_nick: <none>")
+    elif subject == "occupants":
+        _create_win()
+        occupants = prof.get_current_occupants()
+        if occupants:
+            prof.win_focus(plugin_win)
+            prof.win_show(plugin_win, "called -> prof_get_current_occupants:")
+            for occupant in occupants:
+                prof.win_show(plugin_win, occupant)
+        else:
+            prof.win_focus(plugin_win)
+            prof.win_show(plugin_win, "called -> prof_get_current_occupants: <none>")
     else:
         prof.cons_bad_cmd_usage("/python-test")
 
@@ -323,7 +343,7 @@ def prof_init(version, status, account_name, fulljid):
         "/python-test winshow_t <group> <key> <default> <message>",
         "/python-test notify <message>",
         "/python-test sendline <line>",
-        "/python-test get recipient|room",
+        "/python-test get recipient|room|nick|occupants",
         "/python-test log debug|info|warning|error <message>",
         "/python-test count",
         "/python-test ping <jid>",
@@ -348,6 +368,8 @@ def prof_init(version, status, account_name, fulljid):
         [ "sendline <line>",                                "Pass line to profanity to process" ],
         [ "get recipient",                                  "Show the current chat recipient, if in a chat window" ],
         [ "get room",                                       "Show the current room JID, if ina a chat room"],
+        [ "get nick",                                       "Show nickname in current room, if ina a chat room"],
+        [ "get occupants",                                  "Show occupants in current room, if ina a chat room"],
         [ "log debug|info|warning|error <message>",         "Log a message at the specified level" ],
         [ "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" ],
         [ "ping <jid>",                                     "Send an XMPP ping to the specified Jabber ID" ],
@@ -393,7 +415,7 @@ def prof_init(version, status, account_name, fulljid):
         ]
     )
     prof.completer_add("/python-test get",
-        [ "recipient", "room" ]
+        [ "recipient", "room", "nick", "occupants" ]
     )
     prof.completer_add("/python-test log",
         [ "debug", "info", "warning", "error" ]

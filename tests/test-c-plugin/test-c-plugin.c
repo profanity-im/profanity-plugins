@@ -197,6 +197,34 @@ getsubject(char *subject)
             prof_win_focus(plugin_win);
             prof_win_show(plugin_win, "called -> prof_get_current_muc: <none>");
         }
+    } else if (strcmp(subject, "nick") == 0) {
+        create_win();
+        char *nick = prof_get_current_nick();
+        if (nick) {
+            prof_win_focus(plugin_win);
+            char *str = "called -> prof_get_current_nick: ";
+            char buf[strlen(str) + strlen(nick)];
+            sprintf(buf, "%s%s", str, nick);
+            prof_win_show(plugin_win, buf);
+        } else {
+            prof_win_focus(plugin_win);
+            prof_win_show(plugin_win, "called -> prof_get_current_nick: <none>");
+        }
+    } else if (strcmp(subject, "occupants") == 0) {
+        create_win();
+        char **occupants = prof_get_current_occupants();
+        if (occupants) {
+            prof_win_focus(plugin_win);
+            prof_win_show(plugin_win, "called -> prof_get_current_occupants:");
+            int i = 0;
+            while(occupants[i] != NULL) {
+                prof_win_show(plugin_win, occupants[i]);
+                i++;
+            }
+        } else {
+            prof_win_focus(plugin_win);
+            prof_win_show(plugin_win, "called -> prof_get_current_occupants: <none>");
+        }
     } else {
         prof_cons_bad_cmd_usage("/c-test");
     }
@@ -485,7 +513,7 @@ prof_init(const char * const version, const char * const status, const char *con
         "/c-test winshow_t <group> <key> <default> <message>",
         "/c-test notify <message>",
         "/c-test sendline <line>",
-        "/c-test get recipient|room",
+        "/c-test get recipient|room|nick|occupants",
         "/c-test log debug|info|warning|error <message>",
         "/c-test count",
         "/c-test ping <jid>",
@@ -511,6 +539,8 @@ prof_init(const char * const version, const char * const status, const char *con
         { "sendline <line>",                                "Pass line to profanity to process" },
         { "get recipient",                                  "Show the current chat recipient, if in a chat window" },
         { "get room",                                       "Show the current room JID, if in a chat room" },
+        { "get nick",                                       "Show nickname in current room, if in a chat room" },
+        { "get occupants",                                  "Show occupants in current room, if in a chat room" },
         { "log debug|info|warning|error <message>",         "Log a message at the specified level" },
         { "count",                                          "Show the counter, incremented every 5 seconds by a worker thread" },
         { "ping <jid>",                                     "Send an XMPP ping to the specified Jabber ID" },
@@ -559,7 +589,7 @@ prof_init(const char * const version, const char * const status, const char *con
     };
     prof_completer_add("/c-test", cmd_ac);
 
-    char *get_ac[] = { "recipient", "room", NULL };
+    char *get_ac[] = { "recipient", "room", "nick", "occupants", NULL };
     prof_completer_add("/c-test get", get_ac);
 
     char *log_ac[] = { "debug", "info", "warning", "error", NULL };

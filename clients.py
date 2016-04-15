@@ -91,7 +91,7 @@ def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/clients"
     ]
-    description = "Show clients used by chat room occupants"
+    description = "Show client software used by chat room occupants"
     args = []
     examples = []
 
