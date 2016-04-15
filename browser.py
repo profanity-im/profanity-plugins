@@ -80,13 +80,13 @@ def prof_init(version, status, account_name, fulljid):
 
 def prof_on_chat_win_focus(jid):
     prof.completer_clear("/browser")
-    if _links[jid]:
+    if jid in _links:
         prof.completer_add("/browser", _links[jid])
 
 
 def prof_on_room_win_focus(room):
     prof.completer_clear("/browser")
-    if _links[room]:
+    if room in _links:
         prof.completer_add("/browser", _links[room])
 
 
