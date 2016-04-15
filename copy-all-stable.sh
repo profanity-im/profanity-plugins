@@ -8,6 +8,7 @@ cp platform-info.py ~/.local/share/profanity/plugins/.
 cp say.py ~/.local/share/profanity/plugins/.
 cp whoami.py ~/.local/share/profanity/plugins/.
 cp wikipedia-prof.py ~/.local/share/profanity/plugins/.
+cp clients.py ~/.local/share/profanity/plugins/.
 cp tests/python-test.py ~/.local/share/profanity/plugins/.
 
 cd pid
