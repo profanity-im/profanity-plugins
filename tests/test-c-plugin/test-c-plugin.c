@@ -494,6 +494,8 @@ prof_init(const char * const version, const char * const status, const char *con
 {
     pthread_create(&worker_thread, NULL, inc_counter, NULL);
 
+    prof_disco_add_feature("urn:xmpp:profanity:c_test_plugin");
+
     prof_win_create(plugin_win, handle_win_input);
 
     char buf[256];

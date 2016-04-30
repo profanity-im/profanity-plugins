@@ -328,6 +328,8 @@ def prof_init(version, status, account_name, fulljid):
     t.daemon = True
     t.start()
 
+    prof.disco_add_feature("urn:xmpp:profanity:python_test_plugin");
+
     prof.win_create(plugin_win, _handle_win_input)
     if account_name and fulljid:
         prof.win_show(plugin_win, "fired -> prof_init: " + version + ", " + status + ", " + account_name + ", " + fulljid)
