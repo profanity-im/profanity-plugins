@@ -17,7 +17,7 @@ def say(message):
     if platform == "darwin":
         os.system("say " + args + " '" + message + "' 2>/dev/null")
     elif platform == "linux" or platform == "linux2":
-        os.system("echo '" + message + "' | espeak 2>/dev/null")
+        os.system("echo '" + message + "' | espeak " + args + " 2>/dev/null")
 
 
 def prof_post_chat_message_display(jid, message):
@@ -83,14 +83,15 @@ def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/say on|off|active",
         "/say args <args>",
+        "/say clearargs",
         "/say test <message>"
     ]
     description = "Read all messages out loud"
     args = [
         [ "on|off",             "Enable/disable say for all windows" ],
         [ "active",             "Enable say for active window only" ],
-        [ "args <args>",        "Arguments to pass to 'say' command on OSX" ],
-        [ "clearargs <args>",   "Clear 'say' command arguments on OSX" ],
+        [ "args <args>",        "Arguments to pass to command" ],
+        [ "clearargs <args>",   "Clear command arguments" ],
         [ "test <message>",     "Say message" ]
     ]
     examples = []
