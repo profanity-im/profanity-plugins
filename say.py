@@ -88,11 +88,11 @@ def prof_init(version, status, account_name, fulljid):
     ]
     description = "Read all messages out loud"
     args = [
-        [ "on|off",             "Enable/disable say for all windows" ],
-        [ "active",             "Enable say for active window only" ],
-        [ "args <args>",        "Arguments to pass to command" ],
-        [ "clearargs <args>",   "Clear command arguments" ],
-        [ "test <message>",     "Say message" ]
+        [ "on|off",         "Enable/disable say for all windows" ],
+        [ "active",         "Enable say for active window only" ],
+        [ "args <args>",    "Arguments to pass to command" ],
+        [ "clearargs",      "Clear command arguments" ],
+        [ "test <message>", "Say message" ]
     ]
     examples = []
 
