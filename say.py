@@ -32,8 +32,10 @@ def prof_post_chat_message_display(jid, message):
 def prof_post_room_message_display(room, nick, message):
     enabled = prof.settings_get_string("say", "enabled", "off")
     current_muc = prof.get_current_muc()
-    if enabled == "on" or (enable == "active" and current_muc == jid):
-        say(nick + " says " + message + " in " + room)
+    if enabled == "on":
+        say(nick + " in " + room + " says " + message)
+    elif enabled == "active" and current_muc == room:
+        say(nick + " says " + message)
 
     return message
 
@@ -86,7 +88,7 @@ def prof_init(version, status, account_name, fulljid):
         "/say clearargs",
         "/say test <message>"
     ]
-    description = "Read all messages out loud"
+    description = "Read messages out loud"
     args = [
         [ "on|off",         "Enable/disable say for all windows" ],
         [ "active",         "Enable say for active window only" ],
