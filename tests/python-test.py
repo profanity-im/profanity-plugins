@@ -457,7 +457,7 @@ def prof_init(version, status, account_name, fulljid):
         [ "add", "remove" ]
     )
 
-    prof.register_timed(timed_callback, 30)
+    prof.register_timed(timed_callback, 5)
 
 
 def prof_on_start():

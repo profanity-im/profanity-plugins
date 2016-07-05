@@ -609,7 +609,7 @@ prof_init(const char * const version, const char * const status, const char *con
     char *completer_ac[] = { "add", "remove", NULL };
     prof_completer_add("/c-test completer", completer_ac);
 
-    prof_register_timed(timed_callback, 30);
+    prof_register_timed(timed_callback, 5);
 }
 
 void
@@ -631,6 +631,7 @@ prof_on_unload(void)
 {
     create_win();
     prof_win_show(plugin_win, "fired -> prof_on_unload");
+    pthread_cancel(worker_thread);
 }
 
 void
