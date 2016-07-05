@@ -627,6 +627,13 @@ prof_on_shutdown(void)
 }
 
 void
+prof_on_unload(void)
+{
+    create_win();
+    prof_win_show(plugin_win, "fired -> prof_on_unload");
+}
+
+void
 prof_on_connect(const char * const account_name, const char * const fulljid)
 {
     create_win();

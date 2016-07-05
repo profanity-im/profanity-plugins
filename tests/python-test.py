@@ -8,24 +8,29 @@ plugin_win = "Python Test"
 count = 0
 ping_id = 1
 
+
 def _inc_counter():
     global count
     while True:
         time.sleep(5)
         count = count + 1
 
+
 def _handle_win_input(win, line):
     prof.win_show(win, "Input received: " + line)
+
 
 def _create_win():
     if prof.win_exists(plugin_win) == False:
         prof.win_create(plugin_win, _handle_win_input)
+
 
 def _consalert():
     _create_win()
     prof.win_focus(plugin_win)
     prof.cons_alert()
     prof.win_show(plugin_win, "called -> prof.cons_alert")
+
 
 def _consshow(msg):
     if not msg:
@@ -36,6 +41,7 @@ def _consshow(msg):
     prof.win_focus(plugin_win)
     prof.cons_show(msg)
     prof.win_show(plugin_win, "called -> prof.cons_show: " + msg)
+
 
 def _consshow_t(group, key, dflt, msg):
     if not group or not key or not dflt or not msg:
@@ -50,6 +56,7 @@ def _consshow_t(group, key, dflt, msg):
     prof.cons_show_themed(groupval, keyval, dfltval, msg)
     prof.win_show(plugin_win, "called -> prof.cons_show_themed: " + group + ", " + key + ", " + dflt + ", " + msg)
 
+
 def _constest():
     res = prof.current_win_is_console()
     _create_win()
@@ -58,6 +65,7 @@ def _constest():
         prof.win_show(plugin_win, "called -> prof.current_win_is_console: true")
     else:
         prof.win_show(plugin_win, "called -> prof.current_win_is_console: false")
+
 
 def _winshow(msg):
     if not msg:
@@ -68,6 +76,7 @@ def _winshow(msg):
     prof.win_focus(plugin_win)
     prof.win_show(plugin_win, msg)
     prof.win_show(plugin_win, "called -> prof.win_show: " + msg)
+
 
 def _winshow_t(group, key, dflt, msg):
     if not group or not key or not dflt or not msg:
@@ -82,6 +91,7 @@ def _winshow_t(group, key, dflt, msg):
     prof.win_show_themed(plugin_win, groupval, keyval, dfltval, msg)
     prof.win_show(plugin_win, "called -> prof_win_show_themed: " + group + ", " + key + ", " + dflt + ", " + msg)
 
+
 def _sendline(line):
     if not line:
         prof.cons_bad_cmd_usage("/python-test")
@@ -92,6 +102,7 @@ def _sendline(line):
     prof.send_line(line)
     prof.win_show(plugin_win, "called -> prof.send_line: " + line)
 
+
 def _notify(msg):
     if not msg:
         prof.cons_bad_cmd_usage("/python-test")
@@ -101,6 +112,7 @@ def _notify(msg):
     prof.win_focus(plugin_win)
     prof.notify(msg, 5000, "python-test plugin")
     prof.win_show(plugin_win, "called -> prof.notify: " + msg)
+
 
 def _get(subject):
     if subject == "recipient":
@@ -144,6 +156,7 @@ def _get(subject):
     else:
         prof.cons_bad_cmd_usage("/python-test")
 
+
 def _log(level, msg):
     if not level or not msg:
         prof.cons_bad_cmd_usage("/python-test")
@@ -172,10 +185,12 @@ def _log(level, msg):
     else:
         prof.cons_bad_cmd_usage("/python-test")
 
+
 def _count():
     _create_win()
     prof.win_focus(plugin_win)
     prof.win_show(plugin_win, "Count: " + str(count))
+
 
 def _ping(jid):
     global ping_id
@@ -192,6 +207,7 @@ def _ping(jid):
         prof.win_show(plugin_win, "Ping sent successfully")
     else:
         prof.win_show(plugin_win, "Error sending ping")
+
 
 def _boolean(op, group, key, value_str):
     if op != "get" and op != "set":
@@ -224,6 +240,7 @@ def _boolean(op, group, key, value_str):
         prof.settings_set_boolean(group, key, value)
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
 
+
 def _string(op, group, key, value):
     if op != "get" and op != "set":
         prof.cons_bad_cmd_usage("/python-test")
@@ -251,6 +268,7 @@ def _string(op, group, key, value):
         prof.settings_set_string(group, key, value)
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + value)
 
+
 def _int(op, group, key, value):
     if op != "get" and op != "set":
         prof.cons_bad_cmd_usage("/python-test")
@@ -271,12 +289,14 @@ def _int(op, group, key, value):
         prof.settings_set_int(group, key, int(value))
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
 
+
 def _incoming(barejid, resource, message):
     if not barejid or not resource or not message:
         prof.cons_bad_cmd_usage("/python-test")
         return
 
     prof.incoming_message(barejid, resource, message)
+
 
 def _completer(op, item):
     if not item:
@@ -319,9 +339,11 @@ def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
     elif    subcmd == "completer":  _completer(arg1, arg2)
     else:                           prof.cons_bad_cmd_usage("/python-test")
 
+
 def timed_callback():
     _create_win()
     prof.win_show(plugin_win, "timed -> timed_callback called")
+
 
 def prof_init(version, status, account_name, fulljid):
     t = threading.Thread(target=_inc_counter)
@@ -437,53 +459,71 @@ def prof_init(version, status, account_name, fulljid):
 
     prof.register_timed(timed_callback, 30)
 
+
 def prof_on_start():
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_start")
+
 
 def prof_on_shutdown():
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_shutdown")
 
+
+def prof_on_unload():
+    _create_win()
+    prof.win_show(plugin_win, "fired -> prof_on_unload")
+
+
 def prof_on_connect(account_name, fulljid):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_connect: " + account_name + ", " + fulljid)
+
 
 def prof_on_disconnect(account_name, fulljid):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_disconnect: " + account_name + ", " + fulljid)
 
+
 def prof_pre_chat_message_display(jid, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_chat_message_display: " + jid + ", " + message)
+
 
 def prof_post_chat_message_display(jid, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_chat_message_display: " + jid + ", " + message)
 
+
 def prof_pre_chat_message_send(jid, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_chat_message_send: " + jid + ", " + message)
+
 
 def prof_post_chat_message_send(jid, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_chat_message_send: " + jid + ", " + message)
 
+
 def prof_pre_room_message_display(room, nick, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_room_message_display: " + room + ", " + nick + ", " + message)
+
 
 def prof_post_room_message_display(room, nick, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_room_message_display: " + room + ", " + nick + ", " + message)
 
+
 def prof_pre_room_message_send(room, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_room_message_send: " + room + ", " + message)
 
+
 def prof_post_room_message_send(room, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_room_message_send: " + room + ", " + message)
+
 
 def prof_on_room_history_message(room, nick, message, timestamp):
     _create_win()
@@ -492,48 +532,59 @@ def prof_on_room_history_message(room, nick, message, timestamp):
     else:
         prof.win_show(plugin_win, "fired -> prof_on_room_history_message: " + room + ", " + nick + ", " + message)
 
+
 def prof_pre_priv_message_display(room, nick, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_priv_message_display: " + room + ", " + nick + ", " + message)
+
 
 def prof_post_priv_message_display(room, nick, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_priv_message_display: " + room + ", " + nick + ", " + message)
 
+
 def prof_pre_priv_message_send(room, nick, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_pre_priv_message_send: " + room + ", " + nick + ", " + message)
+
 
 def prof_post_priv_message_send(room, nick, message):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_post_priv_message_send: " + room + ", " + nick + ", " + message)
 
+
 def prof_on_message_stanza_send(stanza):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_message_stanza_send: " + stanza)
+
 
 def prof_on_message_stanza_receive(stanza):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_message_stanza_receive: " + stanza)
     return True
 
+
 def prof_on_presence_stanza_send(stanza):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_presence_stanza_send: " + stanza)
+
 
 def prof_on_presence_stanza_receive(stanza):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_presence_stanza_receive: " + stanza)
     return True
 
+
 def prof_on_iq_stanza_send(stanza):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_iq_stanza_send: " + stanza)
+
 
 def prof_on_iq_stanza_receive(stanza):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_iq_stanza_receive: " + stanza)
     return True
+
 
 def prof_on_contact_offline(barejid, resource, status):
     _create_win()
@@ -542,6 +593,7 @@ def prof_on_contact_offline(barejid, resource, status):
     else:
         prof.win_show(plugin_win, "fired -> prof_on_contact_offline: " + barejid + "/" + resource)
 
+
 def prof_on_contact_presence(barejid, resource, presence, status, priority):
     _create_win()
     if status:
@@ -549,9 +601,11 @@ def prof_on_contact_presence(barejid, resource, presence, status, priority):
     else:
         prof.win_show(plugin_win, "fired -> prof_on_contact_presence: " + barejid + "/" + resource + " " + presence + " " + str(priority))
 
+
 def prof_on_chat_win_focus(barejid):
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_chat_win_focus: " + barejid)
+
 
 def prof_on_room_win_focus(roomjid):
     _create_win()
