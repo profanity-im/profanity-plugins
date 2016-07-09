@@ -7,11 +7,14 @@ plugin_win = "Python Test"
 
 count = 0
 ping_id = 1
-
+count_thread = None
+thread_stop = None
 
 def _inc_counter():
     global count
-    while True:
+    global thread_stop
+
+    while not thread_stop.is_set():
         time.sleep(5)
         count = count + 1
 
@@ -346,9 +349,17 @@ def timed_callback():
 
 
 def prof_init(version, status, account_name, fulljid):
-    t = threading.Thread(target=_inc_counter)
-    t.daemon = True
-    t.start()
+    global count
+    global ping_id
+    global thread_stop
+
+    count = 0
+    ping_id = 1
+
+    thread_stop = threading.Event()
+    count_thread = threading.Thread(target=_inc_counter)
+    count_thread.daemon = True
+    count_thread.start()
 
     prof.disco_add_feature("urn:xmpp:profanity:python_test_plugin");
 
@@ -466,13 +477,21 @@ def prof_on_start():
 
 
 def prof_on_shutdown():
+    global thread_stop
+
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_shutdown")
+    thread_stop.set()
+    count_thread.join()
 
 
 def prof_on_unload():
+    global thread_stop
+
     _create_win()
     prof.win_show(plugin_win, "fired -> prof_on_unload")
+    thread_stop.set()
+    count_thread.join()
 
 
 def prof_on_connect(account_name, fulljid):

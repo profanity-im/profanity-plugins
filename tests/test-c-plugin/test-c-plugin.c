@@ -624,6 +624,7 @@ prof_on_shutdown(void)
 {
     create_win();
     prof_win_show(plugin_win, "fired -> prof_on_shutdown");
+    pthread_cancel(worker_thread);
 }
 
 void
