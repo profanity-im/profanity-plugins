@@ -32,17 +32,9 @@ handle_win_input(PROF_WIN_TAG win, char *line)
 }
 
 void
-create_win(void)
-{
-    if (!prof_win_exists(plugin_win)) {
-        prof_win_create(plugin_win, handle_win_input);
-    }
-}
-
-void
 consalert(void)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     prof_cons_alert();
     prof_win_show(plugin_win, "called -> prof_cons_alert");
@@ -55,7 +47,7 @@ consshow(char *msg)
         prof_cons_bad_cmd_usage("/c-test");
         return;
     }
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     prof_cons_show(msg);
     char *str = "called -> prof_cons_show: ";
@@ -71,7 +63,7 @@ consshow_t(char *group, char *key, char *def, char *msg)
         prof_cons_bad_cmd_usage("/c-test");
         return;
     }
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     char *groupval = strcmp(group, "none") == 0 ? NULL : group;
     char *keyval = strcmp(key, "none") == 0 ? NULL : key;
@@ -87,7 +79,7 @@ void
 constest(void)
 {
     int res = prof_current_win_is_console();
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     if (res) {
         prof_win_show(plugin_win, "called -> prof_current_win_is_console: true");
@@ -103,7 +95,7 @@ winshow(char *msg)
         prof_cons_bad_cmd_usage("/c-test");
         return;
     }
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     prof_win_show(plugin_win, msg);
     char *str = "called -> prof_win_show: ";
@@ -119,7 +111,7 @@ winshow_t(char *group, char *key, char *def, char *msg)
         prof_cons_bad_cmd_usage("/c-test");
         return;
     }
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     char *groupval = strcmp(group, "none") == 0 ? NULL : group;
     char *keyval = strcmp(key, "none") == 0 ? NULL : key;
@@ -138,7 +130,7 @@ sendline(char *line)
         prof_cons_bad_cmd_usage("/c-test");
         return;
     }
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     prof_send_line(line);
     char *str = "called -> prof_send_line: ";
@@ -154,7 +146,7 @@ donotify(char *msg)
         prof_cons_bad_cmd_usage("/c-test");
         return;
     }
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     prof_notify(msg, 5000, "c-test plugin");
     char *str = "called -> prof_notify: ";
@@ -172,7 +164,7 @@ getsubject(char *subject)
     }
 
     if (strcmp(subject, "recipient") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         char *recipient = prof_get_current_recipient();
         if (recipient) {
             prof_win_focus(plugin_win);
@@ -185,7 +177,7 @@ getsubject(char *subject)
             prof_win_show(plugin_win, "called -> prof_get_current_recipient: <none>");
         }
     } else if (strcmp(subject, "room") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         char *room = prof_get_current_muc();
         if (room) {
             prof_win_focus(plugin_win);
@@ -198,7 +190,7 @@ getsubject(char *subject)
             prof_win_show(plugin_win, "called -> prof_get_current_muc: <none>");
         }
     } else if (strcmp(subject, "nick") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         char *nick = prof_get_current_nick();
         if (nick) {
             prof_win_focus(plugin_win);
@@ -211,7 +203,7 @@ getsubject(char *subject)
             prof_win_show(plugin_win, "called -> prof_get_current_nick: <none>");
         }
     } else if (strcmp(subject, "occupants") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         char **occupants = prof_get_current_occupants();
         if (occupants) {
             prof_win_focus(plugin_win);
@@ -239,7 +231,7 @@ logmsg(char *level, char *msg)
     }
 
     if (strcmp(level, "debug") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         prof_log_debug(msg);
         char *str = "called -> prof_log_debug: ";
@@ -247,7 +239,7 @@ logmsg(char *level, char *msg)
         sprintf(buf, "%s%s", str, msg);
         prof_win_show(plugin_win, buf);
     } else if (strcmp(level, "info") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         prof_log_info(msg);
         char *str = "called -> prof_log_info: ";
@@ -255,7 +247,7 @@ logmsg(char *level, char *msg)
         sprintf(buf, "%s%s", str, msg);
         prof_win_show(plugin_win, buf);
     } else if (strcmp(level, "warning") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         prof_log_warning(msg);
         char *str = "called -> prof_log_warning: ";
@@ -263,7 +255,7 @@ logmsg(char *level, char *msg)
         sprintf(buf, "%s%s", str, msg);
         prof_win_show(plugin_win, buf);
     } else if (strcmp(level, "error") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         prof_log_error(msg);
         char *str = "called -> prof_log_error: ";
@@ -278,7 +270,7 @@ logmsg(char *level, char *msg)
 void
 docount(void)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     char buf[100];
     sprintf(buf, "Count: %d", count);
@@ -292,7 +284,7 @@ doping(char *jid)
         prof_cons_bad_cmd_usage("/c-test");
         return;
     }
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_focus(plugin_win);
     char *strstart = "<iq to='";
     char *strend = "' type='get'><ping xmlns='urn:xmpp:ping'/></iq>";
@@ -330,7 +322,7 @@ booleansetting(char *op, char *group, char *key, char *value_str)
 
     if (strcmp(op, "get") == 0) {
         int dflt = 0;
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         int res = prof_settings_get_boolean(group, key, dflt);
         if (res) {
@@ -343,7 +335,7 @@ booleansetting(char *op, char *group, char *key, char *value_str)
         if (strcmp(value_str, "true") == 0) {
             value = 1;
         }
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         prof_settings_set_boolean(group, key, value);
         char buf[5 + strlen(group) + 2 + strlen(key) + 4 + strlen(value_str)];
@@ -371,7 +363,7 @@ stringsetting(char *op, char *group, char *key, char *value)
     }
 
     if (strcmp(op, "get") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         char *res = prof_settings_get_string(group, key, NULL);
         if (res) {
@@ -382,7 +374,7 @@ stringsetting(char *op, char *group, char *key, char *value)
             prof_win_show(plugin_win, "String setting: NULL");
         }
     } else if (strcmp(op, "set") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         prof_settings_set_string(group, key, value);
         char buf[5 + strlen(group) + 2 + strlen(key) + 4 + strlen(value)];
@@ -405,14 +397,14 @@ intsetting(char *op, char *group, char *key, char *value)
     }
 
     if (strcmp(op, "get") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         int res = prof_settings_get_int(group, key, 0);
         char buf[256];
         sprintf(buf, "Integer setting: %d", res);
         prof_win_show(plugin_win, buf);
     } else if (strcmp(op, "set") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         int int_value = atoi(value);
         prof_settings_set_int(group, key, int_value);
@@ -437,7 +429,7 @@ completer(char *op, char *item)
     }
 
     if (strcmp(op, "add") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         char *ac[] = { item, NULL };
         prof_completer_add("/c-test", ac);
@@ -446,7 +438,7 @@ completer(char *op, char *item)
         prof_win_show(plugin_win, buf);
         prof_completer_add("/c-test completer remove", ac);
     } else if (strcmp(op, "remove") == 0) {
-        create_win();
+        prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         char *ac[] = { item, NULL };
         prof_completer_remove("/c-test", ac);
@@ -485,7 +477,7 @@ cmd_ctest(char **args)
 void
 timed_callback(void)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_show(plugin_win, "timed -> timed_callback called");
 }
 
@@ -615,14 +607,14 @@ prof_init(const char * const version, const char * const status, const char *con
 void
 prof_on_start(void)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_show(plugin_win, "fired -> prof_on_start");
 }
 
 void
 prof_on_shutdown(void)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_show(plugin_win, "fired -> prof_on_shutdown");
     pthread_cancel(worker_thread);
 }
@@ -630,7 +622,7 @@ prof_on_shutdown(void)
 void
 prof_on_unload(void)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     prof_win_show(plugin_win, "fired -> prof_on_unload");
     pthread_cancel(worker_thread);
 }
@@ -638,7 +630,7 @@ prof_on_unload(void)
 void
 prof_on_connect(const char * const account_name, const char * const fulljid)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_connect: ";
     char buf[strlen(str) + strlen(account_name) + 2 + strlen(fulljid) + 1];
@@ -649,7 +641,7 @@ prof_on_connect(const char * const account_name, const char * const fulljid)
 void
 prof_on_disconnect(const char * const account_name, const char * const fulljid)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_disconnect: ";
     char buf[strlen(str) + strlen(account_name) + 2 + strlen(fulljid) + 1];
@@ -660,7 +652,7 @@ prof_on_disconnect(const char * const account_name, const char * const fulljid)
 char*
 prof_pre_chat_message_display(const char * const jid, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_chat_message_display: ";
     char buf[strlen(str) + strlen(jid) + 2 + strlen(message) + 1];
@@ -673,7 +665,7 @@ prof_pre_chat_message_display(const char * const jid, const char *message)
 void
 prof_post_chat_message_display(const char * const jid, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_chat_message_display: ";
     char buf[strlen(str) + strlen(jid) + 2 + strlen(message) + 1];
@@ -684,7 +676,7 @@ prof_post_chat_message_display(const char * const jid, const char *message)
 char*
 prof_pre_chat_message_send(const char * const jid, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_chat_message_send: ";
     char buf[strlen(str) + strlen(jid) + 2 + strlen(message) + 1];
@@ -697,7 +689,7 @@ prof_pre_chat_message_send(const char * const jid, const char *message)
 void
 prof_post_chat_message_send(const char * const jid, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_chat_message_send: ";
     char buf[strlen(str) + strlen(jid) + 2 + strlen(message) + 1];
@@ -708,7 +700,7 @@ prof_post_chat_message_send(const char * const jid, const char *message)
 char*
 prof_pre_room_message_display(const char * const room, const char * const nick, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_room_message_display: ";
     char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
@@ -721,7 +713,7 @@ prof_pre_room_message_display(const char * const room, const char * const nick, 
 void
 prof_post_room_message_display(const char * const room, const char * const nick, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_room_message_display: ";
     char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
@@ -732,7 +724,7 @@ prof_post_room_message_display(const char * const room, const char * const nick,
 char *
 prof_pre_room_message_send(const char * const room, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_room_message_send: ";
     char buf[strlen(str) + strlen(room) + 2 + strlen(message) + 1];
@@ -745,7 +737,7 @@ prof_pre_room_message_send(const char * const room, const char *message)
 void
 prof_post_room_message_send(const char * const room, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_room_message_send: ";
     char buf[strlen(str) + strlen(room) + 2 + strlen(message) + 1];
@@ -756,7 +748,7 @@ prof_post_room_message_send(const char * const room, const char *message)
 void
 prof_on_room_history_message(const char * const room, const char *const nick, const char *const message, const char *const timestamp)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_room_history_message: ";
     if (timestamp == NULL) {
@@ -773,7 +765,7 @@ prof_on_room_history_message(const char * const room, const char *const nick, co
 char *
 prof_pre_priv_message_display(const char * const room, const char * const nick, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_priv_message_display: ";
     char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
@@ -786,7 +778,7 @@ prof_pre_priv_message_display(const char * const room, const char * const nick, 
 void
 prof_post_priv_message_display(const char * const room, const char * const nick, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_priv_message_display: ";
     char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
@@ -797,7 +789,7 @@ prof_post_priv_message_display(const char * const room, const char * const nick,
 char *
 prof_pre_priv_message_send(const char * const room, const char * const nick, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_priv_message_send: ";
     char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
@@ -810,7 +802,7 @@ prof_pre_priv_message_send(const char * const room, const char * const nick, con
 void
 prof_post_priv_message_send(const char * const room, const char * const nick, const char *message)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_priv_message_send: ";
     char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
@@ -821,7 +813,7 @@ prof_post_priv_message_send(const char * const room, const char * const nick, co
 char*
 prof_on_message_stanza_send(const char *const stanza)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_message_stanza_send: ";
     char buf[strlen(str) + strlen(stanza) + 1];
@@ -836,7 +828,7 @@ prof_on_message_stanza_send(const char *const stanza)
 int
 prof_on_message_stanza_receive(const char *const stanza)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_message_stanza_receive: ";
     char buf[strlen(str) + strlen(stanza) + 1];
@@ -849,7 +841,7 @@ prof_on_message_stanza_receive(const char *const stanza)
 char*
 prof_on_presence_stanza_send(const char *const stanza)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_presence_stanza_send: ";
     char buf[strlen(str) + strlen(stanza) + 1];
@@ -862,7 +854,7 @@ prof_on_presence_stanza_send(const char *const stanza)
 int
 prof_on_presence_stanza_receive(const char *const stanza)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_presence_stanza_receive: ";
     char buf[strlen(str) + strlen(stanza) + 1];
@@ -875,7 +867,7 @@ prof_on_presence_stanza_receive(const char *const stanza)
 char*
 prof_on_iq_stanza_send(const char *const stanza)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_iq_stanza_send: ";
     char buf[strlen(str) + strlen(stanza) + 1];
@@ -888,7 +880,7 @@ prof_on_iq_stanza_send(const char *const stanza)
 int
 prof_on_iq_stanza_receive(const char *const stanza)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_iq_stanza_receive: ";
     char buf[strlen(str) + strlen(stanza) + 1];
@@ -901,7 +893,7 @@ prof_on_iq_stanza_receive(const char *const stanza)
 void
 prof_on_contact_offline(const char *const barejid, const char *const resource, const char *const status)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_contact_offline: ";
     int status_len = status == NULL ? 0 : strlen(status) + 2;
@@ -917,7 +909,7 @@ prof_on_contact_offline(const char *const barejid, const char *const resource, c
 void
 prof_on_contact_presence(const char *const barejid, const char *const resource, const char *const presence, const char *const status, const int priority)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_contact_presence: ";
     int status_len = status == NULL ? 0 : strlen(status) + 2;
@@ -933,7 +925,7 @@ prof_on_contact_presence(const char *const barejid, const char *const resource, 
 void
 prof_on_chat_win_focus(const char *const barejid)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     char *str = "fired -> prof_on_chat_win_focus: ";
     char buf[strlen(str) + strlen(barejid) + 1];
     sprintf(buf, "%s%s", str, barejid);
@@ -943,7 +935,7 @@ prof_on_chat_win_focus(const char *const barejid)
 void
 prof_on_room_win_focus(const char *const roomjid)
 {
-    create_win();
+    prof_win_create(plugin_win, handle_win_input);
     char *str = "fired -> prof_on_room_win_focus: ";
     char buf[strlen(str) + strlen(roomjid) + 1];
     sprintf(buf, "%s%s", str, roomjid);
