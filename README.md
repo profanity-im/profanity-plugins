@@ -63,7 +63,7 @@ Use the `/plugins install` command, e.g.
 /plugins install ~/projects-git/profanity-plugins/say.py
 ```
 
-See the `/help plugins` for further plugin management commands.
+See the `/help plugins` command for further plugin management commands.
 
 More help on plugins
 --------------------
