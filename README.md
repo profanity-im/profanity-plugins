@@ -57,24 +57,16 @@ Python plugins: Enabled
 Installing plugins
 ------------------
 
-1 - Copy the plugin
-
-For Python, Ruby and Lua plugins, copy the plugin to `$XDG_DATA/profanity/plugins/`, (`~/.local/share/profanity/plugins/` on most systems).
-
-For C plugins, build the plugin using the supplied Makefile, and then copy the `.so` file to the same location.
-
-2 - Load the plugin
-
-Run the `/plugins load <plugin>` command to load the plugin, e.g. `/plugins load browser.py`, the plugin can also be manually added to the config file `$XDG_CONFIG/profanity/profrc` (`~/.config/profanity/profrc` on most systems).
-
-For example:
+Use the `/plugins install` command, e.g.
 
 ```
-[plugins]
-load=browser.py;platform-info.py;ascii.py;pid.so
+/plugins install ~/projects-git/profanity-plugins/say.py
 ```
 
-Getting help on plugins:
+See the `/help plugins` for further plugin management commands.
+
+More help on plugins
+--------------------
 
 * `/plugins` - Shows a list of loaded plugins.
 * `/help commands plugins` - Shows commands defined by plugins
