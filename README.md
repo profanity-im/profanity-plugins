@@ -103,7 +103,7 @@ For example ([say.py](https://github.com/boothj5/profanity-plugins/blob/master/s
 ```
 [say]
 args=-v english -s 120
-enabled=off
+enabled=active
 ```
 
 Example plugin code
