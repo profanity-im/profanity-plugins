@@ -63,7 +63,7 @@ Use the `/plugins install` command, e.g.
 /plugins install ~/projects-git/profanity-plugins/say.py
 ```
 
-See the `/help plugins` command for further plugin management commands.
+See the `/help plugins` command for further plugin management options.
 
 More help on plugins
 --------------------
@@ -87,6 +87,23 @@ For example ([syscmd.py](https://github.com/boothj5/profanity-plugins/blob/maste
 [system]
 command=cyan
 result=green
+```
+
+Plugin settings
+---------------
+
+The plugins API also includes functions to read and write settings.  The settings are stored in: 
+
+```
+~/.local/share/profanity/plugin_settings
+```
+
+For example ([say.py](https://github.com/boothj5/profanity-plugins/blob/master/say.py) plugin):
+
+```
+[say]
+args=-v english -s 120
+enabled=off
 ```
 
 Example plugin code
