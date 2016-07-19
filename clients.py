@@ -63,18 +63,21 @@ def _sv_send(muc, occupant):
     ET.SubElement(iq, "query", {
         "xmlns": "jabber:iq:version"
     })
+
     iq_id_count = iq_id_count + 1
 
-    prof.send_stanza(ET.tostring(iq))
+    prof.send_stanza(ET.tostring(iq).decode("utf-8"))
 
 
 def _cmd_clients():
     muc = prof.get_current_muc()
     if muc == None:
+        prof.cons_show("Command only valid in chat rooms.")
         return
 	
     occupants = prof.get_current_occupants()
     if occupants == None or len(occupants) == 0:
+        prof.cons_show("No occupants for /clients command.")
         return
 
     nick = prof.get_current_nick()
