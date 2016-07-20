@@ -1,5 +1,8 @@
 """
 Convert smileys ( :) :( etc) to the Unicode character representation
+
+Dependencies:
+pip install future
 """
 
 import prof

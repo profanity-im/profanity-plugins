@@ -1,10 +1,13 @@
 """
 Paste the contents of the clipboard when in a chat or room window.
+
+Dependencies:
+pip install future
+sudo apt-get python-tk (or python3-tk)
 """
 
 import prof
-import sys
-import Tkinter as tk
+import tkinter as tk
 
 
 def _cmd_paste():
