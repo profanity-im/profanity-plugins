@@ -30,12 +30,12 @@ Build with:
 
 ```
 ./bootstrap.sh
-./configure --enable-python-plugins
+./configure
 make
 sudo make install
 ```
 
-Only support for Python 2.7 is currently included, after building, run `profanity -v` to see which language support is available, example output:
+After building, run `profanity -v` to see which language support is available, example output:
 
 ```
 Profanity, version 0.5.0dev.plugins-python.63a7316
