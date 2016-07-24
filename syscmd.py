@@ -24,7 +24,7 @@ def _handle_win_input(win, command):
     result = _get_result(command)
     split = result.splitlines()
     for s in split:
-        prof.win_show_themed(win, "system", "result", None, s.decode("utf-8") )
+        prof.win_show_themed(win, "system", "result", None, s)
     prof.win_show(win, "")
 
 
@@ -48,7 +48,7 @@ def _cmd_system(arg1=None, arg2=None):
                 prof.cons_alert()
             else:
                 result = _get_result(arg2)
-                prof.send_line(u'\u000A' + result.decode("utf-8"))
+                prof.send_line(u'\u000A' + result)
     elif arg1 == "exec":
         if arg2 == None:
             prof.cons_bad_cmd_usage("/system")

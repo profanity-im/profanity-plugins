@@ -78,8 +78,8 @@ def _search(search_terms):
     if len(results) > 0:
         prof.win_show_themed(win, "wikipedia", "search", None, "Search results for \"" + search_terms + "\":")
         for index, result in enumerate(results):
-            page_ac.append(result.encode("utf-8"))
-            prof.win_show_themed(win, "wikipedia", "search.results", None, result.encode("utf-8"))
+            page_ac.append(result)
+            prof.win_show_themed(win, "wikipedia", "search.results", None, result)
         _update_autocomplete()
     else:
         prof.win_show_themed(win, "wikipedia", "search.noresults", None, "No search results found for \"" + search_terms + "\"")
@@ -98,14 +98,14 @@ def _summary(page_str):
         prof.win_focus(win)
         return
 
-    link_ac.append(page.url.encode("utf-8"))
+    link_ac.append(page.url)
     prof.completer_add("/wikipedia open", link_ac)
 
-    prof.win_show_themed(win, "wikipedia", "summary.title", None, page.title.encode("utf-8"))
-    prof.win_show_themed(win, "wikipedia", "summary.url", None, page.url.encode("utf-8"))
+    prof.win_show_themed(win, "wikipedia", "summary.title", None, page.title)
+    prof.win_show_themed(win, "wikipedia", "summary.url", None, page.url)
 
     summary = wikipedia.summary(page_str)
-    prof.win_show_themed(win, "wikipedia", "summary.text", None, summary.encode("utf-8"))
+    prof.win_show_themed(win, "wikipedia", "summary.text", None, summary)
     prof.win_show(win, "")
     prof.win_focus(win)
 
@@ -119,8 +119,8 @@ def _page(page_str):
         prof.win_focus(win)
         return
 
-    prof.win_show_themed(win, "wikipedia", "page.title", None, page.title.encode("utf-8"))
-    prof.win_show_themed(win, "wikipedia", "page.text", None, page.content.encode("utf-8"))
+    prof.win_show_themed(win, "wikipedia", "page.title", None, page.title)
+    prof.win_show_themed(win, "wikipedia", "page.text", None, page.content)
     prof.win_show(win, "")
     prof.win_focus(win)
 
@@ -138,8 +138,8 @@ def _images(page_str):
 
     prof.win_show_themed(win, "wikipedia", "images", None, "Images for " + page_str)
     for image in page.images:
-        prof.win_show_themed(win, "wikipedia", "images.url", None, image.encode("utf-8"))
-        link_ac.append(image.encode("utf-8"))
+        prof.win_show_themed(win, "wikipedia", "images.url", None, image)
+        link_ac.append(image)
     prof.completer_add("/wikipedia open", link_ac)
     prof.win_show(win, "")
     prof.win_focus(win)
@@ -159,8 +159,8 @@ def _links(page_str):
     prof.win_show_themed(win, "wikipedia", "links", None, "Links for " + page_str)
 
     for link in page.links:
-        prof.win_show_themed(win, "wikipedia", "links.link", None, link.encode("utf-8"))
-        page_ac.append(link.encode("utf-8"))
+        prof.win_show_themed(win, "wikipedia", "links.link", None, link)
+        page_ac.append(link)
     _update_autocomplete()
     prof.win_show(win, "")
     prof.win_focus(win)
@@ -179,8 +179,8 @@ def _refs(page_str):
 
     prof.win_show_themed(win, "wikipedia", "refs", None, "References for " + page_str)
     for ref in page.references:
-        prof.win_show_themed(win, "wikipedia", "refs.url", None, ref.encode("utf-8"))
-        link_ac.append(ref.encode("utf-8"))
+        prof.win_show_themed(win, "wikipedia", "refs.url", None, ref)
+        link_ac.append(ref)
     prof.completer_add("/wikipedia open", link_ac)
     prof.win_show(win, "")
     prof.win_focus(win)

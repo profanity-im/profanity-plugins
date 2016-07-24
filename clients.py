@@ -66,7 +66,7 @@ def _sv_send(muc, occupant):
 
     iq_id_count = iq_id_count + 1
 
-    prof.send_stanza(ET.tostring(iq).decode("utf-8"))
+    prof.send_stanza(ET.tostring(iq))
 
 
 def _cmd_clients():
