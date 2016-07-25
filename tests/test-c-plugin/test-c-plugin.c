@@ -498,7 +498,7 @@ prof_init(const char * const version, const char * const status, const char *con
     }
     prof_win_show(plugin_win, buf);
 
-    const char *synopsis[] = {
+    char *synopsis[] = {
         "/c-test consalert",
         "/c-test consshow <message>",
         "/c-test consshow_t <group> <key> <default> <message>",
@@ -521,8 +521,8 @@ prof_init(const char * const version, const char * const status, const char *con
         "/c-test completer add|remove <item>",
         NULL
     };
-    const char *description = "C test plugin. All commands focus the plugin window.";
-    const char *args[][2] = {
+    char *description = "C test plugin. All commands focus the plugin window.";
+    char *args[][2] = {
         { "consalert",                                      "Highlight the console window in the status bar" },
         { "consshow <message>",                             "Show the message in the console window" },
         { "consshow_t <group> <key> <default> <message>",   "Show the themed message in the console window. " },
@@ -550,7 +550,7 @@ prof_init(const char * const version, const char * const status, const char *con
         { NULL, NULL }
     };
 
-    const char *examples[] = {
+    char *examples[] = {
         "/c-test sendline /about",
         "/c-test log debug \"Test debug message\"",
         "/c-test consshow_t c-test cons.show none \"This is themed\"",
