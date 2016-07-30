@@ -8,6 +8,10 @@ Plugin support for Profanity is currently in development.
 
 For a list of outstanding issues before releasing 0.5.0, see: https://github.com/boothj5/profanity/milestones/0.5.0
 
+* [Website documentation](http://www.profanity.im/plugins.html)
+* [Python API docs](http://www.profanity.im/plugins/python/html/index.html)
+* [C API docs](http://www.profanity.im/plugins/c/html/index.html)
+
 Building Profanity with plugin support
 --------------------------------------
 
