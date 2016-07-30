@@ -9,8 +9,6 @@ Plugin support for Profanity is currently in development.
 For a list of outstanding issues before releasing 0.5.0, see: https://github.com/boothj5/profanity/milestones/0.5.0
 
 * [Website documentation](http://www.profanity.im/plugins.html)
-* [Python API docs](http://www.profanity.im/plugins/python/html/index.html)
-* [C API docs](http://www.profanity.im/plugins/c/html/index.html)
 
 Building Profanity with plugin support
 --------------------------------------
@@ -110,11 +108,16 @@ args=-v english -s 120
 enabled=active
 ```
 
-Example plugin code
--------------------
+Developing plugins
+------------------
 
-Whilst the API is being developed, the following test plugins are a good reference of possible hooks and API calls available, (Ruby and Lua examples might not be up to date):
+API Documentation:
+* [Python API](http://www.profanity.im/plugins/python/html/prof.html)
+* [Python hooks](http://www.profanity.im/plugins/python/html/plugin.html)
+* [C API](http://www.profanity.im/plugins/c/html/profapi_8h.html)
+* [C hooks](http://www.profanity.im/plugins/c/html/profhooks_8h.html)
 
+Example test plugins (Ruby and Lua examples might not be up to date):
 * [tests/test-c-plugin.c](https://github.com/boothj5/profanity-plugins/blob/master/tests/test-c-plugin/test-c-plugin.c)
 * [tests/python-test.py](https://github.com/boothj5/profanity-plugins/blob/master/tests/python-test.py)
 * [tests/RubyTest.rb](https://github.com/boothj5/profanity-plugins/blob/master/tests/RubyTest.rb)
