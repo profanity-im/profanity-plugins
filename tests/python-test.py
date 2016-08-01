@@ -267,6 +267,54 @@ def _string(op, group, key, value):
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + value)
 
 
+def _string_list(op, group, key, value):
+    if op != "get" and op != "add" and op !="remove" and op != "remove_all":
+        prof.cons_bad_cmd_usage("/python-test")
+        return
+
+    if op == "get":
+        if group == None or key == None:
+            prof.cons_bad_cmd_usage("/python-test")
+            return
+        res = prof.settings_get_string_list(group, key)
+        prof.win_focus(plugin_win)
+        if res is None:
+            prof.win_show(plugin_win, "No list found")
+            return
+        prof.win_show(plugin_win, "String list:")
+        for el in res:
+            prof.win_show(plugin_win, "  " + el)
+        return
+
+    if op == "add":
+        if group == None or key == None or value == None:
+            prof.cons_bad_cmd_usage("/python-test")
+            return
+        prof.settings_string_list_add(group, key, value)
+        prof.win_focus(plugin_win)
+        prof.win_show(plugin_win, "Added '" + value + "' to [" + group + "]" + " " + key)
+
+
+    if op == "remove":
+        if group == None or key == None or value == None:
+            prof.cons_bad_cmd_usage("/python-test")
+            return
+        res = prof.settings_string_list_remove(group, key, value)        
+        prof.win_focus(plugin_win)
+        if res:
+            prof.win_show(plugin_win, "Removed '" + value + "' to [" + group + "]" + " " + key)
+        else:
+            prof.win_show(plugin_win, "Error removing string item from list")
+
+    if op == "remove_all":
+        if group == None or key == None:
+            prof.cons_bad_cmd_usage("/python-test")
+            return
+        prof.settings_string_list_remove_all(group, key)
+        prof.win_focus(plugin_win)
+        prof.win_show(plugin_win, "Removed all items from [" + group + "]" + " " + key)
+
+
 def _int(op, group, key, value):
     if op != "get" and op != "set":
         prof.cons_bad_cmd_usage("/python-test")
@@ -318,24 +366,25 @@ def _completer(op, item):
 
 
 def _cmd_pythontest(subcmd=None, arg1=None, arg2=None, arg3=None, arg4=None):
-    if      subcmd == "consalert":  _consalert()
-    elif    subcmd == "consshow":   _consshow(arg1)
-    elif    subcmd == "consshow_t": _consshow_t(arg1, arg2, arg3, arg4)
-    elif    subcmd == "constest":   _constest()
-    elif    subcmd == "winshow":    _winshow(arg1)
-    elif    subcmd == "winshow_t":  _winshow_t(arg1, arg2, arg3, arg4)
-    elif    subcmd == "sendline":   _sendline(arg1)
-    elif    subcmd == "notify":     _notify(arg1)
-    elif    subcmd == "get":        _get(arg1)
-    elif    subcmd == "log":        _log(arg1, arg2)
-    elif    subcmd == "count":      _count()
-    elif    subcmd == "ping":       _ping(arg1)
-    elif    subcmd == "boolean":    _boolean(arg1, arg2, arg3, arg4)
-    elif    subcmd == "string":     _string(arg1, arg2, arg3, arg4)
-    elif    subcmd == "int":        _int(arg1, arg2, arg3, arg4)
-    elif    subcmd == "incoming":   _incoming(arg1, arg2, arg3)
-    elif    subcmd == "completer":  _completer(arg1, arg2)
-    else:                           prof.cons_bad_cmd_usage("/python-test")
+    if      subcmd == "consalert":      _consalert()
+    elif    subcmd == "consshow":       _consshow(arg1)
+    elif    subcmd == "consshow_t":     _consshow_t(arg1, arg2, arg3, arg4)
+    elif    subcmd == "constest":       _constest()
+    elif    subcmd == "winshow":        _winshow(arg1)
+    elif    subcmd == "winshow_t":      _winshow_t(arg1, arg2, arg3, arg4)
+    elif    subcmd == "sendline":       _sendline(arg1)
+    elif    subcmd == "notify":         _notify(arg1)
+    elif    subcmd == "get":            _get(arg1)
+    elif    subcmd == "log":            _log(arg1, arg2)
+    elif    subcmd == "count":          _count()
+    elif    subcmd == "ping":           _ping(arg1)
+    elif    subcmd == "boolean":        _boolean(arg1, arg2, arg3, arg4)
+    elif    subcmd == "string":         _string(arg1, arg2, arg3, arg4)
+    elif    subcmd == "string_list":    _string_list(arg1, arg2, arg3, arg4)
+    elif    subcmd == "int":            _int(arg1, arg2, arg3, arg4)
+    elif    subcmd == "incoming":       _incoming(arg1, arg2, arg3)
+    elif    subcmd == "completer":      _completer(arg1, arg2)
+    else:                               prof.cons_bad_cmd_usage("/python-test")
 
 
 def timed_callback():
@@ -381,6 +430,10 @@ def prof_init(version, status, account_name, fulljid):
         "/python-test boolean set <group> <key> <value>",
         "/python-test string get <group> <key>",
         "/python-test string set <group> <key> <value>",
+        "/python-test string_list get <group> <key>",
+        "/python-test string_list add <group> <key> <value>",
+        "/python-test string_list remove <group> <key> <value>",
+        "/python-test string_list remove_all <group> <key>",
         "/python-test int get <group> <key>",
         "/python-test int set <group> <key> <value>",
         "/python-test incoming <barejid> <resource> <message>",
@@ -407,6 +460,10 @@ def prof_init(version, status, account_name, fulljid):
         [ "boolean set <group> <key> <value>",              "Set a boolean setting" ],
         [ "string get <group> <key>",                       "Get a string setting" ],
         [ "string set <group> <key> <value>",               "Set a string setting" ],
+        [ "string_list get <group> <key>",                  "Get a string list setting" ],
+        [ "string_list add <group> <key> <value>",          "Add a string to a string list setting" ],
+        [ "string_list remove <group> <key> <value>",       "Remove a string from a string list setting" ],
+        [ "string_list remove_all <group> <key>",           "Remove all strings from a string list setting" ],
         [ "int get <group> <key>",                          "Get a integer setting" ],
         [ "int set <group> <key> <value>",                  "Set a integer setting" ],
         [ "incoming <barejid> <resource> <message>",        "Show an incoming message." ],
@@ -439,6 +496,7 @@ def prof_init(version, status, account_name, fulljid):
             "ping",
             "boolean",
             "string",
+            "string_list",
             "int",
             "incoming",
             "completer" 
@@ -455,6 +513,9 @@ def prof_init(version, status, account_name, fulljid):
     )
     prof.completer_add("/python-test string",
         [ "get", "set" ]
+    )
+    prof.completer_add("/python-test string_list",
+        [ "get", "add", "remove", "remove_all" ]
     )
     prof.completer_add("/python-test int",
         [ "get", "set" ]
