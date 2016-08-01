@@ -299,7 +299,7 @@ def _string_list(op, group, key, value):
         if group == None or key == None or value == None:
             prof.cons_bad_cmd_usage("/python-test")
             return
-        res = prof.settings_string_list_remove(group, key, value)        
+        res = prof.settings_string_list_remove(group, key, value)
         prof.win_focus(plugin_win)
         if res:
             prof.win_show(plugin_win, "Removed '" + value + "' to [" + group + "]" + " " + key)
