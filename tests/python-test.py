@@ -293,7 +293,7 @@ def _string_list(op, group, key, value):
         prof.settings_string_list_add(group, key, value)
         prof.win_focus(plugin_win)
         prof.win_show(plugin_win, "Added '" + value + "' to [" + group + "]" + " " + key)
-
+        return
 
     if op == "remove":
         if group == None or key == None or value == None:
@@ -302,17 +302,22 @@ def _string_list(op, group, key, value):
         res = prof.settings_string_list_remove(group, key, value)
         prof.win_focus(plugin_win)
         if res:
-            prof.win_show(plugin_win, "Removed '" + value + "' to [" + group + "]" + " " + key)
+            prof.win_show(plugin_win, "Removed '" + value + "' from [" + group + "]" + " " + key)
         else:
             prof.win_show(plugin_win, "Error removing string item from list")
+        return;
 
     if op == "remove_all":
         if group == None or key == None:
             prof.cons_bad_cmd_usage("/python-test")
             return
-        prof.settings_string_list_remove_all(group, key)
+        res = prof.settings_string_list_remove_all(group, key)
         prof.win_focus(plugin_win)
-        prof.win_show(plugin_win, "Removed all items from [" + group + "]" + " " + key)
+        if res:
+            prof.win_show(plugin_win, "Removed all items from [" + group + "]" + " " + key)
+        else:
+            prof.win_show(plugin_win, "Error removing list")
+        return
 
 
 def _int(op, group, key, value):

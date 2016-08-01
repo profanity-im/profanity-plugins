@@ -384,6 +384,87 @@ stringsetting(char *op, char *group, char *key, char *value)
 }
 
 void
+stringlistsetting(char *op, char *group, char *key, char *value)
+{
+    if ((strcmp(op, "get") != 0) && (strcmp(op, "add") != 0) && (strcmp(op, "remove") != 0) && (strcmp(op, "remove_all") != 0)) {
+        prof_cons_bad_cmd_usage("/c-test");
+        return;
+    }
+
+    if (strcmp(op, "get") == 0) {
+        if (group == NULL || key == NULL) {
+            prof_cons_bad_cmd_usage("/c-test");
+            return;
+        }
+        char** res = prof_settings_get_string_list(group, key);
+        prof_win_focus(plugin_win);
+        if (res == NULL) {
+            prof_win_show(plugin_win, "No list found");
+            return;
+        }
+        prof_win_show(plugin_win, "String list:");
+        int i = 0;
+        while (res[i] != NULL) {
+            char buf[2 + strlen(res[i]) + 1];
+            sprintf(buf, "  %s", res[i]);
+            prof_win_show(plugin_win, buf);
+            i++;
+        }
+        return;
+    }
+
+    if (strcmp(op, "add") == 0) {
+        if (group == NULL || key == NULL || value == NULL) {
+            prof_cons_bad_cmd_usage("/c-test");
+            return;
+        }
+        prof_settings_string_list_add(group, key, value);
+        prof_win_focus(plugin_win);
+        char buf[7 + strlen(value) + 6 + strlen(group) + 2 + strlen(key) + 1];
+        sprintf(buf, "Added '%s' to [%s] %s", value, group, key);
+        prof_win_show(plugin_win, buf);
+        return;
+    }
+
+    if (strcmp(op, "remove") == 0) {
+        if (group == NULL || key == NULL || value == NULL) {
+            prof_cons_bad_cmd_usage("/c-test");
+            return;
+        }
+        int res = prof_settings_string_list_remove(group, key, value);
+        prof_win_focus(plugin_win);
+        if (res) {
+            char buf[9 + strlen(value) + 8 + strlen(group) + 2 + strlen(key) + 1]; 
+            sprintf(buf, "Removed '%s' from [%s] %s", value, group, key);
+            prof_win_show(plugin_win, buf);
+        } else {
+            prof_win_show(plugin_win, "Error removing string item from list");
+        }
+        return;
+    }
+
+    if (strcmp(op, "remove_all") == 0) {
+        if (group == NULL || key == NULL) {
+            prof_cons_bad_cmd_usage("/c-test");
+            return;
+        }
+        int res = prof_settings_string_list_remove_all(group, key);
+        prof_win_focus(plugin_win);
+        if (res) {
+            char buf[24 + strlen(group) + 2 + strlen(key) + 1]; 
+            sprintf(buf, "Removed all items from [%s] %s", group, key);
+            prof_win_show(plugin_win, buf);
+        } else {
+            prof_win_show(plugin_win, "Error removing list");
+        }
+        return;
+    }
+
+    return;
+}
+
+
+void
 intsetting(char *op, char *group, char *key, char *value)
 {
     if (op == NULL || group == NULL || key == NULL) {
@@ -468,6 +549,7 @@ cmd_ctest(char **args)
     else if (strcmp(args[0], "ping") == 0)          doping(args[1]);
     else if (strcmp(args[0], "boolean") == 0)       booleansetting(args[1], args[2], args[3], args[4]);
     else if (strcmp(args[0], "string") == 0)        stringsetting(args[1], args[2], args[3], args[4]);
+    else if (strcmp(args[0], "string_list") == 0)   stringlistsetting(args[1], args[2], args[3], args[4]);
     else if (strcmp(args[0], "int") == 0)           intsetting(args[1], args[2], args[3], args[4]);
     else if (strcmp(args[0], "incoming") == 0)      incomingmsg(args[1], args[2], args[3]);
     else if (strcmp(args[0], "completer") == 0)     completer(args[1], args[2]);
@@ -515,6 +597,10 @@ prof_init(const char * const version, const char * const status, const char *con
         "/c-test boolean set <group> <key> <value>",
         "/c-test string get <group> <key>",
         "/c-test string set <group> <key> <value>",
+        "/c-test-test string_list get <group> <key>",
+        "/c-test string_list add <group> <key> <value>",
+        "/c-test string_list remove <group> <key> <value>",
+        "/c-test string_list remove_all <group> <key>",
         "/c-test int get <group> <key>",
         "/c-test int set <group> <key> <value>",
         "/c-test incoming <barejid> <resource> <message>",
@@ -542,6 +628,10 @@ prof_init(const char * const version, const char * const status, const char *con
         { "boolean set <group> <key> <value>",              "Set a boolean setting" },
         { "string get <group> <key>",                       "Get a string setting" },
         { "string set <group> <key> <value>",               "Set a string setting" },
+        { "string_list get <group> <key>",                  "Get a string list setting" },
+        { "string_list add <group> <key> <value>",          "Add a string to a string list setting" },
+        { "string_list remove <group> <key> <value>",       "Remove a string from a string list setting" },
+        { "string_list remove_all <group> <key>",           "Remove all strings from a string list setting" },
         { "int get <group> <key>",                          "Get a integer setting" },
         { "int set <group> <key> <value>",                  "Set a integer setting" },
         { "incoming <barejid> <resource> <message>",        "Show an incoming message." },
@@ -576,6 +666,7 @@ prof_init(const char * const version, const char * const status, const char *con
         "ping",
         "boolean",
         "string",
+        "string_list",
         "int",
         "incoming",
         "completer",
@@ -594,6 +685,9 @@ prof_init(const char * const version, const char * const status, const char *con
 
     char *string_ac[] = { "get", "set", NULL };
     prof_completer_add("/c-test string", string_ac);
+
+    char *stringlist_ac[] = { "get", "add", "remove", "remove_all", NULL };
+    prof_completer_add("/c-test string_list", stringlist_ac);
 
     char *int_ac[] = { "get", "set", NULL };
     prof_completer_add("/c-test int", int_ac);
