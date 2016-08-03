@@ -1,5 +1,6 @@
 import prof
 
+online = set()
 
 def _show_settings():
     prof.cons_show("Presence notify plugin settings:")
@@ -97,10 +98,18 @@ def _do_notify(barejid, presence):
     if mode == "all":
         return True
     elif mode == "online":
-        if presence == "online" or presence == "offline":
-            return True
+        if barejid in online:
+            if presence == "offline":
+                online.remove(barejid)
+                return True
+            else:
+                return False
         else:
-            return False
+            if presence != "offline":
+                online.add(barejid)
+                return True
+            else:
+                return False
     else: # off
         return False
 
