@@ -86,7 +86,7 @@ def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/presence_notify all|online|off",
         "/presence_notify ignored add|remove|clear [<barejid>]",
-        "/presence_notify show|hide resource"
+        "/presence_notify resource on|off"
     ]
     description = "Send a desktop notification on presence updates."
     args = [
