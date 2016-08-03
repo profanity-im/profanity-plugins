@@ -3,9 +3,17 @@ import prof
 online = set()
 
 def _show_settings():
+    prof.cons_show("")
     prof.cons_show("Presence notify plugin settings:")
+
     mode = prof.settings_get_string("presence_notify", "mode", "all")
     prof.cons_show("Mode: {mode}".format(mode=mode))
+
+    resource = prof.settings_get_boolean("presence_notify", "resource", False)
+    if resource:
+        prof.cons_show("Resource: ON")
+    else:
+        prof.cons_show("Resource: OFF")
 
     ignored_list = prof.settings_get_string_list("presence_notify", "ignored")
     if ignored_list and len(ignored_list) > 0:
@@ -58,13 +66,27 @@ def _cmd_presence_notify(arg1=None, arg2=None, arg3=None):
         prof.cons_bad_cmd_usage("/presence_notify")
         return
 
+    if arg1 == "resource":
+        if arg2 == "on":
+            prof.settings_set_boolean("presence_notify", "resource", True)
+            prof.cons_show("Showing resource in presence notifications")
+            return;
+        if arg2 == "off":
+            prof.settings_set_boolean("presence_notify", "resource", False)
+            prof.cons_show("Hiding resource in presence notifications")
+            return;
+
+        prof.cons_bad_cmd_usage("/presence_notify")
+        return
+
     _show_settings()
 
 
 def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/presence_notify all|online|off",
-        "/presence_notify ignored add|remove|clear [<barejid>]"
+        "/presence_notify ignored add|remove|clear [<barejid>]",
+        "/presence_notify show|hide resource"
     ]
     description = "Send a desktop notification on presence updates."
     args = [
@@ -72,7 +94,8 @@ def prof_init(version, status, account_name, fulljid):
         [ "online",                         "Enable only online/offline presence notifications" ],
         [ "off",                            "Disable presence notifications" ],
         [ "ignored add|remove <barejid>",   "Add or remove a contact from the list excluded from presence notifications"],
-        [ "ignored clear",                  "Clear the list of excluded contacts"]
+        [ "ignored clear",                  "Clear the list of excluded contacts"],
+        [ "resource on|off",                "Enable/disable showing the contacts resource in the notification"]
     ]
     examples = [
         "/presence_notify all",
@@ -82,10 +105,13 @@ def prof_init(version, status, account_name, fulljid):
     prof.register_command("/presence_notify", 0, 3, synopsis, description, args, examples, _cmd_presence_notify)
 
     prof.completer_add("/presence_notify",
-        [ "all", "online", "off", "ignored" ]
+        [ "all", "online", "off", "ignored", "resource" ]
     )
     prof.completer_add("/presence_notify ignored",
         [ "add", "remove", "clear" ]
+    )
+    prof.completer_add("/presence_notify resource",
+        [ "on", "off" ]
     )
 
 
@@ -116,7 +142,10 @@ def _do_notify(barejid, presence):
 
 def prof_on_contact_presence(barejid, resource, presence, status, priority):
     if _do_notify(barejid, presence):
-        message = "{barejid} is {presence}".format(barejid=barejid, presence=presence)
+        jid = barejid
+        if prof.settings_get_boolean("presence_notify", "resource", False):
+            jid = jid + "/" + resource
+        message = "{jid} is {presence}".format(jid=jid, presence=presence)
         if status:
             message = message + ", \"{status}\"".format(status=status)
         prof.notify(message, 5000, "Presence")
@@ -125,7 +154,10 @@ def prof_on_contact_presence(barejid, resource, presence, status, priority):
 
 def prof_on_contact_offline(barejid, resource, status):
     if _do_notify(barejid, "offline"):
-        message = "{barejid} is offline".format(barejid=barejid)
+        jid = barejid
+        if prof.settings_get_boolean("presence_notify", "resource", False):
+            jid = jid + "/" + resource
+        message = "{jid} is {presence}".format(jid=jid, presence=presence)
         if status:
             message = message + ", \"{status}\"".format(status=status)
         prof.notify(message, 5000, "Presence")
