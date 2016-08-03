@@ -157,7 +157,7 @@ def prof_on_contact_offline(barejid, resource, status):
         jid = barejid
         if prof.settings_get_boolean("presence_notify", "resource", False):
             jid = jid + "/" + resource
-        message = "{jid} is {presence}".format(jid=jid, presence=presence)
+        message = "{jid} is offline".format(jid=jid)
         if status:
             message = message + ", \"{status}\"".format(status=status)
         prof.notify(message, 5000, "Presence")
