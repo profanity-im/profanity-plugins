@@ -73,4 +73,4 @@ def prof_on_contact_offline(barejid, resource, status):
         if not all_res or len(all_res) == 0:
             prof.notify("{barejid} is offline".format(barejid=barejid), 5000, "Presence")
         elif barejid in all_res:
-            prof.notify("{barejid} is {presence}".format(barejid=barejid, presence=presence), 5000, "Presence")
+            prof.notify("{barejid} is offline".format(barejid=barejid), 5000, "Presence")
