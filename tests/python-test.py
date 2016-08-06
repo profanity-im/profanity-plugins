@@ -224,7 +224,7 @@ def _boolean(op, group, key, value_str):
         dflt = False
         prof.win_create(plugin_win, _handle_win_input)
         prof.win_focus(plugin_win)
-        res = prof.settings_get_boolean(group, key, dflt)
+        res = prof.settings_boolean_get(group, key, dflt)
         if res:
             prof.win_show(plugin_win, "Boolean setting: TRUE")
         else:
@@ -235,7 +235,7 @@ def _boolean(op, group, key, value_str):
             value = True
         prof.win_create(plugin_win, _handle_win_input)
         prof.win_focus(plugin_win)
-        prof.settings_set_boolean(group, key, value)
+        prof.settings_boolean_set(group, key, value)
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
 
 
@@ -255,7 +255,7 @@ def _string(op, group, key, value):
     if op == "get":
         prof.win_create(plugin_win, _handle_win_input)
         prof.win_focus(plugin_win)
-        res = prof.settings_get_string(group, key, None)
+        res = prof.settings_string_get(group, key, None)
         if res:
             prof.win_show(plugin_win, "String setting: " + res)
         else:
@@ -263,7 +263,7 @@ def _string(op, group, key, value):
     elif op == "set":
         prof.win_create(plugin_win, _handle_win_input)
         prof.win_focus(plugin_win)
-        prof.settings_set_string(group, key, value)
+        prof.settings_string_set(group, key, value)
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + value)
 
 
@@ -276,7 +276,7 @@ def _string_list(op, group, key, value):
         if group == None or key == None:
             prof.cons_bad_cmd_usage("/python-test")
             return
-        res = prof.settings_get_string_list(group, key)
+        res = prof.settings_string_list_get(group, key)
         prof.win_focus(plugin_win)
         if res is None:
             prof.win_show(plugin_win, "No list found")
@@ -311,7 +311,7 @@ def _string_list(op, group, key, value):
         if group == None or key == None:
             prof.cons_bad_cmd_usage("/python-test")
             return
-        res = prof.settings_string_list_remove_all(group, key)
+        res = prof.settings_string_list_clear(group, key)
         prof.win_focus(plugin_win)
         if res:
             prof.win_show(plugin_win, "Removed all items from [" + group + "]" + " " + key)
@@ -332,12 +332,12 @@ def _int(op, group, key, value):
     if op == "get":
         prof.win_create(plugin_win, _handle_win_input)
         prof.win_focus(plugin_win)
-        res = prof.settings_get_int(group, key, 0)
+        res = prof.settings_int_get(group, key, 0)
         prof.win_show(plugin_win, "Integer setting: " + str(res))
     elif op == "set":
         prof.win_create(plugin_win, _handle_win_input)
         prof.win_focus(plugin_win)
-        prof.settings_set_int(group, key, int(value))
+        prof.settings_int_set(group, key, int(value))
         prof.win_show(plugin_win, "Set [" + group + "] " + key + " to " + str(value))
 
 

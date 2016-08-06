@@ -12,7 +12,7 @@ import os
 from sys import platform
 
 def say(message):
-    args = prof.settings_get_string("say", "args", "")
+    args = prof.settings_string_get("say", "args", "")
 
     if platform == "darwin":
         os.system("say " + args + " '" + message + "' 2>/dev/null")
@@ -21,7 +21,7 @@ def say(message):
 
 
 def prof_post_chat_message_display(jid, message):
-    enabled = prof.settings_get_string("say", "enabled", "off")
+    enabled = prof.settings_string_get("say", "enabled", "off")
     current_recipient = prof.get_current_recipient()
     if enabled == "on" or (enabled == "active" and current_recipient == jid):
         say(jid + " says " + message)
@@ -30,7 +30,7 @@ def prof_post_chat_message_display(jid, message):
 
 
 def prof_post_room_message_display(room, nick, message):
-    enabled = prof.settings_get_string("say", "enabled", "off")
+    enabled = prof.settings_string_get("say", "enabled", "off")
     current_muc = prof.get_current_muc()
     if enabled == "on":
         say(nick + " in " + room + " says " + message)
@@ -50,22 +50,22 @@ def prof_post_priv_message_display(room, nick, message):
 
 def _cmd_say(arg1=None, arg2=None):
     if arg1 == "on":
-        prof.settings_set_string("say", "enabled", "on")
+        prof.settings_string_set("say", "enabled", "on")
         prof.cons_show("Say plugin enabled")
     elif arg1 == "off":
-        prof.settings_set_string("say", "enabled", "off")
+        prof.settings_string_set("say", "enabled", "off")
         prof.cons_show("Say plugin disabled")
     elif arg1 == "active":
-        prof.settings_set_string("say", "enabled", "active")
+        prof.settings_string_set("say", "enabled", "active")
         prof.cons_show("Say plugin enabled for active window only")
     elif arg1 == "args":
         if arg2 == None:
             prof.cons_bad_cmd_usage("/say")
         else:
-            prof.settings_set_string("say", "args", arg2)
+            prof.settings_string_set("say", "args", arg2)
             prof.cons_show("Say plugin arguments set to: " + arg2)
     elif arg1 == "clearargs":
-        prof.settings_set_string("say", "args", "")
+        prof.settings_string_set("say", "args", "")
         prof.cons_show("Say plugin arguments cleared")
     elif arg1 == "test":
         if arg2 == None:
@@ -73,8 +73,8 @@ def _cmd_say(arg1=None, arg2=None):
         else:
             say(arg2)
     else:
-        enabled = prof.settings_get_string("say", "enabled", "off")
-        args = prof.settings_get_string("say", "args", "")
+        enabled = prof.settings_string_get("say", "enabled", "off")
+        args = prof.settings_string_get("say", "args", "")
         prof.cons_show("Say plugin settings:")
         prof.cons_show("enabled : " + enabled)
         if args != "":

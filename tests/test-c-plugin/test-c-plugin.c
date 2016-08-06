@@ -324,7 +324,7 @@ booleansetting(char *op, char *group, char *key, char *value_str)
         int dflt = 0;
         prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
-        int res = prof_settings_get_boolean(group, key, dflt);
+        int res = prof_settings_boolean_get(group, key, dflt);
         if (res) {
             prof_win_show(plugin_win, "Boolean setting: TRUE");
         } else {
@@ -337,7 +337,7 @@ booleansetting(char *op, char *group, char *key, char *value_str)
         }
         prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
-        prof_settings_set_boolean(group, key, value);
+        prof_settings_boolean_set(group, key, value);
         char buf[5 + strlen(group) + 2 + strlen(key) + 4 + strlen(value_str)];
         sprintf(buf, "Set [%s] %s to %s", group, key, value_str);
         prof_win_show(plugin_win, buf);
@@ -365,7 +365,7 @@ stringsetting(char *op, char *group, char *key, char *value)
     if (strcmp(op, "get") == 0) {
         prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
-        char *res = prof_settings_get_string(group, key, NULL);
+        char *res = prof_settings_string_get(group, key, NULL);
         if (res) {
             char buf[16 + strlen(res)];
             sprintf(buf, "String setting: %s", res);
@@ -376,7 +376,7 @@ stringsetting(char *op, char *group, char *key, char *value)
     } else if (strcmp(op, "set") == 0) {
         prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
-        prof_settings_set_string(group, key, value);
+        prof_settings_string_set(group, key, value);
         char buf[5 + strlen(group) + 2 + strlen(key) + 4 + strlen(value)];
         sprintf(buf, "Set [%s] %s to %s", group, key, value);
         prof_win_show(plugin_win, buf);
@@ -396,7 +396,7 @@ stringlistsetting(char *op, char *group, char *key, char *value)
             prof_cons_bad_cmd_usage("/c-test");
             return;
         }
-        char** res = prof_settings_get_string_list(group, key);
+        char** res = prof_settings_string_list_get(group, key);
         prof_win_focus(plugin_win);
         if (res == NULL) {
             prof_win_show(plugin_win, "No list found");
@@ -448,7 +448,7 @@ stringlistsetting(char *op, char *group, char *key, char *value)
             prof_cons_bad_cmd_usage("/c-test");
             return;
         }
-        int res = prof_settings_string_list_remove_all(group, key);
+        int res = prof_settings_string_list_clear(group, key);
         prof_win_focus(plugin_win);
         if (res) {
             char buf[24 + strlen(group) + 2 + strlen(key) + 1]; 
@@ -480,7 +480,7 @@ intsetting(char *op, char *group, char *key, char *value)
     if (strcmp(op, "get") == 0) {
         prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
-        int res = prof_settings_get_int(group, key, 0);
+        int res = prof_settings_int_get(group, key, 0);
         char buf[256];
         sprintf(buf, "Integer setting: %d", res);
         prof_win_show(plugin_win, buf);
@@ -488,7 +488,7 @@ intsetting(char *op, char *group, char *key, char *value)
         prof_win_create(plugin_win, handle_win_input);
         prof_win_focus(plugin_win);
         int int_value = atoi(value);
-        prof_settings_set_int(group, key, int_value);
+        prof_settings_int_set(group, key, int_value);
         char buf[256];
         sprintf(buf, "Set [%s] %s to %d", group, key, int_value);
         prof_win_show(plugin_win, buf);
