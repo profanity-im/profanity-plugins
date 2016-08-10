@@ -744,163 +744,163 @@ prof_on_disconnect(const char * const account_name, const char * const fulljid)
 }
 
 char*
-prof_pre_chat_message_display(const char * const jid, const char *message)
+prof_pre_chat_message_display(const char * const barejid, const char *const resource, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_chat_message_display: ";
-    char buf[strlen(str) + strlen(jid) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s", str, jid, message);
+    char buf[strlen(str) + strlen(barejid) + 1 + strlen(resource) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s/%s, %s", str, barejid, resource, message);
     prof_win_show(plugin_win, buf);
 
     return NULL;
 }
 
 void
-prof_post_chat_message_display(const char * const jid, const char *message)
+prof_post_chat_message_display(const char * const barejid, const char *const resource, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_chat_message_display: ";
-    char buf[strlen(str) + strlen(jid) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s", str, jid, message);
+    char buf[strlen(str) + strlen(barejid) + 1 + strlen(resource) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s/%s, %s", str, barejid, resource, message);
     prof_win_show(plugin_win, buf);
 }
 
 char*
-prof_pre_chat_message_send(const char * const jid, const char *message)
+prof_pre_chat_message_send(const char * const barejid, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_chat_message_send: ";
-    char buf[strlen(str) + strlen(jid) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s", str, jid, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s", str, barejid, message);
     prof_win_show(plugin_win, buf);
 
     return NULL;
 }
 
 void
-prof_post_chat_message_send(const char * const jid, const char *message)
+prof_post_chat_message_send(const char * const barejid, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_chat_message_send: ";
-    char buf[strlen(str) + strlen(jid) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s", str, jid, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s", str, barejid, message);
     prof_win_show(plugin_win, buf);
 }
 
 char*
-prof_pre_room_message_display(const char * const room, const char * const nick, const char *message)
+prof_pre_room_message_display(const char * const barejid, const char * const nick, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_room_message_display: ";
-    char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s, %s", str, barejid, nick, message);
     prof_win_show(plugin_win, buf);
 
     return NULL;
 }
 
 void
-prof_post_room_message_display(const char * const room, const char * const nick, const char *message)
+prof_post_room_message_display(const char * const barejid, const char * const nick, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_room_message_display: ";
-    char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s, %s", str, barejid, nick, message);
     prof_win_show(plugin_win, buf);
 }
 
 char *
-prof_pre_room_message_send(const char * const room, const char *message)
+prof_pre_room_message_send(const char * const barejid, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_room_message_send: ";
-    char buf[strlen(str) + strlen(room) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s", str, room, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s", str, barejid, message);
     prof_win_show(plugin_win, buf);
 
     return NULL;
 }
 
 void
-prof_post_room_message_send(const char * const room, const char *message)
+prof_post_room_message_send(const char * const barejid, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_room_message_send: ";
-    char buf[strlen(str) + strlen(room) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s", str, room, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s", str, barejid, message);
     prof_win_show(plugin_win, buf);
 }
 
 void
-prof_on_room_history_message(const char * const room, const char *const nick, const char *const message, const char *const timestamp)
+prof_on_room_history_message(const char * const barejid, const char *const nick, const char *const message, const char *const timestamp)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_on_room_history_message: ";
     if (timestamp == NULL) {
-        char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
-        sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
+        char buf[strlen(str) + strlen(barejid) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+        sprintf(buf, "%s%s, %s, %s", str, barejid, nick, message);
         prof_win_show(plugin_win, buf);
     } else {
-        char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 2 + strlen(timestamp) + 1];
-        sprintf(buf, "%s%s, %s, %s, %s", str, room, nick, message, timestamp);
+        char buf[strlen(str) + strlen(barejid) + 2 + strlen(nick) + 2 + strlen(message) + 2 + strlen(timestamp) + 1];
+        sprintf(buf, "%s%s, %s, %s, %s", str, barejid, nick, message, timestamp);
         prof_win_show(plugin_win, buf);
     }
 }
 
 char *
-prof_pre_priv_message_display(const char * const room, const char * const nick, const char *message)
+prof_pre_priv_message_display(const char * const barejid, const char * const nick, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_priv_message_display: ";
-    char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s, %s", str, barejid, nick, message);
     prof_win_show(plugin_win, buf);
 
     return NULL;
 }
 
 void
-prof_post_priv_message_display(const char * const room, const char * const nick, const char *message)
+prof_post_priv_message_display(const char * const barejid, const char * const nick, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_priv_message_display: ";
-    char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s, %s", str, barejid, nick, message);
     prof_win_show(plugin_win, buf);
 }
 
 char *
-prof_pre_priv_message_send(const char * const room, const char * const nick, const char *message)
+prof_pre_priv_message_send(const char * const barejid, const char * const nick, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_pre_priv_message_send: ";
-    char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s, %s", str, barejid, nick, message);
     prof_win_show(plugin_win, buf);
 
     return NULL;
 }
 
 void
-prof_post_priv_message_send(const char * const room, const char * const nick, const char *message)
+prof_post_priv_message_send(const char * const barejid, const char * const nick, const char *message)
 {
     prof_win_create(plugin_win, handle_win_input);
 
     char *str = "fired -> prof_post_priv_message_send: ";
-    char buf[strlen(str) + strlen(room) + 2 + strlen(nick) + 2 + strlen(message) + 1];
-    sprintf(buf, "%s%s, %s, %s", str, room, nick, message);
+    char buf[strlen(str) + strlen(barejid) + 2 + strlen(nick) + 2 + strlen(message) + 1];
+    sprintf(buf, "%s%s, %s, %s", str, barejid, nick, message);
     prof_win_show(plugin_win, buf);
 }
 
@@ -1027,11 +1027,11 @@ prof_on_chat_win_focus(const char *const barejid)
 }
 
 void
-prof_on_room_win_focus(const char *const roomjid)
+prof_on_room_win_focus(const char *const barejid)
 {
     prof_win_create(plugin_win, handle_win_input);
     char *str = "fired -> prof_on_room_win_focus: ";
-    char buf[strlen(str) + strlen(roomjid) + 1];
-    sprintf(buf, "%s%s", str, roomjid);
+    char buf[strlen(str) + strlen(barejid) + 1];
+    sprintf(buf, "%s%s", str, barejid);
     prof_win_show(plugin_win, buf);
 }

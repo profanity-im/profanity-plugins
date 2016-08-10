@@ -565,72 +565,72 @@ def prof_on_disconnect(account_name, fulljid):
     prof.win_show(plugin_win, "fired -> prof_on_disconnect: " + account_name + ", " + fulljid)
 
 
-def prof_pre_chat_message_display(jid, message):
+def prof_pre_chat_message_display(barejid, resource, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_pre_chat_message_display: " + jid + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_pre_chat_message_display: " + barejid + "/" + resource + ", " + message)
 
 
-def prof_post_chat_message_display(jid, message):
+def prof_post_chat_message_display(barejid, resource, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_post_chat_message_display: " + jid + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_post_chat_message_display: " + barejid + "/" + resource + ", " + message)
 
 
-def prof_pre_chat_message_send(jid, message):
+def prof_pre_chat_message_send(barejid, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_pre_chat_message_send: " + jid + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_pre_chat_message_send: " + barejid + ", " + message)
 
 
-def prof_post_chat_message_send(jid, message):
+def prof_post_chat_message_send(barejid, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_post_chat_message_send: " + jid + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_post_chat_message_send: " + barejid + ", " + message)
 
 
-def prof_pre_room_message_display(room, nick, message):
+def prof_pre_room_message_display(barejid, nick, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_pre_room_message_display: " + room + ", " + nick + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_pre_room_message_display: " + barejid + ", " + nick + ", " + message)
 
 
-def prof_post_room_message_display(room, nick, message):
+def prof_post_room_message_display(barejid, nick, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_post_room_message_display: " + room + ", " + nick + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_post_room_message_display: " + barejid + ", " + nick + ", " + message)
 
 
-def prof_pre_room_message_send(room, message):
+def prof_pre_room_message_send(barejid, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_pre_room_message_send: " + room + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_pre_room_message_send: " + barejid + ", " + message)
 
 
-def prof_post_room_message_send(room, message):
+def prof_post_room_message_send(barejid, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_post_room_message_send: " + room + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_post_room_message_send: " + barejid + ", " + message)
 
 
-def prof_on_room_history_message(room, nick, message, timestamp):
+def prof_on_room_history_message(barejid, nick, message, timestamp):
     prof.win_create(plugin_win, _handle_win_input)
     if timestamp:
-        prof.win_show(plugin_win, "fired -> prof_on_room_history_message: " + room + ", " + nick + ", " + message + ", " + timestamp)
+        prof.win_show(plugin_win, "fired -> prof_on_room_history_message: " + barejid + ", " + nick + ", " + message + ", " + timestamp)
     else:
-        prof.win_show(plugin_win, "fired -> prof_on_room_history_message: " + room + ", " + nick + ", " + message)
+        prof.win_show(plugin_win, "fired -> prof_on_room_history_message: " + barejid + ", " + nick + ", " + message)
 
 
-def prof_pre_priv_message_display(room, nick, message):
+def prof_pre_priv_message_display(barejid, nick, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_pre_priv_message_display: " + room + ", " + nick + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_pre_priv_message_display: " + barejid + ", " + nick + ", " + message)
 
 
-def prof_post_priv_message_display(room, nick, message):
+def prof_post_priv_message_display(barejid, nick, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_post_priv_message_display: " + room + ", " + nick + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_post_priv_message_display: " + barejid + ", " + nick + ", " + message)
 
 
-def prof_pre_priv_message_send(room, nick, message):
+def prof_pre_priv_message_send(barejid, nick, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_pre_priv_message_send: " + room + ", " + nick + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_pre_priv_message_send: " + barejid + ", " + nick + ", " + message)
 
 
-def prof_post_priv_message_send(room, nick, message):
+def prof_post_priv_message_send(barejid, nick, message):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_post_priv_message_send: " + room + ", " + nick + ", " + message)
+    prof.win_show(plugin_win, "fired -> prof_post_priv_message_send: " + barejid + ", " + nick + ", " + message)
 
 
 def prof_on_message_stanza_send(stanza):
@@ -687,6 +687,6 @@ def prof_on_chat_win_focus(barejid):
     prof.win_show(plugin_win, "fired -> prof_on_chat_win_focus: " + barejid)
 
 
-def prof_on_room_win_focus(roomjid):
+def prof_on_room_win_focus(barejid):
     prof.win_create(plugin_win, _handle_win_input)
-    prof.win_show(plugin_win, "fired -> prof_on_room_win_focus: " + roomjid)
+    prof.win_show(plugin_win, "fired -> prof_on_room_win_focus: " + barejid)

@@ -10,12 +10,12 @@ bot_session = {}
 bot_state = False
 
 
-def prof_post_chat_message_display(jid, message):
+def prof_post_chat_message_display(barejid, resource, message):
     if bot_state:
-        if jid not in bot_session:
-            bot_session[jid] = bot.create_session()
-        response = bot_session[jid].think(message)
-        prof.send_line("/msg " + jid + " " + response)
+        if barejid not in bot_session:
+            bot_session[barejid] = bot.create_session()
+        response = bot_session[barejid].think(message)
+        prof.send_line("/msg " + barejid + " " + response)
 
 
 def _cmd_chatterbot(state):

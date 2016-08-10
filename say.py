@@ -20,27 +20,27 @@ def say(message):
         os.system("echo '" + message + "' | espeak " + args + " 2>/dev/null")
 
 
-def prof_post_chat_message_display(jid, message):
+def prof_post_chat_message_display(barejid, resource, message):
     enabled = prof.settings_string_get("say", "enabled", "off")
     current_recipient = prof.get_current_recipient()
-    if enabled == "on" or (enabled == "active" and current_recipient == jid):
-        say(jid + " says " + message)
+    if enabled == "on" or (enabled == "active" and current_recipient == barejid):
+        say(barejid + " says " + message)
 
     return message
 
 
-def prof_post_room_message_display(room, nick, message):
+def prof_post_room_message_display(barejid, nick, message):
     enabled = prof.settings_string_get("say", "enabled", "off")
     current_muc = prof.get_current_muc()
     if enabled == "on":
-        say(nick + " in " + room + " says " + message)
-    elif enabled == "active" and current_muc == room:
+        say(nick + " in " + barejid + " says " + message)
+    elif enabled == "active" and current_muc == barejid:
         say(nick + " says " + message)
 
     return message
 
 
-def prof_post_priv_message_display(room, nick, message):
+def prof_post_priv_message_display(barejid, nick, message):
     # TODO add get current nick hook for private chats
     if enabled:
         say(nick + " says " + message)

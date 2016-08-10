@@ -78,44 +78,44 @@ def prof_init(version, status, account_name, fulljid):
     prof.register_command("/browser", 0, 1, synopsis, description, args, examples, _cmd_browser)
 
 
-def prof_on_chat_win_focus(jid):
+def prof_on_chat_win_focus(barejid):
     prof.completer_clear("/browser")
-    if jid in _links:
-        prof.completer_add("/browser", _links[jid])
+    if barejid in _links:
+        prof.completer_add("/browser", _links[barejid])
 
 
-def prof_on_room_win_focus(room):
+def prof_on_room_win_focus(barejid):
     prof.completer_clear("/browser")
-    if room in _links:
-        prof.completer_add("/browser", _links[room])
+    if barejid in _links:
+        prof.completer_add("/browser", _links[barejid])
 
 
-def _process_message(jid, current_jid, message):
+def _process_message(barejid, current_jid, message):
     links = re.findall(r'(https?://\S+)', message)
     if (len(links) > 0):
-        if jid not in _links:
-            _links[jid] = []
-        # add to list of links for jid
+        if barejid not in _links:
+            _links[barejid] = []
+        # add to list of links for barejid
         for link in links:
-            if link not in _links[jid]:
-                _links[jid].append(link)
+            if link not in _links[barejid]:
+                _links[barejid].append(link)
         # add to autocompleter if message for current window
-        if current_jid == jid:
-            prof.completer_add("/browser", _links[jid])
-        # set last link for jid
-        _lastlink[jid] = links[len(links)-1]
+        if current_jid == barejid:
+            prof.completer_add("/browser", _links[barejid])
+        # set last link for barejid
+        _lastlink[barejid] = links[len(links)-1]
 
 
-def prof_post_chat_message_display(jid, message):
+def prof_post_chat_message_display(barejid, resource, message):
     current_jid = prof.get_current_recipient()
-    _process_message(jid, current_jid, message)
+    _process_message(barejid, current_jid, message)
 
 
-def prof_post_room_message_display(room, nick, message):
+def prof_post_room_message_display(barejid, nick, message):
     current_jid = prof.get_current_muc()
-    _process_message(room, current_jid, message)
+    _process_message(barejid, current_jid, message)
 
 
-def prof_on_room_history_message(room, nick, message, timestamp):
+def prof_on_room_history_message(barejid, nick, message, timestamp):
     current_jid = prof.get_current_muc()
-    _process_message(room, current_jid, message)
+    _process_message(barejid, current_jid, message)

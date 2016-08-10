@@ -18,13 +18,13 @@ def _emote(input_str):
     return result
 
 
-def prof_pre_chat_message_display(jid, message):
+def prof_pre_chat_message_display(barejid, resource, message):
     return _emote(message)
 
 
-def prof_pre_room_message_display(room, nick, message):
+def prof_pre_room_message_display(barejid, nick, message):
     return _emote(message)
 
 
-def prof_pre_priv_message_display(room, nick, message):
+def prof_pre_priv_message_display(barejid, nick, message):
     return _emote(message)
