@@ -6,6 +6,7 @@ Requires imgur API
 """
 
 import prof
+from os import path
 
 from imgurpython import ImgurClient
 from imgurpython.helpers.error import ImgurClientError
@@ -15,10 +16,13 @@ client_secret = 'dd5b0918a2f5d36391d574bd2061c50b47bade63'
 client = ImgurClient(client_id, client_secret)
 
 
-def _cmd_imgur(arg):
+def _cmd_imgur(img_path):
     try:
-        data = client.upload_from_path(arg, config=None, anon=True)
+        expanded_path = path.expanduser(img_path)
+        data = client.upload_from_path(expanded_path, config=None, anon=True)
         prof.send_line(data['link'])
+    except IOError as ioe:
+        prof.cons_show('Could not find file at ' + expanded_path)
     except ImgurClientError as e:
         prof.log_error('Could not upload to Imgur - ' + e.error_message)
         prof.log_error('Imgur status code - ' + e.status_code)
