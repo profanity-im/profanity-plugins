@@ -1,11 +1,13 @@
 """
 Requires imgur API
     pip install imgurpython
-
+Requires scrot installed for screenshot
+    sudo apt-get install scrot
 
 """
 
 import prof
+import subprocess
 from os import path
 
 from imgurpython import ImgurClient
@@ -16,13 +18,20 @@ client_secret = 'dd5b0918a2f5d36391d574bd2061c50b47bade63'
 client = ImgurClient(client_id, client_secret)
 
 
-def _cmd_imgur(img_path):
+def _cmd_imgur(arg1):
+    if arg1 == "screenshot":
+        file_path = "/tmp/_prof_scrot.png"
+        command = "scrot " + file_path
+        subprocess.call(command, shell=True)
+    else:
+        try:
+            file_path = path.expanduser(arg1)
+        except IOError as ioe:
+            prof.cons_show('Could not find file at ' + file_path)
+            return
     try:
-        expanded_path = path.expanduser(img_path)
-        data = client.upload_from_path(expanded_path, config=None, anon=True)
+        data = client.upload_from_path(file_path, config=None, anon=True)
         prof.send_line(data['link'])
-    except IOError as ioe:
-        prof.cons_show('Could not find file at ' + expanded_path)
     except ImgurClientError as e:
         prof.log_error('Could not upload to Imgur - ' + e.error_message)
         prof.log_error('Imgur status code - ' + e.status_code)
@@ -30,14 +39,18 @@ def _cmd_imgur(img_path):
 
 def prof_init(version, status, account_name, fulljid):
     synopsis = [
-        "/imgur <file>"
+        "/imgur <file_path>",
+        "/imgur screenshot"
     ]
-    description = "Upload an image to imgur and send the link"
+    description = "Upload an image or screenshot to imgur and send the link"
     args = [
-        [ "<file>",  "full path to image file" ]
+        [ "<file_path>",  "full path to image file" ],
+        [ "screenshot", "upload a full screen capture" ]
     ]
     examples = [
-        "/imgur ~/images/cats.jpg"
+        "/imgur ~/images/cats.jpg",
+        "/imgur screenshot"
     ]
 
     prof.register_command("/imgur", 1, 1, synopsis, description, args, examples, _cmd_imgur)
+    prof.completer_add("/imgur", [ "screenshot" ])
