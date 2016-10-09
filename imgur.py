@@ -1,13 +1,16 @@
 """
 Requires imgur API
     pip install imgurpython
-Requires scrot installed for screenshot
+Requires scrot installed for screenshot (on linux)
     sudo apt-get install scrot
+
+Uses built in screencapture on OSX
 
 """
 
 import prof
 import subprocess
+import sys
 from os import path
 
 from imgurpython import ImgurClient
@@ -20,9 +23,11 @@ client = ImgurClient(client_id, client_secret)
 
 def _cmd_imgur(arg1):
     if arg1 == "screenshot":
-        file_path = "/tmp/_prof_scrot.png"
-        command = "scrot " + file_path
-        subprocess.call(command, shell=True)
+        file_path = "/tmp/_prof_screenshot.png"
+        if sys.platform == "darwin":
+            subprocess.call("screencapture " + file_path, shell=True)
+        else:
+            subprocess.call("scrot " + file_path, shell=True)
     else:
         try:
             file_path = path.expanduser(arg1)
