@@ -1,7 +1,8 @@
 """
 Requires imgur API
     pip install imgurpython
-
+Requires scrot installed for screenshot
+    sudo apt-get install scrot
 
 """
 
