@@ -157,6 +157,9 @@ def prof_init(version, status, account_name, fulljid):
     prof.completer_add("/sounds set", [ "chat", "room", "private" ])
     prof.completer_add("/sounds clear", [ "chat", "room", "private" ])
     prof.completer_add("/sounds rooms", [ "add", "remove", "clear" ])
+    prof.filepath_completer_add("/sounds set chat")
+    prof.filepath_completer_add("/sounds set room")
+    prof.filepath_completer_add("/sounds set private")
 
 
 def prof_post_chat_message_display(barejid, resource, message):
