@@ -605,6 +605,7 @@ prof_init(const char * const version, const char * const status, const char *con
         "/c-test int set <group> <key> <value>",
         "/c-test incoming <barejid> <resource> <message>",
         "/c-test completer add|remove <item>",
+        "/c-test file",
         NULL
     };
     char *description = "C test plugin. All commands focus the plugin window.";
@@ -637,6 +638,7 @@ prof_init(const char * const version, const char * const status, const char *con
         { "incoming <barejid> <resource> <message>",        "Show an incoming message." },
         { "completer add <item>",                           "Add an autocomplete item to the /c-test command." },
         { "completer remove <item>",                        "Remove an autocomplete item from the /c-test command." },
+        { "file",                                           "Complete a file path." },
         { NULL, NULL }
     };
 
@@ -670,6 +672,7 @@ prof_init(const char * const version, const char * const status, const char *con
         "int",
         "incoming",
         "completer",
+        "file",
         NULL
     };
     prof_completer_add("/c-test", cmd_ac);
@@ -694,6 +697,8 @@ prof_init(const char * const version, const char * const status, const char *con
 
     char *completer_ac[] = { "add", "remove", NULL };
     prof_completer_add("/c-test completer", completer_ac);
+
+    prof_filepath_completer_add("/c-test file");
 
     prof_register_timed(timed_callback, 5);
 }

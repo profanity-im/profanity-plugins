@@ -59,3 +59,4 @@ def prof_init(version, status, account_name, fulljid):
 
     prof.register_command("/imgur", 1, 1, synopsis, description, args, examples, _cmd_imgur)
     prof.completer_add("/imgur", [ "screenshot" ])
+    prof.filepath_completer_add("/imgur")
