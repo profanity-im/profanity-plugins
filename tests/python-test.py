@@ -442,7 +442,8 @@ def prof_init(version, status, account_name, fulljid):
         "/python-test int get <group> <key>",
         "/python-test int set <group> <key> <value>",
         "/python-test incoming <barejid> <resource> <message>",
-        "/python-test completer add|remove <item>"
+        "/python-test completer add|remove <item>",
+        "/python-test file"
     ]
     description = "Python test plugins. All commands focus the plugin window."
     args = [
@@ -473,7 +474,8 @@ def prof_init(version, status, account_name, fulljid):
         [ "int set <group> <key> <value>",                  "Set a integer setting" ],
         [ "incoming <barejid> <resource> <message>",        "Show an incoming message." ],
         [ "completer add <item>",                           "Add an autocomplete item to the /c-test command." ],
-        [ "completer remove <item>",                        "Remove an autocomplete item from the /c-test command." ]
+        [ "completer remove <item>",                        "Remove an autocomplete item from the /c-test command." ],
+        [ "file",                                           "Complete a file path." ]
     ]
     examples = [
         "/python-test sendline /about",
@@ -504,7 +506,8 @@ def prof_init(version, status, account_name, fulljid):
             "string_list",
             "int",
             "incoming",
-            "completer" 
+            "completer",
+            "file"
         ]
     )
     prof.completer_add("/python-test get",
@@ -528,6 +531,8 @@ def prof_init(version, status, account_name, fulljid):
     prof.completer_add("/python-test completer",
         [ "add", "remove" ]
     )
+
+    prof.filepath_completer_add("/python-test file")
 
     prof.register_timed(timed_callback, 5)
 
