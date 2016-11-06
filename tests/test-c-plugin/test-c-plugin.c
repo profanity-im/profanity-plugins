@@ -185,6 +185,15 @@ getsubject(char *subject)
             char buf[strlen(str) + strlen(room)];
             sprintf(buf, "%s%s", str, room);
             prof_win_show(plugin_win, buf);
+            char *nick = prof_get_room_nick(room);
+            if (nick) {
+                prof_win_focus(plugin_win);
+                char *str1 = "called -> prof_get_room_nick('";
+                char *str2 = "'): ";
+                char buf1[strlen(str1) + strlen(room) + strlen(str2) + strlen(nick)];
+                sprintf(buf1, "%s%s%s%s", str1, room, str2, nick);
+                prof_win_show(plugin_win, buf1);
+            }
         } else {
             prof_win_focus(plugin_win);
             prof_win_show(plugin_win, "called -> prof_get_current_muc: <none>");

@@ -128,6 +128,10 @@ def _get(subject):
         if room:
             prof.win_focus(plugin_win)
             prof.win_show(plugin_win, "called -> prof_get_current_muc: " + room)
+            nick = prof.get_room_nick(room)
+            if nick:
+                prof.win_focus(plugin_win)
+                prof.win_show(plugin_win, "called -> prof_get_room_nick('" + room + "'): " + nick)
         else:
             prof.win_focus(plugin_win)
             prof.win_show(plugin_win, "called -> prof_get_current_muc: <none>")
