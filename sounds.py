@@ -175,6 +175,13 @@ def prof_post_chat_message_display(barejid, resource, message):
 
 
 def prof_post_room_message_display(barejid, nick, message):
+    my_nick = prof.get_room_nick(barejid)
+    if not my_nick:
+        return
+
+    if my_nick == nick:
+        return;
+
     enabled = prof.settings_boolean_get("sounds", "enabled", False)
     if not enabled:
         return
