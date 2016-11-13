@@ -15,8 +15,8 @@ def _cmd_paste(arg1=None, arg2=None):
         root = tk.Tk(baseName="")
         root.withdraw()
         result = root.clipboard_get()
-        newline = prof.settings_boolean_get("paste", "newline", False)
-        if newline:
+        newline = prof.settings_boolean_get("paste", "newline", True)
+        if len(result.splitlines()) > 1 and newline:
             prof.send_line(u'\u000A' + result)
         else:
             prof.send_line(result)
@@ -25,34 +25,34 @@ def _cmd_paste(arg1=None, arg2=None):
 
     if arg1 == "newline":
         if not arg2:
-            root = tk.Tk(baseName="")
-            root.withdraw()
-            result = root.clipboard_get()
-            prof.send_line(u'\u000A' + result)
+            prof.cons_show("")
+            newline = prof.settings_boolean_get("paste", "newline", True)
+            if newline:
+                prof.cons_show("paste.py newline: on")
+            else:
+                prof.cons_show("paste.py newline: off")
         elif arg2 == "on":
             prof.settings_boolean_set("paste", "newline", True)
-            prof.cons_show("paste.py newline enabled")
+            prof.cons_show("paste.py newline enabled.")
         elif arg2 == "off":
             prof.settings_boolean_set("paste", "newline", False)
-            prof.cons_show("paste.py newline disabled")
+            prof.cons_show("paste.py newline disabled.")
         else:
             prof.cons_bad_cmd_usage("/paste")
 
         return
 
-        prof.cons_bad_cmd_usage("/paste")
+    prof.cons_bad_cmd_usage("/paste")
 
 
 def prof_init(version, status, account_name, fulljid):
     synopsis = [
         "/paste",
-        "/paste newline",
         "/paste newline on|off"
     ]
     description = "Paste contents of clipboard."
     args = [
-        [ "newline",        "Send newline before clipboard contents." ],
-        [ "newline on|off", "Always send newline." ]
+        [ "newline on|off", "Send newline before multiline clipboard text, defaults to on" ]
     ]
     examples = []
     prof.register_command("/paste", 0, 2, synopsis, description, args, examples, _cmd_paste)
