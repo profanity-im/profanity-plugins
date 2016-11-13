@@ -33,9 +33,9 @@ See the `/help plugins` command for further plugin management options.
 Branches
 --------
 
-`0.5.0`: Maintenance branch for plugins compatible with the current Profanity release 0.5.0
-`0.5.1`: Development for the next Profanity patch release 0.5.1
-`master`: Development for the next Profanity major release 0.6.0
+* `0.5.0`: Maintenance branch for plugins compatible with the current Profanity release 0.5.0
+* `0.5.1`: Development for the next Profanity patch release 0.5.1
+* `master`: Development for the next Profanity major release 0.6.0
 
 Developing plugins
 ------------------
