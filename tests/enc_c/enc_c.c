@@ -2,8 +2,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <profapi.h>
+
+static char *chat_msg_hook = NULL;
+static char *room_msg_hook = NULL;
 
 void
 cmd_enc(char **args)
@@ -71,6 +75,18 @@ cmd_enc(char **args)
     } else if (args[0] && (strcmp(args[0], "room_show_themed") == 0)) {
         prof_room_show_themed(args[1], "enc_c", "room_msg", NULL, "C", args[2]);
 
+    } else if (args[0] && (strcmp(args[0], "chat_msg") == 0)) {
+        if (chat_msg_hook) {
+            free(chat_msg_hook);
+        }
+        chat_msg_hook = strdup(args[1]);
+
+    } else if (args[0] && (strcmp(args[0], "room_msg") == 0)) {
+        if (room_msg_hook) {
+            free(room_msg_hook);
+        }
+        room_msg_hook = strdup(args[1]);
+
     } else {
         prof_cons_bad_cmd_usage("/enc_c");
     }
@@ -95,6 +111,12 @@ prof_init(const char * const version, const char * const status, const char *con
         "/enc_c room_ch reset <roomjid>",
         "/enc_c room_show <roomjid> <message>",
         "/enc_c room_show_themed <roomjid> <message>",
+        "/enc_c chat_msg none",
+        "/enc_c chat_msg modify",
+        "/enc_c chat_msg block",
+        "/enc_c room_msg none",
+        "/enc_c room_msg modify",
+        "/enc_c room_msg block",
         NULL
     };
     char *description = "Various enc things";
@@ -114,13 +136,32 @@ prof_init(const char * const version, const char * const status, const char *con
         { "room_ch reset <roomjid>",                "Reset char for room" },
         { "room_show <roomjid> <message>",          "Show chat room message" },
         { "room_show_themed <roomjid> <message>",   "Show themed chat room message" },
+        { "chat_msg none",                          "Preserve chat messages" },
+        { "chat_msg modify",                        "Modify chat messages" },
+        { "chat_msg block",                         "Block chat messages" },
+        { "room_msg none",                          "Preserve chat room messages" },
+        { "room_msg modify",                        "Modify chat room messages" },
+        { "room_msg block",                         "Block chat room messages" },
         { NULL, NULL } 
     };
     char *examples[] = { NULL };
 
     prof_register_command("/enc_c", 2, 5, synopsis, description, args, examples, cmd_enc);
  
-    char *cmd_ac[] = { "end", "chat_title", "chat_ch", "chat_show", "chat_show_themed", "room_title", "room_ch", "room_show", "room_show_themed", NULL };
+    char *cmd_ac[] = {
+        "end",
+        "chat_title",
+        "chat_ch",
+        "chat_show",
+        "chat_show_themed",
+        "room_title",
+        "room_ch",
+        "room_show",
+        "room_show_themed",
+        "chat_msg",
+        "room_msg",
+        NULL
+    };
     prof_completer_add("/enc_c", cmd_ac);
 
     char *chat_title_ac[] = { "set", "reset", NULL };
@@ -140,4 +181,40 @@ prof_init(const char * const version, const char * const status, const char *con
 
     char *room_ch_ac[] = { "set", "reset", NULL };
     prof_completer_add("/enc_c room_ch", room_ch_ac);
+
+    char *chat_msg_ac[] = { "none", "modify", "block", NULL };
+    prof_completer_add("/enc_c chat_msg", chat_msg_ac);
+
+    char *room_msg_ac[] = { "none", "modify", "block", NULL };
+    prof_completer_add("/enc_c room_msg", room_msg_ac);
+}
+
+char*
+prof_pre_chat_message_send(const char * const barejid, const char *message)
+{
+    if (chat_msg_hook && (strcmp(chat_msg_hook, "modify") == 0)) {
+        char buf[strlen("[c modified] ") + strlen(message) + 1];
+        sprintf(buf, "%s%s", "[c modified] ", message);
+        return strdup(buf);
+    } else if (chat_msg_hook && (strcmp(chat_msg_hook, "block") == 0)) {
+        prof_chat_show_themed(barejid, NULL, NULL, "bold_red", "!", "C plugin blocked message");
+        return NULL;
+    } else {
+        return strdup(message);
+    }
+}
+
+char*
+prof_pre_room_message_send(const char * const roomjid, const char *message)
+{
+    if (room_msg_hook && (strcmp(room_msg_hook, "modify") == 0)) {
+        char buf[strlen("[c modified] ") + strlen(message) + 1];
+        sprintf(buf, "%s%s", "[c modified] ", message);
+        return strdup(buf);
+    } else if (room_msg_hook && (strcmp(room_msg_hook, "block") == 0)) {
+        prof_room_show_themed(roomjid, NULL, NULL, "bold_red", "!", "C plugin blocked message");
+        return NULL;
+    } else {
+        return strdup(message);
+    }
 }

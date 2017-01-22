@@ -1,6 +1,12 @@
 import prof
 
+chat_msg_hook = None
+room_msg_hook = None
+
 def _cmd_enc(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
+    global chat_msg_hook
+    global room_msg_hook
+
     if arg1 == "end":
         prof.encryption_reset(arg2)
 
@@ -46,6 +52,12 @@ def _cmd_enc(arg1=None, arg2=None, arg3=None, arg4=None, arg5=None):
     elif arg1 == "room_show_themed":
         prof.room_show_themed(arg2, "enc_py", "room_msg", None, "P", arg3)
 
+    elif arg1 == "chat_msg":
+        chat_msg_hook = arg2
+
+    elif arg1 == "room_msg":
+        room_msg_hook = arg2
+
     else:
         prof.cons_bad_cmd_usage("/enc_py")
 
@@ -67,6 +79,12 @@ def prof_init(version, status, account_name, fulljid):
         "/enc_py room_ch reset <roomjid>",
         "/enc_py room_show <roomjid> <message>",
         "/enc_py room_show_themed <roomjid> <message>"
+        "/enc_py chat_msg none",
+        "/enc_py chat_msg modify",
+        "/enc_py chat_msg block",
+        "/enc_py room_msg none",
+        "/enc_py room_msg modify",
+        "/enc_py room_msg block"
     ]
     description = "Various enc things"
     args = [
@@ -84,16 +102,56 @@ def prof_init(version, status, account_name, fulljid):
         [ "room_ch set <roomjid> <ch>",             "Set char for room" ],
         [ "room_ch reset <roomjid>",                "Reset char for room" ],
         [ "room_show <roomjid> <message>",          "Show chat room message" ],
-        [ "room_show_themed <roomjid> <message>",   "Show themed chat room message" ]
+        [ "room_show_themed <roomjid> <message>",   "Show themed chat room message" ],
+        [ "chat_msg none",                          "Preserve chat messages" ],
+        [ "chat_msg modify",                        "Modify chat messages" ],
+        [ "chat_msg block",                         "Block chat messages" ],
+        [ "room_msg none",                          "Preserve chat room messages" ],
+        [ "room_msg modify",                        "Modify chat room messages" ],
+        [ "room_msg block",                         "Block chat room messages" ]
     ]
     examples = []
 
     prof.register_command("/enc_py", 2, 5, synopsis, description, args, examples, _cmd_enc)
-    prof.completer_add("/enc_py", [ "end", "chat_title", "chat_ch", "chat_show", "chat_show_themed", "room_title", "room_ch", "room_show", "room_show_themed" ])
+    prof.completer_add("/enc_py", [
+        "end",
+        "chat_title",
+        "chat_ch",
+        "chat_show",
+        "chat_show_themed",
+        "room_title",
+        "room_ch",
+        "room_show",
+        "room_show_themed",
+        "chat_msg",
+        "room_msg"
+    ])
     prof.completer_add("/enc_py chat_title", [ "set", "reset" ])
     prof.completer_add("/enc_py chat_ch", [ "set", "reset" ])
     prof.completer_add("/enc_py chat_ch set", [ "in", "out" ])
     prof.completer_add("/enc_py chat_ch reset", [ "in", "out" ])
     prof.completer_add("/enc_py room_title", [ "set", "reset" ])
     prof.completer_add("/enc_py room_ch", [ "set", "reset" ])
+    prof.completer_add("/enc_py chat_msg", [ "none", "modify", "block" ])
+    prof.completer_add("/enc_py room_msg", [ "none", "modify", "block" ])
 
+
+def prof_pre_chat_message_send(barejid, message):
+    if chat_msg_hook == "modify":
+        return "[py modified] " + message
+    elif chat_msg_hook == "block":
+        prof.chat_show_themed(barejid, None, None, "bold_red", "!", "Python plugin blocked message")
+        return None
+    else:
+        prof.log_info("none")
+        return message
+
+
+def prof_pre_room_message_send(roomjid, message):
+    if room_msg_hook == "modify":
+        return "[py modified] " + message
+    elif room_msg_hook == "block":
+        prof.room_show_themed(roomjid, None, None, "bold_red", "!", "Python plugin blocked message")
+        return None
+    else:
+        return message
