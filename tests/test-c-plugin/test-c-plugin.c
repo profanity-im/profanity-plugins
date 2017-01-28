@@ -791,7 +791,7 @@ prof_pre_chat_message_send(const char * const barejid, const char *message)
     sprintf(buf, "%s%s, %s", str, barejid, message);
     prof_win_show(plugin_win, buf);
 
-    return NULL;
+    return strdup(message);
 }
 
 void
@@ -839,7 +839,7 @@ prof_pre_room_message_send(const char * const barejid, const char *message)
     sprintf(buf, "%s%s, %s", str, barejid, message);
     prof_win_show(plugin_win, buf);
 
-    return NULL;
+    return strdup(message);
 }
 
 void
@@ -904,7 +904,7 @@ prof_pre_priv_message_send(const char * const barejid, const char * const nick, 
     sprintf(buf, "%s%s, %s, %s", str, barejid, nick, message);
     prof_win_show(plugin_win, buf);
 
-    return NULL;
+    return strdup(message);
 }
 
 void

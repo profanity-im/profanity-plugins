@@ -587,6 +587,7 @@ def prof_post_chat_message_display(barejid, resource, message):
 def prof_pre_chat_message_send(barejid, message):
     prof.win_create(plugin_win, _handle_win_input)
     prof.win_show(plugin_win, "fired -> prof_pre_chat_message_send: " + barejid + ", " + message)
+    return message
 
 
 def prof_post_chat_message_send(barejid, message):
@@ -607,6 +608,7 @@ def prof_post_room_message_display(barejid, nick, message):
 def prof_pre_room_message_send(barejid, message):
     prof.win_create(plugin_win, _handle_win_input)
     prof.win_show(plugin_win, "fired -> prof_pre_room_message_send: " + barejid + ", " + message)
+    return message
 
 
 def prof_post_room_message_send(barejid, message):
@@ -635,6 +637,7 @@ def prof_post_priv_message_display(barejid, nick, message):
 def prof_pre_priv_message_send(barejid, nick, message):
     prof.win_create(plugin_win, _handle_win_input)
     prof.win_show(plugin_win, "fired -> prof_pre_priv_message_send: " + barejid + ", " + nick + ", " + message)
+    return message
 
 
 def prof_post_priv_message_send(barejid, nick, message):
