@@ -1,7 +1,7 @@
 profanity-plugins
 =================
 
-* [Website documentation](http://www.profanity.im/plugins.html)
+* [Website documentation](https://profanity-im.github.io/plugins.html)
 
 Building Profanity with plugin support
 --------------------------------------
@@ -41,8 +41,8 @@ Developing plugins
 ------------------
 
 API Documentation:
-* [Python API](http://www.profanity.im/plugins/0.5.1/python/html/prof.html)
-* [Python hooks](http://www.profanity.im/plugins/0.5.1/python/html/plugin.html)
-* [C API](http://www.profanity.im/plugins/0.5.1/c/html/profapi_8h.html)
-* [C hooks](http://www.profanity.im/plugins/0.5.1/c/html/profhooks_8h.html)
+* [Python API](https://profanity-im.github.io/plugins/0.5.1/python/html/prof.html)
+* [Python hooks](https://profanity-im.github.io/plugins/0.5.1/python/html/plugin.html)
+* [C API](https://profanity-im.github.io/plugins/0.5.1/c/html/profapi_8h.html)
+* [C hooks](https://profanity-im.github.io/plugins/0.5.1/c/html/profhooks_8h.html)
 
