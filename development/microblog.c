@@ -39,7 +39,7 @@
  * Install:
  *
  * cp microblog.so \
- * ~/.local/share/profanity/plugins/pubsub-event-headline.so
+ * ~/.local/share/profanity/plugins/
  *
  * Documentation:
  *
