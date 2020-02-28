@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 ??? 
+ * Copyright (C) 2020 Stefan Kropp <stefan@debxwoody.de>
  *
  * This file is part of profanity.
  *
