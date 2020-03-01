@@ -50,6 +50,7 @@
 
 #include <profapi.h>
 
+#include <assert.h>
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
@@ -59,7 +60,7 @@
 #include <string.h>
 
 #define PLUGIN_NAME "microblog"
-#define PLUGIN_VERSION "0.0.1"
+#define PLUGIN_VERSION "0.0.1-DEV"
 
 #define XMPP_URN_MICROBLOG "urn:xmpp:microblog:0"
 
@@ -82,9 +83,10 @@ static bool enabled = true;
  * The function will return true on success, otherwise false.
  */
 bool parse(const char *stanza, PubSubEvent *event) {
+  bool result = false;
   // stanza and event are mandatory
-  if (stanza == NULL || event == NULL) {
-    return false;
+  if (stanza == NULL || event == NULL || strlen(stanza) == 0) {
+    return result;
   }
 
   xmlDocPtr doc;
@@ -92,7 +94,7 @@ bool parse(const char *stanza, PubSubEvent *event) {
 
   doc = xmlReadMemory(stanza, strlen(stanza), NULL, NULL, 0);
   if (doc == NULL) {
-    return false;
+    return result;
   }
 
   xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
@@ -103,29 +105,47 @@ bool parse(const char *stanza, PubSubEvent *event) {
 
   xmlXPathObjectPtr xpathObj = xmlXPathEvalExpression(
       "//message/ev:event/ev:items/attribute::node", xpathCtx);
-  if (strcmp(xpathObj->nodesetval->nodeTab[0]->children->content,
-             XMPP_URN_MICROBLOG) == 0) {
 
-    xpathObj = xmlXPathEvalExpression("//message/attribute::from", xpathCtx);
-    event->from = strdup(xpathObj->nodesetval->nodeTab[0]->children->content);
-    xmlXPathFreeObject(xpathObj);
+  if (xpathObj != NULL && xpathObj->nodesetval != NULL &&
+      xpathObj->nodesetval->nodeTab[0] != NULL) {
+    if (xpathObj->nodesetval->nodeTab[0]->children != NULL &&
+        xpathObj->nodesetval->nodeTab[0]->children->content != NULL) {
+      if (strcmp(xpathObj->nodesetval->nodeTab[0]->children->content,
+                 XMPP_URN_MICROBLOG) == 0) {
+        xpathObj =
+            xmlXPathEvalExpression("//message/attribute::from", xpathCtx);
+        assert(xpathObj != NULL);
 
-    xpathObj = xmlXPathEvalExpression(
-        "//message/ev:event/ev:items/ev:item/a:entry/a:title", xpathCtx);
-    event->title = strdup(xpathObj->nodesetval->nodeTab[0]->children->content);
-    xmlXPathFreeObject(xpathObj);
+        event->from =
+            strdup(xpathObj->nodesetval->nodeTab[0]->children->content);
+        xmlXPathFreeObject(xpathObj);
 
-    xpathObj = xmlXPathEvalExpression(
-        "//message/ev:event/ev:items/ev:item/attribute::id", xpathCtx);
-    event->id = strdup(xpathObj->nodesetval->nodeTab[0]->children->content);
-    xmlXPathFreeObject(xpathObj);
-  } else {
-    return false;
+        xpathObj = xmlXPathEvalExpression(
+            "//message/ev:event/ev:items/ev:item/a:entry/a:title", xpathCtx);
+        assert(xpathObj != NULL);
+
+        event->title =
+            strdup(xpathObj->nodesetval->nodeTab[0]->children->content);
+        xmlXPathFreeObject(xpathObj);
+
+        xpathObj = xmlXPathEvalExpression(
+            "//message/ev:event/ev:items/ev:item/attribute::id", xpathCtx);
+        assert(xpathObj != NULL);
+
+        event->id = strdup(xpathObj->nodesetval->nodeTab[0]->children->content);
+        xmlXPathFreeObject(xpathObj);
+        result = true;
+      }
+    }
   }
 
-  xmlXPathFreeContext(xpathCtx);
-  xmlFreeDoc(doc);
-  return true;
+  if (xpathCtx) {
+    xmlXPathFreeContext(xpathCtx);
+  }
+  if (doc) {
+    xmlFreeDoc(doc);
+  }
+  return result;
 }
 
 void prof_init(const char *const version, const char *const status,
@@ -149,7 +169,6 @@ void prof_on_unload(void) {
 
 int prof_on_message_stanza_receive(const char *const stanza) {
   if (enabled) {
-
     PubSubEvent event;
     event.id = NULL;
     event.from = NULL;
