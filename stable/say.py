@@ -9,15 +9,16 @@ On OSX will use the built in 'say' command.
 
 import prof
 import os
+import shlex
 from sys import platform
 
 def say(message):
     args = prof.settings_string_get("say", "args", "")
 
     if platform == "darwin":
-        os.system("say " + args + " '" + message + "' 2>/dev/null")
+        os.system("say " + args + " " + shlex.quote(message) + " 2>/dev/null")
     elif platform == "linux" or platform == "linux2":
-        os.system("echo '" + message + "' | espeak " + args + " 2>/dev/null")
+        os.system("echo " + shlex.quote(message) + " | espeak " + args + " 2>/dev/null")
 
 
 def prof_post_chat_message_display(barejid, resource, message):
