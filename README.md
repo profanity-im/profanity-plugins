@@ -46,3 +46,7 @@ API Documentation:
 * [C API](https://profanity-im.github.io/plugins/0.5.1/c/html/profapi_8h.html)
 * [C hooks](https://profanity-im.github.io/plugins/0.5.1/c/html/profhooks_8h.html)
 
+External plugins
+------------------
+
+* [profanity-notifycmd](https://github.com/Neo-Oli/profanity-notifycmd) - Launch a custom shell command when you receive a message in profanity.
