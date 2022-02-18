@@ -49,4 +49,9 @@ API Documentation:
 External plugins
 ------------------
 
+* [profanity-copy-message-plugin](https://github.com/lonski/profanity-copy-message-plugin) - Copy messages to clipboard.
+* [profanity-discord](https://github.com/colcrunch/profanity-discord) - Forward jabber pings on to discord through a webhook.
 * [profanity-notifycmd](https://github.com/Neo-Oli/profanity-notifycmd) - Launch a custom shell command when you receive a message in profanity.
+* [profanity-plugin-sanitise](https://github.com/nd2s/profanity-plugin-sanitise) - Clean incoming messages.
+* [profanity-shortcuts-plugin](https://github.com/ReneVolution/profanity-shortcuts-plugin) - Store custom substitution shortcuts and use them in chats.
+
