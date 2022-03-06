@@ -49,6 +49,7 @@ API Documentation:
 External plugins
 ------------------
 
+* [moj](https://github.com/shinyblink/moj) - Replace emojis
 * [profanity-copy-message-plugin](https://github.com/lonski/profanity-copy-message-plugin) - Copy messages to clipboard.
 * [profanity-discord](https://github.com/colcrunch/profanity-discord) - Forward jabber pings on to discord through a webhook.
 * [profanity-notifycmd](https://github.com/Neo-Oli/profanity-notifycmd) - Launch a custom shell command when you receive a message in profanity.
