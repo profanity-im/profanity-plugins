@@ -48,7 +48,7 @@ def _handle_send(command=None):
     result = _get_result(command)
     newline = prof.settings_boolean_get("system", "newline", True)
     if len(result.splitlines()) > 1 and newline:
-        prof.send_line(u'\u000A' + result)
+        prof.send_line(u'\u000A' + result.decode('utf-8', errors='ignore'))
     else:
         prof.send_line(result)
 
