@@ -56,3 +56,4 @@ External plugins
 * [profanity-plugin-sanitise](https://github.com/nd2s/profanity-plugin-sanitise) - Clean incoming messages.
 * [profanity-shortcuts-plugin](https://github.com/ReneVolution/profanity-shortcuts-plugin) - Store custom substitution shortcuts and use them in chats.
 * [profanity-plugins by H3rnand3zzz](https://github.com/H3rnand3zzz/profanity-plugins) - Array of different **QoL** plugins.
+* [profanity-plugins by Reimar](https://github.com/ReimarPB/profanity-plugins) - Collection of plugins
