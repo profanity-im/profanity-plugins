@@ -1,6 +1,6 @@
 """
 Play sounds on various events.
-Requires mpg123 to be installed on the host system:
+Default settings require mpg123 to be installed on the host system:
     sudo apt-get install mpg123
     brew install mpg123
 """
@@ -16,7 +16,9 @@ def _play_sound(soundfile):
         soundfilenew = soundfile.replace("~", expanduser("~"), 1)
     else:
         soundfilenew = soundfile
-    subprocess.Popen(["mpg123", "-q", soundfilenew])
+
+    audioplayer = prof.settings_string_get("sounds", "audioplayer", "mpg123 -q")
+    subprocess.Popen([e for e in audioplayer.split(" ") + [soundfilenew]])
 
 
 def _cmd_sounds(arg1=None, arg2=None, arg3=None):
@@ -27,11 +29,15 @@ def _cmd_sounds(arg1=None, arg2=None, arg3=None):
         roomsound = prof.settings_string_get("sounds", "room", None)
         privatesound = prof.settings_string_get("sounds", "private", None)
         roomlist = prof.settings_string_list_get("sounds", "rooms")
+        audioplayer = prof.settings_string_get("sounds", "audioplayer", "mpg123 -q")
+
         if chatsound or roomsound or privatesound:
             if enabled:
                 prof.cons_show("Sounds: ON")
             else:
                 prof.cons_show("Sounds: OFF")
+
+            prof.cons_show("Audio Player: " + audioplayer)
             if chatsound:
                 prof.cons_show("  Chat    : " + chatsound)
             if roomsound:
@@ -59,6 +65,24 @@ def _cmd_sounds(arg1=None, arg2=None, arg3=None):
         prof.cons_show("Sounds disabled")
         return
 
+    if arg1 == "test":
+        if arg2 not in ("chat", "private", "room",):
+            prof.cons_bad_cmd_usage("/sounds")
+            return
+    
+        enabled = prof.settings_boolean_get("sounds", "enabled", False)
+        if not enabled:
+            prof.cons_show("Sounds disabled")
+            return
+
+        soundfile = prof.settings_string_get("sounds", arg2, None)
+        if not soundfile:
+            prof.cons_show("No sound file for " + arg2)
+            return
+
+        _play_sound(soundfile)
+        return
+
     if arg1 == "set":
         if arg2 == "chat":
             prof.settings_string_set("sounds", "chat", arg3)
@@ -69,10 +93,20 @@ def _cmd_sounds(arg1=None, arg2=None, arg3=None):
         elif arg2 == "private":
             prof.settings_string_set("sounds", "private", arg3)
             prof.cons_show("Set private sound: " + arg3)
+        elif arg2 == "audioplayer":
+            prof.settings_string_set("sounds", "audioplayer", arg3)
+            prof.cons_show("Set audio player: " + arg3)
         else:
             prof.cons_bad_cmd_usage("/sounds")
 
         return
+
+    if arg1 == "reset":
+        if arg2 == "audioplayer":
+            prof.settings_string_set("sounds", "audioplayer", "mpg123 -q")
+            prof.cons_show("Reset audio player to default.")
+        else:
+            prof.cons_bad_cmd_usage("/sounds")
 
     if arg1 == "clear":
         if arg2 == "chat":
@@ -121,20 +155,26 @@ def prof_init(version, status, account_name, fulljid):
     synopsis = [ 
         "/sounds",
         "/sounds on|off",
+        "/sounds set audioplayer <cmd>",
+        "/sounds reset audioplayer",
         "/sounds set chat <file>",
         "/sounds set room <file>",
         "/sounds set private <file>",
+        "/sounds test private|room|chat",
         "/sounds clear chat",
         "/sounds clear room",
         "/sounds clear private",
         "/sounds rooms add <roomjid>"
     ]
-    description = "Play mp3 sounds on various Profanity events. Calling with no args shows current sound files."
+    description = "Play sounds on various Profanity events. Calling with no args shows current sound files."
     args = [
         [ "on|off", "Enable or disable playing sounds." ],
-        [ "set chat <file>", "Path to mp3 file to play on chat messages." ],
-        [ "set room <file>", "Path to mp3 file to play on room messages." ],
-        [ "set private <file>", "Path to mp3 file to play on private room messages." ],
+        [ "set audioplayer <cmd>", "Commmand line of audio player to use for playing sound files.  Defaults to mpg123."],
+        [ "reset audioplayer", "Resets the audio player to the default mpg123." ],
+        [ "set chat <file>", "Path to sound file to play on chat messages." ],
+        [ "set room <file>", "Path to sound file to play on room messages." ],
+        [ "set private <file>", "Path to sound file to play on private room messages." ],
+        [ "test private|room|chat", "Test the configured audio player and sound file."],
         [ "clear chat", "Remove the sound for chat messages." ],
         [ "clear room", "Remove the sound for room messages." ],
         [ "clear private", "Remove the sound for private messages." ],
@@ -143,9 +183,11 @@ def prof_init(version, status, account_name, fulljid):
         [ "rooms clear", "Clear the room list, all rooms will play sounds on new messages."]
     ]
     examples = [
+        "/sounds set audioplayer paplay",
         "/sounds set chat ~/sounds/woof.mp3",
         "/sounds set room ~/sounds/meow.mp3",
         "/sounds set private ~/sounds/shhh.mp3",
+        "/sounds test private",
         "/sounds remove private",
         "/sounds rooms add myroom@conference.server.org",
         "/sounds on"
@@ -153,8 +195,10 @@ def prof_init(version, status, account_name, fulljid):
 
     prof.register_command("/sounds", 0, 3, synopsis, description, args, examples, _cmd_sounds)
 
-    prof.completer_add("/sounds", [ "set", "clear", "on", "off", "rooms" ])
-    prof.completer_add("/sounds set", [ "chat", "room", "private" ])
+    prof.completer_add("/sounds", [ "set", "clear", "on", "off", "rooms", "reset" ])
+    prof.completer_add("/sounds set", [ "chat", "room", "private", "audioplayer" ])
+    prof.completer_add("/sounds reset", [ "audioplayer" ])
+    prof.completer_add("/sounds test", [ "chat", "room", "private" ])
     prof.completer_add("/sounds clear", [ "chat", "room", "private" ])
     prof.completer_add("/sounds rooms", [ "add", "remove", "clear" ])
     prof.filepath_completer_add("/sounds set chat")
