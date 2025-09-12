@@ -196,11 +196,12 @@ def _valid_iq_result(iq):
     iq_id = iq.get("id")
     if not iq_id:
         return False
-    registered = registered_queries[iq_id]
-    if registered is None:
-        return False
-    sender = _bare_jid(iq.get('from'))
-    if registered['remote'] != sender:
+    try:
+        registered = registered_queries[iq_id]
+        sender = _bare_jid(iq.get('from'))
+        if registered['remote'] != sender:
+            return False
+    except:
         return False
     return True
 
