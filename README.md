@@ -1,6 +1,8 @@
 profanity-plugins
 =================
 
+This repository is a collection of community maintained plugins.
+
 * [Website documentation](https://profanity-im.github.io/plugins.html)
 
 Building Profanity with plugin support
