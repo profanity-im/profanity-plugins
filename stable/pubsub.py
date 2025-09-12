@@ -196,15 +196,18 @@ def _valid_iq_result(iq):
     iq_id = iq.get("id")
     if not iq_id:
         return False
-    if not iq_id.startswith("ps_"):
+    registered = registered_queries[iq_id]
+    if registered is None:
         return False
-    # keep proper track of ids sent and if it belongs to correct service
+    sender = _bare_jid(iq.get('from'))
+    if registered['remote'] != sender:
+        return False
     return True
 
 def _handle_iq_result(iq):
     iq_id = iq.get('id')
     service = iq.get('from')
-    handler = registered_queries[iq_id]
+    handler = registered_queries[iq_id]['handler']
     del registered_queries[iq_id]
     return handler(service, iq)
 
@@ -276,11 +279,14 @@ def prof_on_connect(account_name, fulljid):
 #####
 ## helpers
 #####
-def _set_my_jid(fulljid = None):
+def _set_my_jid(jid = None):
     global my_jid
-    if not fulljid is None and not fulljid is '':
-        my_jid = fulljid.split('/')[0]
-    prof.log_debug("my jid: %s" % my_jid)
+    if not jid is None and not jid == '':
+        my_jid = _bare_jid(jid)
+    prof.log_debug("my_jid: %s" % my_jid)
+
+def _bare_jid(jid):
+    return jid.split('/')[0]
 
 def _create_win(service):
     win_name = _win_name(service)
@@ -301,7 +307,8 @@ def _register_iq(iq, handler):
     global iq_id_count, registered_queries
     iq_id = "ps_" + str(iq_id_count)
     iq.set("id", iq_id)
-    registered_queries[iq_id] = handler
+    remote = _bare_jid(iq.get('to'))
+    registered_queries[iq_id] = {'remote': remote, 'handler': handler}
     iq_id_count = iq_id_count + 1
     return iq
 
