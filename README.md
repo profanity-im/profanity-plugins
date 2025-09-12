@@ -35,7 +35,7 @@ Branches
 
 * `0.5.0`: Maintenance branch compatible Profanity 0.5.0
 * `0.5.1`: Maintenance branch compatible Profanity 0.5.1
-* `master`: Development for Profanity 0.6.0 - 0.11.x
+* `master`: Development for Profanity 0.6.0 - latest
 
 Developing plugins
 ------------------
