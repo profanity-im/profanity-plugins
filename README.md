@@ -1,6 +1,11 @@
 profanity-plugins
 =================
 
+*Note*:
+Profanity had support for C and Python plugins until version 0.19.0.
+This [pull request](https://github.com/profanity-im/profanity/pull/2248) removed it in favour of Lua.
+Take a look at [community-plugins](https://github.com/profanity-im/community-plugins) for Lua plugins maintained by the community.
+
 This repository is a collection of community maintained plugins.
 
 * [Website documentation](https://profanity-im.github.io/plugins.html)
